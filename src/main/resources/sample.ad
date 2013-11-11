@@ -1,0 +1,33 @@
+= Hello, AsciiDoc in Java EE 7 with WebSocket!
+Doc Writer <doc@example.com>
+v1.0, 2013-11-11
+:toc:
+:numbered:
+:source-highlighter: coderay
+
+An introduction to http://asciidoc.org[AsciiDoc].
+
+== Simple examples
+
+* Apples
+* Oranges
+* Bananas
+
+[source,ruby]
+puts "Hello, World!"
+
+== Implementations
+
+AsciiDoc:: The original implementation, written in Python
+Asciidoctor:: A modern implementation, written in Ruby
+
+NOTE: This AsciiDoc source in this demo is rendered by http://asciidoctor.org[Asciidoctor].
+
+== Data tables
+
+.A table produced from CSV
+[cols="1,1,^1", options="header", format="csv"]
+|===
+Name,Title,Years of Service
+include::employees.txt[]
+|===

@@ -1,0 +1,39 @@
+package com.mgreau.wildfly.rest;
+
+import javax.inject.Inject;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+import com.mgreau.wildfly.asciidoctor.AsciidoctorProcessor;
+
+@Path("documents")
+public class WSMADREST {
+
+	@Inject
+	AsciidoctorProcessor processor;
+
+	private String sample = "sample.ad";
+
+	@GET
+	@Path("sample-adoc")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getAdocFile() {
+		return getSampleDoc();
+	}
+
+	@GET
+	@Path("sample-html")
+	@Produces(MediaType.TEXT_HTML)
+	public String getHTMLOuput() {
+		return processor.renderAsDocument(getSampleDoc(), "");
+	}
+	
+	
+	private String getSampleDoc(){
+		return processor.readFromStream(Thread.currentThread()
+				.getContextClassLoader().getResourceAsStream(sample));
+	}
+
+}

@@ -1,0 +1,2 @@
+Doc Writer,Documentation Lead,10
+Junior Writer,Technical Writer,2
