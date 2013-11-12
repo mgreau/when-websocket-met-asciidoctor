@@ -1,5 +1,8 @@
 package com.mgreau.wildfly.websocket.messages;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 
 public class HTMLMessage extends Message {
 
@@ -9,10 +12,15 @@ public class HTMLMessage extends Message {
 	/** html source content */
 	private String htmlSource;
 	
+	/** time to process the file into html*/
 	private long timeToRender;
 	
 	/** Number of writers on this doc */
 	private Integer nbWriters;
+	
+	private Collection<String> authors = new ArrayList<String>();
+	
+	private Collection<String> connected = new ArrayList<String>();
 	
 	
 	public String toString(){

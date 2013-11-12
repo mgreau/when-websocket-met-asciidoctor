@@ -5,9 +5,11 @@ Maxime Gréaun <@mgreau>
 This project shows how to use the WebSocket Protocol and Asciidoctor project to :
 
 * Live Writing Asciidoc file and automatically view HTML 5 rendered
-** each time you write something
-** when you click on "Generate HTML" button if you want to disconnect then work then reconnect and send
+** each time you write something if you are connected so in *live writing mode*
+** when you click on "Generate HTML" button if you work on *offline mode* and so you are diconnected then you work then you reconnect to send your work
 * Several persons can work on the same doc
+* you see the number of writers (people who send adoc file)
+* you see the name of the last author
 
 image::live-writing.png[Screenshot of the WebSocket Java EE 7 demo with a severals matches and AngularJS deployed on WildFly]
 

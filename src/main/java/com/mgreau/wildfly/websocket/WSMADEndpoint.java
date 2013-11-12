@@ -80,12 +80,13 @@ public class WSMADEndpoint {
         boolean isAlreadyAnAuhtor = session.getUserProperties().containsKey("isAuthor");
         session.getUserProperties().put("isAuthor", true);
         
-        //Send betMsg with bet count
+        //check if there is any author
         if (!nbWritersByAdoc.containsKey(adocId)){
         	nbWritersByAdoc.put(adocId, new AtomicInteger());
         }
         if (!isAlreadyAnAuhtor){
         	nbWritersByAdoc.get(adocId).incrementAndGet();
+        	
         }
         long start = System.currentTimeMillis();
         HTMLMessage html = new HTMLMessage(msg.getAuthor(), processor.renderAsDocument(msg.getAdocSource(), ""));
@@ -104,7 +105,7 @@ public class WSMADEndpoint {
     
     @OnClose
     public void closedConnection(Session session, @PathParam("adoc-id") String adocId) {
-    	if (session.getUserProperties().containsKey("bet")){
+    	if (session.getUserProperties().containsKey("isAuthor")){
             /* Remove bet */
     		 nbWritersByAdoc.get(adocId).decrementAndGet();
     	}
