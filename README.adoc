@@ -1,6 +1,7 @@
-= Asciidoctor WebSocket Java EE 7 - AngularJS - WildFly 8
-Maxime Gréaun <@mgreau>
+== Live Collaborate Writing
 :imagesdir: ./doc/img
+
+=== When WebSocket met Asciidoctor
 
 This project shows how to use the WebSocket Protocol and Asciidoctor project to :
 
@@ -13,8 +14,19 @@ This project shows how to use the WebSocket Protocol and Asciidoctor project to 
 
 image::live-writing.png[Screenshot of the WebSocket Java EE 7 demo with a severals matches and AngularJS deployed on WildFly]
 
+=== Technology used
 
-== Install on your WildFly 8 Application Server
+* Asciidoctor
+** AsciidoctorJ
+* Java EE 7 
+** WebSocket => (Undertow)
+** JSON-P
+* Web Client
+** AngularJS
+* App server
+** WildFly 8
+
+=== Install on your WildFly 8 Application Server
   
 
 . Start wildfly : 
