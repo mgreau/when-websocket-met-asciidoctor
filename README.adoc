@@ -1,4 +1,4 @@
-== Live Collaborative Writing app for Asciidoc file (Asciidoctor / Java EE 7 WebSocket)
+== Live Collaborative Writing app for Asciidoc file
 :imagesdir: ./doc/img
 
 === When WebSocket met Asciidoctor
