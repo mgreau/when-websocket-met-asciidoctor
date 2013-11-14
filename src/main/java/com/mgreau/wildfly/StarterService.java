@@ -10,5 +10,5 @@ import javax.ejb.Startup;
 public class StarterService {
     
     private static final Logger logger = Logger.getLogger("StarterService");
- 
+    
 }
