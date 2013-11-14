@@ -8,7 +8,7 @@
 	<packaging>war</packaging>
 
 	<name>when-websocket-met-asciidoctor</name>
-        <description>Editing doc online in live</description>
+    <description>Real-time collaborative writing for Asciidoc file</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -1,11 +1,11 @@
-== Live Collaborative Writing app for Asciidoc file
+== Real-time collaborative writing for Asciidoc files
 :imagesdir: ./doc/img
 
 === When WebSocket met Asciidoctor
 
 This project shows how to use the WebSocket Protocol and Asciidoctor project to :
 
-* Live Writing Asciidoc file and automatically view HTML 5 rendered
+* Realtime Writing Asciidoc file and automatically view HTML 5 rendered
 ** each time you write something if you are connected so in *live writing mode*
 ** when you click on "Generate HTML" button if you work on *offline mode* and so you are diconnected then you work then you reconnect to send your work
 * Several persons can work on the same doc
