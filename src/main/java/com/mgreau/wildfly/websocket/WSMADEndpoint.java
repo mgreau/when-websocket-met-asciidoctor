@@ -20,7 +20,6 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
-import com.mgreau.wildfly.StarterService;
 import com.mgreau.wildfly.asciidoctor.AsciidoctorProcessor;
 import com.mgreau.wildfly.websocket.decoders.MessageDecoder;
 import com.mgreau.wildfly.websocket.encoders.AsciidocMessageEncoder;
@@ -31,7 +30,7 @@ import com.mgreau.wildfly.websocket.messages.HTMLMessage;
 /**
  * WSMAD : WebSocket met Asciidoctor !
  * 
- * @author @mgreau
+ * @author greau.maxime@gmail.com
  *
  */
 @ServerEndpoint(
@@ -41,7 +40,6 @@ import com.mgreau.wildfly.websocket.messages.HTMLMessage;
 		)
 public class WSMADEndpoint {
 	
-	/** log */
 	private static final Logger logger = Logger.getLogger("WSMADEndpoint");
 	
     /** All open WebSocket sessions */
@@ -50,16 +48,17 @@ public class WSMADEndpoint {
     /** Handle number of writers by adoc file */
     static Map<String, AtomicInteger> nbWritersByAdoc = new ConcurrentHashMap<>();
     
-    @Inject StarterService ejbService;
-    
-    @Inject AsciidoctorProcessor processor;
-    
+    @Inject 
+    AsciidoctorProcessor processor;
+   
     /**
-     * Send Output Message resulted of an asciidoc source processor
+     * Send, to all peers connected to this asciidoc file, the Output Message resulted of an asciidoc source processor.
+     * 
+     * @param msg HTMLMessage 
+     * @param adocId unique id for this asciidoc file
      */
     public static void sendOutputMessage(HTMLMessage msg, String adocId) {
         try {
-            /* Send updates to all open WebSocket sessions for this doc */
             for (Session session : peers) {
             	if (Boolean.TRUE.equals(session.getUserProperties().get(adocId))){
             		if (session.isOpen()){
@@ -73,25 +72,36 @@ public class WSMADEndpoint {
         }   
     }
     
+    /**
+     * Received a AsciidocMessage from one peer with a new version of the source file.
+     * 
+     * @param session peer who send a new version
+     * @param msg the AsciidocMessage
+     * @param adocId unique id for this asciidoc file
+     */
     @OnMessage
     public void message(final Session session, AsciidocMessage msg,  @PathParam("adoc-id") String adocId) {
         logger.log(Level.INFO, "Received: Asciidoc source from - {0}", msg);
-        //check if the user had already bet and save this bet
-        boolean isAlreadyAnAuhtor = session.getUserProperties().containsKey("isAuthor");
-        session.getUserProperties().put("isAuthor", true);
         
-        //check if there is any author
+        //check if the user had already send a version for this doc
+        boolean isAlreadyAnAuhtor = session.getUserProperties().containsKey("isAuthor");
+        if (!isAlreadyAnAuhtor){
+        	session.getUserProperties().put("isAuthor", true);
+        }
+        
+        //check if there is any author for this id
         if (!nbWritersByAdoc.containsKey(adocId)){
         	nbWritersByAdoc.put(adocId, new AtomicInteger());
         }
         if (!isAlreadyAnAuhtor){
         	nbWritersByAdoc.get(adocId).incrementAndGet();
-        	
         }
         long start = System.currentTimeMillis();
         HTMLMessage html = new HTMLMessage(msg.getAuthor(), processor.renderAsDocument(msg.getAdocSource(), ""));
         html.setTimeToRender(System.currentTimeMillis() -  start);
         html.setNbWriters(nbWritersByAdoc.get(adocId).get());
+        
+        //send the new HTML version to all connected peers
         sendOutputMessage(html, adocId);
     }
 
@@ -100,18 +110,23 @@ public class WSMADEndpoint {
     	logger.log(Level.INFO, "Session ID : " + session.getId() +" - Connection opened for doc : " + adocId);
         session.getUserProperties().put(adocId, true);
         peers.add(session);
-       
+        //TODO : send a message to all peers to inform that someone is connected
     }
     
+    /**
+     * Close the connection and decrement the number of writers and send a message 
+     * to notify all others writers.
+     * @param session peer session
+     * @param adocId unique id for this asciidoc file
+     */
     @OnClose
     public void closedConnection(Session session, @PathParam("adoc-id") String adocId) {
     	if (session.getUserProperties().containsKey("isAuthor")){
-            /* Remove bet */
     		 nbWritersByAdoc.get(adocId).decrementAndGet();
     	}
-        /* Remove this connection from the queue */
         peers.remove(session);
-        logger.log(Level.INFO, "Connection closed.");
+        logger.log(Level.INFO, "Connection closed for " + session.getId());
+        //TODO send a message to all peers to inform that someone is disonnected
     }
     
     @OnError
