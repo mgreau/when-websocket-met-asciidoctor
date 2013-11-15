@@ -1,5 +1,10 @@
 package com.mgreau.wildfly.websocket.messages;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.asciidoctor.DocumentHeader;
+
 /**
  * This message can be send by both peers (client/server) :
  * <ul>
@@ -17,33 +22,47 @@ package com.mgreau.wildfly.websocket.messages;
  */
 public class AsciidocMessage extends Message {
 	
-	/** Author for this adoc version */
-	private String author;
+	/** The current person who send this version */
+	private String currentWriter;
 	
-	/** Asciidoc source content */
+	/** Asciidoc file information */
+	private DocumentHeader docHeader;
+	
+	/** Asciidoc source origin content */
 	private String adocSource;
+
+	/** Document format which is sent to peerŒ */
+	protected TypeFormat format;
 	
+	public AsciidocMessage(){
+	}
 	
-	public AsciidocMessage(String author, String adoc){
-		this.author = author;
-		this.adocSource = adoc;
+	public AsciidocMessage(String currentWriter, String adocSource){
+		this.format = TypeFormat.asciidoc;
+		this.currentWriter = currentWriter;
+		this.adocSource = adocSource;
+	}
+	
+	public AsciidocMessage(String currentWriter, String adocSource, TypeFormat format){
+		this.format = TypeFormat.asciidoc;
+		if (format !=  null)
+			this.format = format;
+		this.currentWriter = currentWriter;
+		this.adocSource = adocSource;
 	}
 	
 	
 	public String toString(){
-		return "[AsciidocMessage]" + " - Last Author: ..." + author;
+		return "[AsciidocMessage]" + " - By writer: ..." + currentWriter;
 	}
 
-
-	public String getAuthor() {
-		return author;
+	public String getCurrentWriter() {
+		return currentWriter;
 	}
 
-
-	public void setAuthor(String author) {
-		this.author = author;
+	public void setCurrentWriter(String currentWriter) {
+		this.currentWriter = currentWriter;
 	}
-
 
 	public String getAdocSource() {
 		return adocSource;
@@ -52,6 +71,24 @@ public class AsciidocMessage extends Message {
 
 	public void setAdocSource(String adocSource) {
 		this.adocSource = adocSource;
+	}
+
+
+	public DocumentHeader getDocHeader() {
+		return docHeader;
+	}
+
+
+	public void setDocHeader(DocumentHeader docHeader) {
+		this.docHeader = docHeader;
+	}
+
+	public TypeFormat getFormat() {
+		return format;
+	}
+
+	public void setFormat(TypeFormat format) {
+		this.format = format;
 	}
 
 	

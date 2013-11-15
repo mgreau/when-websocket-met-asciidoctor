@@ -35,7 +35,7 @@ public class MessageDecoder implements Decoder.Text<AsciidocMessage> {
         if (willDecode(string)) {
             switch (messageMap.get("type")) {
                 case "adoc":
-                    msg = new AsciidocMessage(messageMap.get("author"), messageMap.get("source"));
+                    msg = new AsciidocMessage(messageMap.get("writer"), messageMap.get("source"));
                     break;
             }
         } else {

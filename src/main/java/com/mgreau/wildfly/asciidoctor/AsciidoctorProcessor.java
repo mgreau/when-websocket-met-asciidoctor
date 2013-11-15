@@ -5,21 +5,26 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.AttributesBuilder;
+import org.asciidoctor.DocumentHeader;
 import org.asciidoctor.OptionsBuilder;
 import org.asciidoctor.SafeMode;
 
 @ApplicationScoped
 public class AsciidoctorProcessor {
+	
+	private static final Logger logger = Logger.getLogger("AsciidoctorProcessor");
 	private Asciidoctor delegate;
 	
     // tag::render[]
 	public String renderAsDocument(String source, String baseDir) {
+		logger.info("Start rendering adoc");
 		return delegate.render(source, OptionsBuilder.options()
 				.safe(SafeMode.SAFE).backend("html5").headerFooter(true).eruby("erubis")
 				//.option("base_dir", baseDir)
@@ -28,6 +33,11 @@ public class AsciidoctorProcessor {
 						.attribute("copycss!", "").asMap()).asMap());
 	}
     // end::render[]
+	
+	public DocumentHeader renderDocumentHeader(String source) {
+		logger.info("Start rendering adoc");
+		return delegate.readDocumentHeader(source);
+	}
 	
 	public String renderAsDocument(InputStream source, String baseDir) {
 		return renderAsDocument(readFromStream(source), baseDir);
