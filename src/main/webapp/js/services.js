@@ -45,8 +45,8 @@ app.factory('WebSocketService', function($window) {
 	};
 
 	// Send an adoc source to see the generated html back
-	service.sendAdocSource = function(idAdoc, source, author) {
-		var jsonObj = {"type" : "adoc", "source" : source, "author": author};
+	service.sendAdocSource = function(idAdoc, source, writer) {
+		var jsonObj = {"type" : "adoc", "source" : source, "writer": writer};
 		service.ws[idAdoc].send(JSON.stringify(jsonObj));
 	};
 

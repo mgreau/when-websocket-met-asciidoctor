@@ -18,17 +18,22 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 			var obj = JSON.parse(message);
 
 			//Asciidoc message from server (get last snapshot)
-			if (obj.hasOwnProperty("adoc")){
-				$scope.lwDocs[idAdoc].adoc = obj.adoc;
-				$scope.lwDocs[idAdoc].adocSrc = obj.adoc.source;
+			if (angular.equals(obj.type, "snapshot")){
+				$scope.lwDocs[idAdoc].adoc = obj.data;
+				$scope.lwDocs[idAdoc].adocSrc = obj.data.source;
 				$scope.lwDocs[idAdoc].state = "Get last Asciidoc version";
 				$scope.lwDocs[idAdoc].key = idAdoc;
-				$scope.lwDocs[idAdoc].auhtor = obj.adoc.author;
+				$scope.lwDocs[idAdoc].auhtor = obj.data.currentWriter;
 			} 
-			//Html5 output Message from server
-			else if (obj.hasOwnProperty("html5Backend")){
-				$scope.lwDocs[idAdoc].html5 = obj.html5Backend;
+			// output Message from server
+			else if (angular.equals(obj.type, "output")){
+				$scope.lwDocs[idAdoc].html5 = obj.data;
 				$scope.lwDocs[idAdoc].state = "New HTML5 output version";
+				$scope.lwDocs[idAdoc].key = idAdoc;
+			}
+			else if (angular.equals(obj.type, "notification")){
+				$scope.lwDocs[idAdoc].notification = obj.data;
+				$scope.lwDocs[idAdoc].state = "Notification";
 				$scope.lwDocs[idAdoc].key = idAdoc;
 			}
 
@@ -41,7 +46,12 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 	});
 	
 	$scope.sendAdoc = function(idAdoc) {
-		WebSocketService.sendAdocSource(idAdoc, $scope.lwDocs[idAdoc].adocSrc, $scope.lwDocs[idAdoc].author);
+		if (angular.equals(WebSocketService.status(idAdoc), WebSocket.OPEN)){
+			WebSocketService.sendAdocSource(idAdoc, $scope.lwDocs[idAdoc].adocSrc, $scope.lwDocs[idAdoc].author);
+		}
+		else {
+			console.log("CONNECTION CLOSED, Don't send message");
+		}
 	};
 
 	$scope.connect = function(idAdoc) {

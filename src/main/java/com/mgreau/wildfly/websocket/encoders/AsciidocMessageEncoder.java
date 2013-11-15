@@ -25,11 +25,23 @@ public class AsciidocMessageEncoder implements Encoder.Text<AsciidocMessage> {
 		StringWriter swriter = new StringWriter();
 		try (JsonWriter jsonWrite = Json.createWriter(swriter)) {
 			JsonObjectBuilder builder = Json.createObjectBuilder();
-			builder.add(
-					"adoc",
-					Json.createObjectBuilder()
-					.add("author", m.getAuthor())
-					.add("source", m.getAdocSource()));
+			builder.add("type", m.getType().toString())
+					.add("adocId", m.getAdocId())
+					.add("data",
+							Json.createObjectBuilder()
+									.add("format", m.getFormat().toString())
+									.add("currentWriter", m.getCurrentWriter())
+									.add("docHeader",
+											Json.createObjectBuilder()
+													.add("title",
+															m.getDocHeader()
+																	.getDocumentTitle())
+													.add("author",
+															m.getDocHeader().getAuthor().getFullName())
+													.add("revisioninfo",
+															m.getDocHeader()
+																	.getRevisionInfo().getNumber()))
+									.add("source", m.getAdocSource()));
 
 			jsonWrite.writeObject(builder.build());
 		}
