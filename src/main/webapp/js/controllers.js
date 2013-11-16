@@ -45,8 +45,8 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 		$scope.$apply();
 	});
 	
+	//Send the asciidoc file to the server in order to see the ouput result
 	$scope.sendAdoc = function(idAdoc) {
-		
 		if (angular.equals(WebSocketService.status(idAdoc), WebSocket.OPEN)){
 			if(angular.isUndefined($scope.lwDocs[idAdoc].author) || angular.equals($scope.lwDocs[idAdoc].author,"")){
 				$scope.lwDocs[idAdoc].state = "You need to add an author name.";
@@ -56,6 +56,18 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 		}
 		else {
 			console.log("CONNECTION CLOSED, Don't send message");
+		}
+	};
+	
+	//Load the asciidoc source associated to the last output, to the source editor
+	$scope.loadLastAdoc = function(idAdoc) {
+		if (angular.isUndefined($scope.lwDocs[idAdoc].html5.source)){
+			console.log("No html5.source content");
+			$scope.lwDocs[idAdoc].state = "You already have the last version.";
+		}
+		else {
+			$scope.lwDocs[idAdoc].adocSrc = $scope.lwDocs[idAdoc].html5.source;
+			$scope.lwDocs[idAdoc].state = "Last asciidoc source loaded !!.";
 		}
 	};
 
