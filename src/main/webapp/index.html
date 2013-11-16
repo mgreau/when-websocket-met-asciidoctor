@@ -47,18 +47,17 @@ input {
 					      <span class="input-group-btn">
 					        <button class="btn btn-default" type="button" ng-click="sendAdoc(lwDoc.key)">Generate HTML!</button>
 					      </span>
-					      <input type="text" class="form-control" placeholder="Your name (as an author)" ng-model="lwDoc.author">
+					      <input type="text" required class="form-control" placeholder="Your name (as an author)" ng-model="lwDoc.author">
 					    </div>
 						<div class="alert alert-warning" ng-show="lwDoc.status == 'DISCONNECTED'">
 						  <strong>Offline mode.</strong> Youd need <button class="btn btn-warning active btn-xs" ng-click="connect(lwDoc.key)" >
-							<span class="glyphicon glyphicon-power"></span>click to connect</button> and access live writing.
+							<span class="glyphicon glyphicon-power"></span>click to connect</button> and access real-time writing.
 						</div>
 						<div class="alert alert-success" ng-show="lwDoc.status == 'CONNECTED'">
-						  Youd are currently working on <strong>live writing mode</strong>.
+						  You are currently working on <strong>real-time writing mode</strong>.
 						</div>
-							
-								<textarea style="font-size: 11px; background-color: #e5e5e5;" ng-model="lwDoc.adocSrc"
-									 cols="100" rows="30" ng-change="sendAdoc(lwDoc.key)"></textarea>
+						<textarea style="font-size: 11px; background-color: #e5e5e5;" ng-model="lwDoc.adocSrc"
+							 cols="100" rows="30" ng-change="sendAdoc(lwDoc.key)"></textarea>
 						</div>
 					<div class="panel-footer">
 					</div>
@@ -93,12 +92,6 @@ input {
 	<script src="js/app.js"></script>
 	<script src="js/services.js"></script>
 	<script src="js/controllers.js"></script>
-	<script src="js/ace.js" type="text/javascript" charset="utf-8"></script>
-	<script>
-	    var editor = ace.edit("editor");
-	    editor.setTheme("ace/theme/ambiance");
-	    editor.getSession().setMode("ace/mode/asciidoc");
-	</script>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
