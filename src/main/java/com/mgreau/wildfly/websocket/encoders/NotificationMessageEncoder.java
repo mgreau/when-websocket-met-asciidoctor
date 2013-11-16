@@ -41,12 +41,12 @@ public class NotificationMessageEncoder implements Encoder.Text<NotificationMess
 		return swriter.toString();
 	}
 	
-	private JsonArrayBuilder toJSON(Set<String> writers){
-		JsonArrayBuilder ab = Json.createArrayBuilder();
+	private JsonObjectBuilder toJSON(Set<String> writers){
+		JsonObjectBuilder jsb = Json.createObjectBuilder();
 		for(String writer : writers){
-			ab.add(writer);
+			jsb.add(writer,writer);
 		}
-		return ab;
+		return jsb;
 		
 	}
 }

@@ -15,7 +15,7 @@ app.factory('WebSocketService', function($window) {
 		var port = "8080";
 		var protocol = "ws";
 		if (angular.equals(host, 'wildfly-mgreau.rhcloud.com') ){
-			port = '8080';
+			port = '8000';
 		}
 		if (angular.equals($window.location.protocol,'https:')){
 			port = '8443';
