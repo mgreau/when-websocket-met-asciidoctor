@@ -10,9 +10,17 @@
 	href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 
 <style type="text/css">
-textarea input {
+input {
 	background-color: #e5E5E5;
 	font: 11px;
+}
+
+#editor { 
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
 }
 </style>
 
@@ -20,7 +28,6 @@ textarea input {
 <body  ng-app="wWSmADapp" ng-controller="LiveWritingCtrl">
 	<div class="container">
 		<h2>Real-time collaborative writing : When WebSocket met Asciidoctor !! </h2>
-		<h3>Java EE 7 - Wildfly 8 - OpenShit</h3>
 		<p>
 		<a href="https://github.com/mgreau/when-websocket-met-asciidoctor" target="github">Fork it on Github.</a>
 		| by <a href="https://twitter.com/mgreau" target="twitter">@mgreau</a>
@@ -49,8 +56,9 @@ textarea input {
 						<div class="alert alert-success" ng-show="lwDoc.status == 'CONNECTED'">
 						  Youd are currently working on <strong>live writing mode</strong>.
 						</div>
-						<textarea style="font-size: 11px; background-color: #e5e5e5;" ng-model="lwDoc.adocSrc"
-							 cols="100" rows="30" ng-change="sendAdoc(lwDoc.key)"></textarea>
+							
+								<textarea style="font-size: 11px; background-color: #e5e5e5;" ng-model="lwDoc.adocSrc"
+									 cols="100" rows="30" ng-change="sendAdoc(lwDoc.key)"></textarea>
 						</div>
 					<div class="panel-footer">
 					</div>
@@ -65,6 +73,8 @@ textarea input {
 					<div class="panel-body">
 						<span title="Number of writer" class="glyphicon glyphicon-user"></span> 
 						<em>Online writers :</em> <span title="Number of writers"  class="badge">{{lwDoc.notification.nbWriters}}</span> <br/>
+							<span ng-repeat="writer in lwDoc.notification.writers" class="badge">{{writer}}</span>&nbsp;
+						<hr/>
 						<span title="Number of writer" class="glyphicon glyphicon-user"></span> 
 						<em>Online readers :</em> <span title="Number of viewer"  class="badge">{{lwDoc.notification.nbConnected}}</span> <br/>
 						<span title="Time to render HTML5" class="glyphicon glyphicon-cog"></span> 
@@ -83,6 +93,12 @@ textarea input {
 	<script src="js/app.js"></script>
 	<script src="js/services.js"></script>
 	<script src="js/controllers.js"></script>
+	<script src="js/ace.js" type="text/javascript" charset="utf-8"></script>
+	<script>
+	    var editor = ace.edit("editor");
+	    editor.setTheme("ace/theme/ambiance");
+	    editor.getSession().setMode("ace/mode/asciidoc");
+	</script>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
