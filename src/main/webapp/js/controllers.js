@@ -9,7 +9,7 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 	    		$scope.lwDocs["1234"].status = 'DISCONNECTED';
 	    		$scope.lwDocs["1234"].adocSrc = datas;
 	    		$scope.lwDocs["1234"].state = "Init Asciidoc source.";
-	    		$scope.lwDocs["1234"].auhtor = "";
+	    		$scope.lwDocs["1234"].author = "";
 	});
 
 	//Messages sent by peer server are handled here
@@ -23,7 +23,7 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 				$scope.lwDocs[idAdoc].adocSrc = obj.data.source;
 				$scope.lwDocs[idAdoc].state = "Get last Asciidoc version";
 				$scope.lwDocs[idAdoc].key = idAdoc;
-				$scope.lwDocs[idAdoc].auhtor = obj.data.currentWriter;
+				$scope.lwDocs[idAdoc].author = obj.data.currentWriter;
 			} 
 			// output Message from server
 			else if (angular.equals(obj.type, "output")){
@@ -46,7 +46,12 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 	});
 	
 	$scope.sendAdoc = function(idAdoc) {
+		
 		if (angular.equals(WebSocketService.status(idAdoc), WebSocket.OPEN)){
+			if(angular.isUndefined($scope.lwDocs[idAdoc].author) || angular.equals($scope.lwDocs[idAdoc].author,"")){
+				$scope.lwDocs[idAdoc].state = "You need to add an author name.";
+				return
+			}
 			WebSocketService.sendAdocSource(idAdoc, $scope.lwDocs[idAdoc].adocSrc, $scope.lwDocs[idAdoc].author);
 		}
 		else {
