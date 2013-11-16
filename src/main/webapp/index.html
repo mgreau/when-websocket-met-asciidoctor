@@ -10,18 +10,11 @@
 	href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 
 <style type="text/css">
-input {
+textarea input {
 	background-color: #e5E5E5;
 	font: 11px;
 }
 
-#editor { 
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-}
 </style>
 
 </head>
@@ -68,6 +61,7 @@ input {
 					<div class="panel-heading">
 						<span class="label label-warning">{{lwDoc.state}}</span>
 						 | Last author : <span class="label label-success">{{lwDoc.html5.currentWriter}}</span>
+						 | <button class="btn btn-default btn-xs" type="button" ng-click="loadLastAdoc(lwDoc.key)">Get the last Asciidoc source ?</button>
 					</div>
 					<div class="panel-body">
 						<span title="Number of writer" class="glyphicon glyphicon-user"></span> 
