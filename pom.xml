@@ -15,7 +15,7 @@
 		<!-- Java EE 7 -->
 		<javaee.api.version>7.0</javaee.api.version>
 		<!-- Asciidoctor -->
-		<adoc.java.version>0.1.4</adoc.java.version>
+		<asciidoctor.version>0.1.4</asciidoctor.version>
 		<!-- Wildfly -->
 		<version.jboss.spec.javaee.7.0>8.0.0.Beta1</version.jboss.spec.javaee.7.0>
 		<version.jboss.maven.plugin>7.4.Final</version.jboss.maven.plugin>
@@ -42,7 +42,7 @@
 			<dependency>
 				<groupId>org.asciidoctor</groupId>
 				<artifactId>asciidoctor-java-integration</artifactId>
-				<version>${adoc.java.version}</version>
+				<version>${asciidoctor.version}</version>
 				<scope>provided</scope>
 			</dependency>
 		</dependencies>
@@ -72,11 +72,11 @@
 					<artifactId>maven-war-plugin</artifactId>
 					<version>${maven.war.plugin.version}</version>
 					<configuration>
-					<archive>
-						<manifestEntries>
-							<Dependencies>org.asciidoctor</Dependencies>
-						</manifestEntries>
-					</archive>
+						<archive>
+							<manifestEntries>
+								<Dependencies>org.asciidoctor</Dependencies>
+							</manifestEntries>
+						</archive>
 					</configuration>
 				</plugin>
 			</plugins>
@@ -106,7 +106,6 @@
 					<skip>false</skip>
 				</configuration>
 			</plugin>
-			
 		</plugins>
 	</build>
 
