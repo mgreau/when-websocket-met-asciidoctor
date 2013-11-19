@@ -1,88 +1,114 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Real-time collaborative writing : When - Websocket met Asciidoctor - Wildfly 8 - OpenShit</title>
+<title>Real-time collaborative writing : When - Websocket met
+	Asciidoctor - Wildfly 8 - OpenShit</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="description" content="" />
 <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet"
-	href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
-
+<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
 <style type="text/css">
-textarea input {
-	background-color: #e5E5E5;
-	font: 11px;
+body {
+	padding-top: 110px;
 }
 
-</style>
 
+.ace_editor {
+	height: 800px;
+}
+
+.ace_content {
+	background-color: black;
+	color: white;
+}
+iframe {
+	border: 1px solid black;
+}
+</style>
 </head>
-<body  ng-app="wWSmADapp" ng-controller="LiveWritingCtrl">
-	<div class="container">
-		<h2>Real-time collaborative writing : When WebSocket met Asciidoctor !! </h2>
-		<p>
-		<a href="https://github.com/mgreau/when-websocket-met-asciidoctor" target="github">Fork it on Github.</a>
-		| by <a href="https://twitter.com/mgreau" target="twitter">@mgreau</a>
-		| <a href="http://asciidoctor.org/" target="ad">Asciidoctor projet</a> 
-		| <small><em>Id project : wWSmAD</em></small>
-		</p>
-		<div class="row" ng-repeat="lwDoc in lwDocs">
-			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" >
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						<em>Connection status : </em><span class="label label-info">{{lwDoc.status}}</span>&nbsp;&nbsp;
-							<button class="btn btn-default active btn-xs" ng-show="lwDoc.status == 'CONNECTED'" ng-click="disconnect(lwDoc.key)" >
-							<span class="glyphicon glyphicon-off"></span> Exit.</button>
-					</div>
-					<div class="panel-body">
-					 	<div class="input-group" ng-show="lwDoc.status == 'CONNECTED'">
-					      <span class="input-group-btn">
-					        <button class="btn btn-default" type="button" ng-click="sendAdoc(lwDoc.key)">Generate HTML!</button>
-					      </span>
-					      <input type="text" required class="form-control" placeholder="Your name (as an author)" ng-model="lwDoc.author">
-					    </div>
-						<div class="alert alert-warning" ng-show="lwDoc.status == 'DISCONNECTED'">
-						  <strong>Offline mode.</strong> Youd need <button class="btn btn-warning active btn-xs" ng-click="connect(lwDoc.key)" >
-							<span class="glyphicon glyphicon-power"></span>click to connect</button> and access real-time writing.
-						</div>
-						<div class="alert alert-success" ng-show="lwDoc.status == 'CONNECTED'">
-						  You are currently working on <strong>real-time writing mode</strong>.
-						</div>
-						<textarea style="font-size: 11px; background-color: #e5e5e5;" ng-model="lwDoc.adocSrc"
-							 cols="100" rows="30" ng-change="sendAdoc(lwDoc.key)"></textarea>
-						</div>
-					<div class="panel-footer">
-					</div>
-				</div>
+<body ng-app="wWSmADapp" ng-controller="LiveWritingCtrl">
+	<div class="container" ng-repeat="lwDoc in lwDocs">
+		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+			<div class="collapse navbar-collapse">
+				<p class="navbar-text">
+					<span class="label label-default">{{lwDoc.status}}</span> <br />
+					<button ng-show="lwDoc.status == 'CONNECTED'"
+						class="navbar-btn btn-danger btn-xs"
+						ng-click="disconnect(lwDoc.key)">
+						<span class="glyphicon glyphicon-off"></span> Exit.
+					</button>
+					<button ng-show="lwDoc.status == 'DISCONNECTED'"
+						class="navbar-btn btn-success btn-xs"
+						ng-click="connect(lwDoc.key)" title="Connect OR You can also work on offline mode!">Click to connect</button>
+				</p>
+				<form ng-show="isEditorActivate == false" class="navbar-form navbar-left" style="padding:0;" ng-submit="enableEditor(lwDoc.key)">
+					<div class="form-group col-xs-6">
+				      <input type="text" required class="form-control input-sm"
+								placeholder="Writer name" ng-model="lwDoc.author">
+				       <button class="btn btn-default" type="submit">Enable Editor!</button>
+				    </div>
+			    </form>
+
+				<p class="navbar-text">
+					<span title="Number of writer" class="glyphicon glyphicon-user"></span>
+					<em>Online writers :</em> <span title="Number of writers"
+						class="badge">{{lwDoc.notification.nbWriters}}</span> <br /> <span
+						ng-repeat="writer in lwDoc.notification.writers"
+						class="label label-success">{{writer}}</span> 
+				</p>
+				<p class="navbar-text">
+					<span title="Number of readers"
+						class="glyphicon glyphicon-eye-open"></span> <em>Online
+						readers :</em> <span title="Number of viewer" class="badge">{{lwDoc.notification.nbConnected}}</span>
+					<br /> <span title="Time to render HTML5"
+						class="glyphicon glyphicon-cog"></span> <em>Process time : <span
+						class="label label-danger">{{lwDoc.html5.timeToRender}} ms</span>
+					</em>
+					<br/>
+					<em  ng-show="isEditorActivate">Signed in as <b>{{lwDoc.author}}</b>.</em>
+				</p>
+				<p class="navbar-text" >
+					<span class="label label-warning"
+					ng-show="lwDoc.status == 'DISCONNECTED'">
+					<span title="Offline"
+						class="glyphicon glyphicon-exclamation-sign"></span>
+					<strong>Offline mode.</strong></span>
+					<span class="label label-info"
+						ng-show="lwDoc.status == 'CONNECTED'">
+								You can work on <strong>real-time writing
+								mode</strong>.
+					</span>
+					<br/>
+					<span><em><strong>{{lwDoc.state}}</strong></em></span>
+				</p>
+				<p class="navbar-text navbar-right" >
+					<span title="Last writer" class="glyphicon glyphicon-saved"></span>
+					Last writer : <span class="label label-success">{{lwDoc.html5.currentWriter}}</span>
+					<br />
+					<button class="navbar-btn btn-primary btn-xs" type="button"
+						ng-click="loadLastAdoc(lwDoc.key)">Load the last Asciidoc
+						source</button>
+				</p>
 			</div>
-			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" >
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						<span class="label label-warning">{{lwDoc.state}}</span>
-						 | Last author : <span class="label label-success">{{lwDoc.html5.currentWriter}}</span>
-						 | <button class="btn btn-default btn-xs" type="button" ng-click="loadLastAdoc(lwDoc.key)">Get the last Asciidoc source ?</button>
-					</div>
-					<div class="panel-body">
-						<span title="Number of writer" class="glyphicon glyphicon-user"></span> 
-						<em>Online writers :</em> <span title="Number of writers"  class="badge">{{lwDoc.notification.nbWriters}}</span> <br/>
-							<span ng-repeat="writer in lwDoc.notification.writers" class="badge">{{writer}}</span>&nbsp;
-						<hr/>
-						<span title="Number of writer" class="glyphicon glyphicon-user"></span> 
-						<em>Online readers :</em> <span title="Number of viewer"  class="badge">{{lwDoc.notification.nbConnected}}</span> <br/>
-						<span title="Time to render HTML5" class="glyphicon glyphicon-cog"></span> 
-						<em>HTML5 generated by Asciidoctor in : <span class="label label-danger">{{lwDoc.html5.timeToRender}} ms</span> </em>
-						<iframe srcdoc="{{lwDoc.html5.output}}" width="100%" height="600px">
-						</iframe>
-					</div>
-					<div class="panel-footer">
-					</div>
+		</nav>
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+				<div ui-ace="{
+					  onLoad: aceLoaded,
+					  onChange: aceChanged
+					}"></div>
 				</div>
+			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+				<iframe srcdoc="{{lwDoc.html5.output}}" width="100%"
+							height="800px"> </iframe>
 			</div>
 		</div>
 	</div>
-	<script src="js/angular.min.js"></script>
-	<script src="js/angular-resource.min.js"></script>
+	<script src="js/ng/angular.min.js"></script>
+	<script src="js/ng/angular-resource.min.js"></script>
+	<script src="js/ace/ace.js"></script>
+	<script src="js/ace/ui-ace.js"></script>
 	<script src="js/app.js"></script>
 	<script src="js/services.js"></script>
 	<script src="js/controllers.js"></script>
