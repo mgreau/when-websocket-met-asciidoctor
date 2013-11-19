@@ -23,14 +23,6 @@ public class WSMADREST {
 		return getSampleDoc();
 	}
 
-	@GET
-	@Path("sample-html")
-	@Produces(MediaType.TEXT_HTML)
-	public String getHTMLOuput() {
-		return processor.renderAsDocument(getSampleDoc(), "");
-	}
-	
-	
 	private String getSampleDoc(){
 		return processor.readFromStream(Thread.currentThread()
 				.getContextClassLoader().getResourceAsStream(sample));

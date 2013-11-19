@@ -2,6 +2,7 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 	
 	//Live Writing Docs
 	$scope.lwDocs = new Object();
+	$scope.isEditorActivate = false;
 
 	DocRESTService.async().then(function(datas) {
 	    		$scope.lwDocs["1234"] = new Object();
@@ -11,6 +12,32 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 	    		$scope.lwDocs["1234"].state = "Init Asciidoc source.";
 	    		$scope.lwDocs["1234"].author = "";
 	});
+	
+	$scope.aceLoaded = function(_editor) {
+		$scope.editor = _editor;
+	    // Options
+		$scope.editor.setReadOnly(true);
+		$scope.editor.insert($scope.lwDocs["1234"].adocSrc);
+		
+		$scope.editor.setTheme("ace/theme/ambiance");
+		$scope.editor.getSession().setMode("ace/mode/asciidoc");
+		
+		$scope.editor.commands.addCommand({
+			    name: 'sendAsciidocToServer',
+			    bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
+			    exec: function(editor) {
+			    	$scope.lwDocs["1234"].adocSrc = editor.getValue();
+					$scope.sendAdoc("1234");
+			    },
+			    readOnly: false // false if this command should not apply in readOnly mode
+			});
+	  };
+
+	  $scope.aceChanged = function(e) {
+		  $scope.lwDocs["1234"].adocSrc = $scope.editor.getValue();
+		  $scope.sendAdoc("1234");
+		  
+	  };
 
 	//Messages sent by peer server are handled here
 	WebSocketService.subscribe(function(idAdoc, message) {
@@ -21,7 +48,7 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 			if (angular.equals(obj.type, "snapshot")){
 				$scope.lwDocs[idAdoc].adoc = obj.data;
 				$scope.lwDocs[idAdoc].adocSrc = obj.data.source;
-				$scope.lwDocs[idAdoc].state = "Get last Asciidoc version";
+				$scope.lwDocs[idAdoc].state = "Just Get last Asciidoc version";
 				$scope.lwDocs[idAdoc].key = idAdoc;
 				$scope.lwDocs[idAdoc].author = obj.data.currentWriter;
 			} 
@@ -33,12 +60,12 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 			}
 			else if (angular.equals(obj.type, "notification")){
 				$scope.lwDocs[idAdoc].notification = obj.data;
-				$scope.lwDocs[idAdoc].state = "Notification";
+				$scope.lwDocs[idAdoc].state = "Notification received.";
 				$scope.lwDocs[idAdoc].key = idAdoc;
 			}
 
 		} catch (exception) {
-			//Message WebSocket lifcycle
+			//Message WebSocket lifecycle
 			$scope.lwDocs[idAdoc].status = message;
 			console.log(message);
 		}
@@ -55,7 +82,7 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 			WebSocketService.sendAdocSource(idAdoc, $scope.lwDocs[idAdoc].adocSrc, $scope.lwDocs[idAdoc].author);
 		}
 		else {
-			console.log("CONNECTION CLOSED, Don't send message");
+			$scope.lwDocs[idAdoc].state = "You work on OFFLINE MODE !!.";
 		}
 	};
 	
@@ -67,14 +94,28 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 		}
 		else {
 			$scope.lwDocs[idAdoc].adocSrc = $scope.lwDocs[idAdoc].html5.source;
+			$scope.editor.setValue($scope.lwDocs[idAdoc].adocSrc);
 			$scope.lwDocs[idAdoc].state = "Last asciidoc source loaded !!.";
 		}
 	};
+	
+	//
+	$scope.enableEditor = function(idAdoc) {
+		if(angular.isUndefined($scope.lwDocs[idAdoc].author) || angular.equals($scope.lwDocs[idAdoc].author,"")){
+			$scope.lwDocs[idAdoc].state = "You need to add an author name!!";
+			return
+		}
+		$scope.editor.setReadOnly(false);
+		$scope.isEditorActivate = true;
+		$scope.lwDocs[idAdoc].state = "You can write your doc !";
+	};
 
+	//WebSocket connection in order to send data to the server
 	$scope.connect = function(idAdoc) {
 		WebSocketService.connect(idAdoc);
 	};
 
+	//Disconnect from the server, work offline ?
 	$scope.disconnect = function(idAdoc) {
 		WebSocketService.disconnect(idAdoc);
 	};
