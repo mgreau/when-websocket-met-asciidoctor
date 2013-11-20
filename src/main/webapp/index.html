@@ -13,7 +13,6 @@ body {
 	padding-top: 110px;
 }
 
-
 .ace_editor {
 	height: 800px;
 }
@@ -22,6 +21,7 @@ body {
 	background-color: black;
 	color: white;
 }
+
 iframe {
 	border: 1px solid black;
 }
@@ -30,6 +30,15 @@ iframe {
 <body ng-app="wWSmADapp" ng-controller="LiveWritingCtrl">
 	<div class="container" ng-repeat="lwDoc in lwDocs">
 		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">wWSmAd</a>
+			</div>
 			<div class="collapse navbar-collapse">
 				<p class="navbar-text">
 					<span class="label label-default">{{lwDoc.status}}</span> <br />
@@ -40,22 +49,27 @@ iframe {
 					</button>
 					<button ng-show="lwDoc.status == 'DISCONNECTED'"
 						class="navbar-btn btn-success btn-xs"
-						ng-click="connect(lwDoc.key)" title="Connect OR You can also work on offline mode!">Click to connect</button>
+						ng-click="connect(lwDoc.key)"
+						title="Connect OR You can also work on offline mode!">Click
+						to connect</button>
 				</p>
-				<form ng-show="isEditorActivate == false" class="navbar-form navbar-left" style="padding:0;" ng-submit="enableEditor(lwDoc.key)">
+				<form ng-show="isEditorActivate == false"
+					class="navbar-form navbar-left" style="padding: 0;"
+					ng-submit="enableEditor(lwDoc.key)">
 					<div class="form-group col-xs-6">
-				      <input type="text" required class="form-control input-sm"
-								placeholder="Writer name" ng-model="lwDoc.author">
-				       <button class="btn btn-default" type="submit">Enable Editor!</button>
-				    </div>
-			    </form>
+						<input type="text" required class="form-control input-sm"
+							placeholder="Writer name" ng-model="lwDoc.author">
+						<button class="btn btn-default" type="submit">Enable
+							Editor!</button>
+					</div>
+				</form>
 
 				<p class="navbar-text">
 					<span title="Number of writer" class="glyphicon glyphicon-user"></span>
 					<em>Online writers :</em> <span title="Number of writers"
 						class="badge">{{lwDoc.notification.nbWriters}}</span> <br /> <span
 						ng-repeat="writer in lwDoc.notification.writers"
-						class="label label-success">{{writer}}</span> 
+						class="label label-success">{{writer}}</span>
 				</p>
 				<p class="navbar-text">
 					<span title="Number of readers"
@@ -64,25 +78,19 @@ iframe {
 					<br /> <span title="Time to render HTML5"
 						class="glyphicon glyphicon-cog"></span> <em>Process time : <span
 						class="label label-danger">{{lwDoc.html5.timeToRender}} ms</span>
+					</em> <br /> <em ng-show="isEditorActivate">Signed in as <b>{{lwDoc.author}}</b>.
 					</em>
-					<br/>
-					<em  ng-show="isEditorActivate">Signed in as <b>{{lwDoc.author}}</b>.</em>
 				</p>
-				<p class="navbar-text" >
+				<p class="navbar-text">
 					<span class="label label-warning"
-					ng-show="lwDoc.status == 'DISCONNECTED'">
-					<span title="Offline"
-						class="glyphicon glyphicon-exclamation-sign"></span>
-					<strong>Offline mode.</strong></span>
-					<span class="label label-info"
-						ng-show="lwDoc.status == 'CONNECTED'">
-								You can work on <strong>real-time writing
-								mode</strong>.
-					</span>
-					<br/>
-					<span><em><strong>{{lwDoc.state}}</strong></em></span>
+						ng-show="lwDoc.status == 'DISCONNECTED'"> <span
+						title="Offline" class="glyphicon glyphicon-exclamation-sign"></span>
+						<strong>Offline mode.</strong></span> <span class="label label-info"
+						ng-show="lwDoc.status == 'CONNECTED'"> You can work on <strong>real-time
+							writing mode</strong>.
+					</span> <br /> <span><em><strong>{{lwDoc.state}}</strong></em></span>
 				</p>
-				<p class="navbar-text navbar-right" >
+				<p class="navbar-text navbar-right">
 					<span title="Last writer" class="glyphicon glyphicon-saved"></span>
 					Last writer : <span class="label label-success">{{lwDoc.html5.currentWriter}}</span>
 					<br />
@@ -93,15 +101,25 @@ iframe {
 			</div>
 		</nav>
 		<div class="row">
+			<div class="col-xs-8">
+				<button id="modeKey" ng-class="{isEvtOnChangeActivate: active}"  type="button" ng-click="modeAdocOnChange(false)" class="btn btn-default" title="Asciidoc source will be sent only on Ctrl+S command">Send on Ctrl+S</button>
+				<button id="modeChange" ng-class="{isEvtOnChangeActivate: active}" type="button" ng-click="modeAdocOnChange(true)" class="btn btn-default">Send on Change</button>
+				<button type="button" class="btn btn-default">Patch</button>
+				<button type="button" class="btn btn-default">Apply</button>
+			</div>
+		</div>
+		<div class="row">
 			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-				<div ui-ace="{
+				<div
+					ui-ace="{
 					  onLoad: aceLoaded,
 					  onChange: aceChanged
-					}"></div>
+					}">
 				</div>
+			</div>
 			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-				<iframe srcdoc="{{lwDoc.html5.output}}" width="100%"
-							height="800px"> </iframe>
+				<iframe srcdoc="{{lwDoc.html5.output}}" width="100%" height="800px">
+				</iframe>
 			</div>
 		</div>
 	</div>
