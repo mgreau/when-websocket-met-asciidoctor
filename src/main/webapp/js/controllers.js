@@ -3,6 +3,7 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 	//Live Writing Docs
 	$scope.lwDocs = new Object();
 	$scope.isEditorActivate = false;
+	$scope.isEvtOnChangeActivate = false;
 
 	DocRESTService.async().then(function(datas) {
 	    		$scope.lwDocs["1234"] = new Object();
@@ -19,25 +20,32 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 		$scope.editor.setReadOnly(true);
 		$scope.editor.insert($scope.lwDocs["1234"].adocSrc);
 		
-		$scope.editor.setTheme("ace/theme/ambiance");
-		$scope.editor.getSession().setMode("ace/mode/asciidoc");
-		
 		$scope.editor.commands.addCommand({
 			    name: 'sendAsciidocToServer',
 			    bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
 			    exec: function(editor) {
-			    	$scope.lwDocs["1234"].adocSrc = editor.getValue();
-					$scope.sendAdoc("1234");
+			    	if ($scope.isEvtOnChangeActivate === false){
+				    	$scope.lwDocs["1234"].adocSrc = editor.getValue();
+						$scope.sendAdoc("1234");
+			    	}
 			    },
 			    readOnly: false // false if this command should not apply in readOnly mode
 			});
 	  };
 
+	  //Evt when editor value change
 	  $scope.aceChanged = function(e) {
-		  $scope.lwDocs["1234"].adocSrc = $scope.editor.getValue();
-		  $scope.sendAdoc("1234");
-		  
+		  if ($scope.isEvtOnChangeActivate === true){
+			  $scope.lwDocs["1234"].adocSrc = $scope.editor.getValue();
+			  $scope.sendAdoc("1234");
+		  }
+		  //TODO handle is writing event
 	  };
+	  
+	$scope.modeAdocOnChange = function(value) {
+		$scope.isEvtOnChangeActivate = value;
+		
+	};
 
 	//Messages sent by peer server are handled here
 	WebSocketService.subscribe(function(idAdoc, message) {
