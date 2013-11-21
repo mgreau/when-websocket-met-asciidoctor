@@ -1,8 +1,5 @@
 package com.mgreau.wildfly.websocket.messages;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.asciidoctor.DocumentHeader;
 
 /**
@@ -30,9 +27,15 @@ public class AsciidocMessage extends Message {
 	
 	/** Asciidoc source origin content */
 	private String adocSource;
+	
+	/** Asciidoc source from another user to merge with the adocSource */
+	private String adocSourceToMerge;
 
 	/** Document format which is sent to peerŒ */
 	protected TypeFormat format;
+	
+	/** Action to do with this message : render, compute diff, patch **/
+	private String action;
 	
 	public AsciidocMessage(){
 	}
@@ -89,6 +92,22 @@ public class AsciidocMessage extends Message {
 
 	public void setFormat(TypeFormat format) {
 		this.format = format;
+	}
+
+	public String getAdocSourceToMerge() {
+		return adocSourceToMerge;
+	}
+
+	public void setAdocSourceToMerge(String adocSourceToMerge) {
+		this.adocSourceToMerge = adocSourceToMerge;
+	}
+
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
 	}
 
 	

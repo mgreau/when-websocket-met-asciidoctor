@@ -36,7 +36,12 @@ public class MessageDecoder implements Decoder.Text<AsciidocMessage> {
             switch (messageMap.get("type")) {
                 case "adoc":
                     msg = new AsciidocMessage(messageMap.get("writer"), messageMap.get("source"));
-                    break;
+                break;
+                case "adoc-for-diff":
+                    msg = new AsciidocMessage(messageMap.get("writer"), messageMap.get("source"));
+                    msg.setAdocSourceToMerge(messageMap.get("sourceToMerge"));
+                    msg.setAction("diff");
+                break;
             }
         } else {
         	logger.severe(string);
@@ -67,6 +72,10 @@ public class MessageDecoder implements Decoder.Text<AsciidocMessage> {
             switch (messageMap.get("type")) {
                 case "adoc":
                     if (keys.contains("source"))
+                        decodes = true;
+                    break;
+                case "adoc-for-diff":
+                    if (keys.contains("source") && keys.contains("sourceToMerge") )
                         decodes = true;
                     break;
             }

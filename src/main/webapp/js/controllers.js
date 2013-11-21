@@ -39,7 +39,7 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 			  $scope.lwDocs["1234"].adocSrc = $scope.editor.getValue();
 			  $scope.sendAdoc("1234");
 		  }
-		  //TODO handle is writing event
+		  //TODO handle "is writing" event
 	  };
 	  
 	$scope.modeAdocOnChange = function(value) {
@@ -52,13 +52,17 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 		try {
 			var obj = JSON.parse(message);
 
-			//Asciidoc message from server (get last snapshot)
+			//Asciidoc message from server (get diff or patch snapshot)
 			if (angular.equals(obj.type, "snapshot")){
 				$scope.lwDocs[idAdoc].adoc = obj.data;
-				$scope.lwDocs[idAdoc].adocSrc = obj.data.source;
+				if (angular.equals(obj.data.sourceToMerge, "") == false){
+					//receive diff
+					$scope.editor.setValue(obj.data.sourceToMerge);
+				} else {
+					$scope.editor.setValue(obj.data.source);
+				}
 				$scope.lwDocs[idAdoc].state = "Just Get last Asciidoc version";
 				$scope.lwDocs[idAdoc].key = idAdoc;
-				$scope.lwDocs[idAdoc].author = obj.data.currentWriter;
 			} 
 			// output Message from server
 			else if (angular.equals(obj.type, "output")){
@@ -90,7 +94,7 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 			WebSocketService.sendAdocSource(idAdoc, $scope.lwDocs[idAdoc].adocSrc, $scope.lwDocs[idAdoc].author);
 		}
 		else {
-			$scope.lwDocs[idAdoc].state = "You work on OFFLINE MODE !!.";
+			$scope.lwDocs[idAdoc].state = "You work on OFFLINE MODE !!. You need to CONNECT to do this action.";
 		}
 	};
 	
@@ -104,6 +108,30 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 			$scope.lwDocs[idAdoc].adocSrc = $scope.lwDocs[idAdoc].html5.source;
 			$scope.editor.setValue($scope.lwDocs[idAdoc].adocSrc);
 			$scope.lwDocs[idAdoc].state = "Last asciidoc source loaded !!.";
+		}
+	};
+	
+	$scope.applyPatch = function(idAdoc) {
+		console.log("TODO");
+	};
+	
+	//Show diff between the asciidoc source and asciidoc sent by another writer
+	$scope.computeDiff = function(idAdoc) {
+		if (angular.equals(WebSocketService.status(idAdoc), WebSocket.OPEN)){
+			if(angular.isUndefined($scope.lwDocs[idAdoc].author) || angular.equals($scope.lwDocs[idAdoc].author,"")){
+				$scope.lwDocs[idAdoc].state = "You need to add an author name.";
+				return;
+			} else if (angular.isUndefined($scope.lwDocs[idAdoc].html5.source) || angular.equals($scope.lwDocs[idAdoc].html5.source,"")){
+				$scope.lwDocs[idAdoc].state = "No source to compare with.";
+				return;
+			} else if (angular.equals($scope.lwDocs[idAdoc].html5.currentWriter,$scope.lwDocs[idAdoc].author)){
+				$scope.lwDocs[idAdoc].state = "You are the last writer, no need to compute diff.";
+				return;
+			}
+			WebSocketService.sendAdocSourceForDiff(idAdoc, $scope.lwDocs[idAdoc].adocSrc, $scope.lwDocs[idAdoc].author, $scope.lwDocs[idAdoc].html5.source);
+		}
+		else {
+			$scope.lwDocs[idAdoc].state = "You work on OFFLINE MODE !!. You need to CONNECT to do this action.";
 		}
 	};
 	
