@@ -1,8 +1,10 @@
 package com.mgreau.wildfly.websocket;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,10 +28,14 @@ import com.mgreau.wildfly.websocket.encoders.AsciidocMessageEncoder;
 import com.mgreau.wildfly.websocket.encoders.NotificationMessageEncoder;
 import com.mgreau.wildfly.websocket.encoders.OutputMessageEncoder;
 import com.mgreau.wildfly.websocket.messages.AsciidocMessage;
+import com.mgreau.wildfly.websocket.messages.Message;
 import com.mgreau.wildfly.websocket.messages.NotificationMessage;
 import com.mgreau.wildfly.websocket.messages.OutputMessage;
 import com.mgreau.wildfly.websocket.messages.TypeFormat;
 import com.mgreau.wildfly.websocket.messages.TypeMessage;
+
+import difflib.DiffRow;
+import difflib.DiffRowGenerator;
 
 /**
  * WSMAD : WebSocket met Asciidoctor !
@@ -56,7 +62,8 @@ public class WSMADEndpoint {
 
 	@Inject
 	AsciidoctorProcessor processor;
-
+	
+	
 	/**
 	 * Send, to all peers connected to this asciidoc file, the Output Message
 	 * resulted of an asciidoc source processor.
@@ -66,7 +73,7 @@ public class WSMADEndpoint {
 	 * @param adocId
 	 *            unique id for this asciidoc file
 	 */
-	public static void sendOutputMessage(OutputMessage msg, String adocId) {
+	public static void sendMessage(Message msg, String adocId) {
 		NotificationMessage nfMsg = new NotificationMessage();
 		nfMsg.setNbConnected(nbReadersByAdoc.get(adocId).get());
 		nfMsg.setAdocId(adocId);
@@ -151,23 +158,45 @@ public class WSMADEndpoint {
 			// TODO handle if the name is modified
 		}
 
-		OutputMessage html = new OutputMessage(TypeFormat.html5);
-		html.setAdocId(adocId);
-		html.setType(TypeMessage.output);
-		html.setCurrentWriter(msg.getCurrentWriter());
-		long start = System.currentTimeMillis();
-		html.setTimeToRender(System.currentTimeMillis() - start);
-		try {
-			html.setContent(processor.renderAsDocument(msg.getAdocSource(), ""));
-			html.setDocHeader(processor.renderDocumentHeader(msg
-					.getAdocSource()));
-		} catch (RuntimeException rEx) {
-			logger.severe("processing error." + rEx.getCause().toString());
+		//Send request to show diff
+		if ("diff".equals(msg.getAction())){
+			DiffRowGenerator generator = new DiffRowGenerator.Builder().showInlineDiffs(true).
+					 ignoreWhiteSpaces(false).ignoreBlankLines(false).columnWidth(100).build();
+			StringBuffer diffText = new StringBuffer();
+			for (DiffRow diff : generator.generateDiffRows(split(msg.getAdocSource()), split(msg.getAdocSourceToMerge()))){
+				diffText.append(diff.getNewLine());
+				diffText.append("\n");
+				diffText.append(diff.getOldLine());
+			}
+			msg.setAdocSourceToMerge(diffText.toString());
+			msg.setType(TypeMessage.snapshot);
+			msg.setAdocId(adocId);
+			msg.setFormat(TypeFormat.asciidoc);
+			sendMessage(msg, adocId);
 		}
-		html.setAdocSource(msg.getAdocSource());
+		else if ("patch".equals(msg.getAction())){
+			
+		}
+		else {
+			OutputMessage html = new OutputMessage(TypeFormat.html5);
+			html.setAdocId(adocId);
+			html.setType(TypeMessage.output);
+			html.setCurrentWriter(msg.getCurrentWriter());
+			long start = System.currentTimeMillis();
+			html.setTimeToRender(System.currentTimeMillis() - start);
+			try {
+				html.setContent(processor.renderAsDocument(msg.getAdocSource(), ""));
+				html.setDocHeader(processor.renderDocumentHeader(msg
+						.getAdocSource()));
+			} catch (RuntimeException rEx) {
+				logger.severe("processing error." + rEx.getCause().toString());
+			}
+			html.setAdocSource(msg.getAdocSource());
 
-		// send the new HTML version to all connected peers
-		sendOutputMessage(html, adocId);
+			// send the new HTML version to all connected peers
+			sendMessage(html, adocId);
+		}
+
 	}
 
 	@OnOpen
@@ -246,5 +275,9 @@ public class WSMADEndpoint {
 		nfMsg.setType(TypeMessage.notification);
 		return nfMsg;
 	}
+	
+	private List<String> split(String content) {
+        return Arrays.asList(content.split("\n"));
+    }
 
 }

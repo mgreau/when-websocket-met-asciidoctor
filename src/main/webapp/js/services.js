@@ -49,6 +49,13 @@ app.factory('WebSocketService', function($window) {
 		var jsonObj = {"type" : "adoc", "source" : source, "writer": writer};
 		service.ws[idAdoc].send(JSON.stringify(jsonObj));
 	};
+	
+	// Send 2 adoc source to see the diff
+	service.sendAdocSourceForDiff = function(idAdoc, source, writer, sourceToMerge) {
+		var jsonObj = {"type" : "adoc-for-diff", "source" : source, "writer": writer, "sourceToMerge" : sourceToMerge};
+		service.ws[idAdoc].send(JSON.stringify(jsonObj));
+	};
+	
 
 	// Close the WebSocket connection
 	service.disconnect = function(idAdoc) {

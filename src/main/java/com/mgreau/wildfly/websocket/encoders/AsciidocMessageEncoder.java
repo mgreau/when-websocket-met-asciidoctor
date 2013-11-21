@@ -30,18 +30,8 @@ public class AsciidocMessageEncoder implements Encoder.Text<AsciidocMessage> {
 					.add("data",
 							Json.createObjectBuilder()
 									.add("format", m.getFormat().toString())
-									.add("currentWriter", m.getCurrentWriter())
-									.add("docHeader",
-											Json.createObjectBuilder()
-													.add("title",
-															m.getDocHeader()
-																	.getDocumentTitle())
-													.add("author",
-															m.getDocHeader().getAuthor().getFullName())
-													.add("revisioninfo",
-															m.getDocHeader()
-																	.getRevisionInfo().getNumber()))
-									.add("source", m.getAdocSource()));
+									.add("source", m.getAdocSource())
+									.add("sourceToMerge", m.getAdocSourceToMerge()!=null?m.getAdocSourceToMerge():""));
 
 			jsonWrite.writeObject(builder.build());
 		}
