@@ -3,14 +3,17 @@
 
 === When WebSocket met Asciidoctor
 
-This project shows how to use the WebSocket Protocol and Asciidoctor project to :
+This project gives you the posibility to work on Asciidoctor project with a team :
 
 * Realtime Writing Asciidoc file and automatically view HTML 5 rendered
-** each time you write something if you are connected so in *live writing mode*
-** when you click on "Generate HTML" button if you work on *offline mode* and so you are diconnected then you work then you reconnect to send your work
+** each time you write something if you are connected and you have clicked on *Send On Change*
+** each time you press "Ctrl+S" if you are connected and you have clicked on *Send On Ctrl+S* button
+* You can *patch your file with the latest asciidoc source*:
+** if an other author send a version, you can click on "Compute Diff" button to see differences between your adoc file and the last adoc file
+** if the patch seems ok, click on "Apply Patch" and you adoc source will be up to date
 * Several persons can work on the same doc
-* you see the number of writers (people who send adoc file)
-* you see the name of the last author
+** you see the number of writers (people who send adoc file)
+** you see the name of the last author
 
 image::live-writing.png[Screenshot of the WebSocket Java EE 7 demo with a severals matches and AngularJS deployed on WildFly]
 
@@ -19,6 +22,7 @@ image::live-writing.png[Screenshot of the WebSocket Java EE 7 demo with a severa
 * Asciidoctor
 ** AsciidoctorJ
 * Java EE 7 
+** CDI
 ** WebSocket => (Undertow)
 ** JSON-P
 * Web Client
@@ -28,16 +32,19 @@ image::live-writing.png[Screenshot of the WebSocket Java EE 7 demo with a severa
 
 === Install on your WildFly 8 Application Server
   
+. Build the war and test into WildFly with maven/arquillian : 
+
+   mvn clean package -Pwildfly-managed-arquillian
 
 . Start wildfly : 
 
    $JBOSS_HOME/bin/standalone.sh
    
-. Build the war and deploy it automatically with maven : 
+.  Deploy the app automatically with maven : 
 
-   mvn clean package jboss-as:deploy
+   mvn jboss-as:deploy -Dmaven.test.skip=true
 
 . Launch your browser :
 
-   *  http://localhost:8080/websocket-met-asciidoctor
+   *  http://localhost:8080/wWSmAD
 
