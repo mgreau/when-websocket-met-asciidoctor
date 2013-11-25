@@ -1,4 +1,4 @@
-package com.mgreau.wildfly.asciidoctor;
+package com.mgreau.wwsmad.asciidoctor;
 
 import java.io.IOException;
 import java.io.InputStream;

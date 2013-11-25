@@ -1,4 +1,4 @@
-package com.mgreau.wildfly.websocket.messages;
+package com.mgreau.wwsmad.websocket.messages;
 
 import org.asciidoctor.DocumentHeader;
 
@@ -30,6 +30,9 @@ public class AsciidocMessage extends Message {
 	
 	/** Asciidoc source from another user to merge with the adocSource */
 	private String adocSourceToMerge;
+	
+	/** Patch to apply to source */
+	private String patchToApply;
 
 	/** Document format which is sent to peerŒ */
 	protected TypeFormat format;
@@ -108,6 +111,14 @@ public class AsciidocMessage extends Message {
 
 	public void setAction(String action) {
 		this.action = action;
+	}
+
+	public String getPatchToApply() {
+		return patchToApply;
+	}
+
+	public void setPatchToApply(String patchToApply) {
+		this.patchToApply = patchToApply;
 	}
 
 	

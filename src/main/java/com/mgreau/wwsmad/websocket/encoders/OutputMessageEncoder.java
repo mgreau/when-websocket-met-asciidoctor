@@ -1,4 +1,4 @@
-package com.mgreau.wildfly.websocket.encoders;
+package com.mgreau.wwsmad.websocket.encoders;
 
 import java.io.StringWriter;
 import java.util.logging.Logger;
@@ -9,7 +9,7 @@ import javax.json.JsonWriter;
 import javax.websocket.Encoder;
 import javax.websocket.EndpointConfig;
 
-import com.mgreau.wildfly.websocket.messages.OutputMessage;
+import com.mgreau.wwsmad.websocket.messages.OutputMessage;
 
 public class OutputMessageEncoder implements Encoder.Text<OutputMessage> {
 

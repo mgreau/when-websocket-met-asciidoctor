@@ -1,17 +1,16 @@
-package com.mgreau.wildfly.websocket.encoders;
+package com.mgreau.wwsmad.websocket.encoders;
 
 import java.io.StringWriter;
 import java.util.Set;
 
 import javax.json.Json;
-import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonWriter;
 import javax.websocket.EncodeException;
 import javax.websocket.Encoder;
 import javax.websocket.EndpointConfig;
 
-import com.mgreau.wildfly.websocket.messages.NotificationMessage;
+import com.mgreau.wwsmad.websocket.messages.NotificationMessage;
 
 public class NotificationMessageEncoder implements Encoder.Text<NotificationMessage> {
 	@Override

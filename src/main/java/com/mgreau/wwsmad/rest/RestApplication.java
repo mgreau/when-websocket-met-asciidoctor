@@ -1,4 +1,4 @@
-package com.mgreau.wildfly.rest;
+package com.mgreau.wwsmad.rest;
 
 import javax.ws.rs.core.Application;
 

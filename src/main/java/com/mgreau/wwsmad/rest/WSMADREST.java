@@ -1,4 +1,4 @@
-package com.mgreau.wildfly.rest;
+package com.mgreau.wwsmad.rest;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -6,7 +6,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import com.mgreau.wildfly.asciidoctor.AsciidoctorProcessor;
+import com.mgreau.wwsmad.asciidoctor.AsciidoctorProcessor;
 
 @Path("documents")
 public class WSMADREST {

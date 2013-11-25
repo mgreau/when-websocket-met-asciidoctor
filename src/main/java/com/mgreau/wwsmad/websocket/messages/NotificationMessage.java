@@ -1,4 +1,4 @@
-package com.mgreau.wildfly.websocket.messages;
+package com.mgreau.wwsmad.websocket.messages;
 
 import java.util.HashSet;
 import java.util.Set;

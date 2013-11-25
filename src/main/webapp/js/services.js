@@ -56,6 +56,12 @@ app.factory('WebSocketService', function($window) {
 		service.ws[idAdoc].send(JSON.stringify(jsonObj));
 	};
 	
+	// Send the adoc source and the patch to apply 
+	service.sendAdocSourceToApplyPatch = function(idAdoc, source, writer, patch) {
+		var jsonObj = {"type" : "adoc-for-patch", "source" : source, "writer": writer, "patch" : patch};
+		service.ws[idAdoc].send(JSON.stringify(jsonObj));
+	};
+	
 
 	// Close the WebSocket connection
 	service.disconnect = function(idAdoc) {
