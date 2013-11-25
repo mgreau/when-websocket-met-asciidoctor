@@ -1,4 +1,4 @@
-package com.mgreau.wildfly.websocket.decoders;
+package com.mgreau.wwsmad.websocket.decoders;
 
 import java.io.StringReader;
 import java.util.HashMap;
@@ -6,18 +6,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.stream.JsonParser;
 import javax.websocket.DecodeException;
 import javax.websocket.Decoder;
 import javax.websocket.EndpointConfig;
 
-import com.mgreau.wildfly.websocket.messages.AsciidocMessage;
+import com.mgreau.wwsmad.websocket.messages.AsciidocMessage;
 
 public class MessageDecoder implements Decoder.Text<AsciidocMessage> {
 	
-	/** log */
-	private static final Logger logger = Logger.getLogger("MessageDecoder");
+	@Inject
+	private Logger logger;
 	
     /** Stores the name-value pairs from a JSON message as a Map */
     private Map<String,String> messageMap;
@@ -41,6 +42,11 @@ public class MessageDecoder implements Decoder.Text<AsciidocMessage> {
                     msg = new AsciidocMessage(messageMap.get("writer"), messageMap.get("source"));
                     msg.setAdocSourceToMerge(messageMap.get("sourceToMerge"));
                     msg.setAction("diff");
+                break;
+                case "adoc-for-patch":
+                    msg = new AsciidocMessage(messageMap.get("writer"), messageMap.get("source"));
+                    msg.setPatchToApply(messageMap.get("patch"));
+                    msg.setAction("patch");
                 break;
             }
         } else {
@@ -73,11 +79,15 @@ public class MessageDecoder implements Decoder.Text<AsciidocMessage> {
                 case "adoc":
                     if (keys.contains("source"))
                         decodes = true;
-                    break;
+                break;
                 case "adoc-for-diff":
                     if (keys.contains("source") && keys.contains("sourceToMerge") )
                         decodes = true;
-                    break;
+                break;
+                case "adoc-for-patch":
+                    if (keys.contains("source") && keys.contains("patch") )
+                        decodes = true;
+                break;
             }
         }
         return decodes;

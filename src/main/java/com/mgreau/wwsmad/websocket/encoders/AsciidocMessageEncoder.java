@@ -1,4 +1,4 @@
-package com.mgreau.wildfly.websocket.encoders;
+package com.mgreau.wwsmad.websocket.encoders;
 
 import java.io.StringWriter;
 
@@ -9,7 +9,7 @@ import javax.websocket.EncodeException;
 import javax.websocket.Encoder;
 import javax.websocket.EndpointConfig;
 
-import com.mgreau.wildfly.websocket.messages.AsciidocMessage;
+import com.mgreau.wwsmad.websocket.messages.AsciidocMessage;
 
 public class AsciidocMessageEncoder implements Encoder.Text<AsciidocMessage> {
 	@Override

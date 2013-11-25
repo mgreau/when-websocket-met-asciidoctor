@@ -1,9 +1,10 @@
 app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService, WebSocketService) {
 	
-	//Live Writing Docs
+	//Real-time Collaborative Writing Docs
 	$scope.lwDocs = new Object();
 	$scope.isEditorActivate = false;
 	$scope.isEvtOnChangeActivate = false;
+	$scope.isDiffOnEditor = false;
 
 	DocRESTService.async().then(function(datas) {
 	    		$scope.lwDocs["1234"] = new Object();
@@ -24,10 +25,15 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 			    name: 'sendAsciidocToServer',
 			    bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
 			    exec: function(editor) {
-			    	if ($scope.isEvtOnChangeActivate === false){
-				    	$scope.lwDocs["1234"].adocSrc = editor.getValue();
-						$scope.sendAdoc("1234");
-			    	}
+			    	if ($scope.isDiffOnEditor === true){
+						  $scope.lwDocs["1234"].state = "Diff are loaded, apply it or unload it by click on Compute diff.";
+					 }
+					 else {
+				    	if ($scope.isEvtOnChangeActivate === false){
+					    	$scope.lwDocs["1234"].adocSrc = editor.getValue();
+							$scope.sendAdoc("1234");
+				    	}
+					 }
 			    },
 			    readOnly: false // false if this command should not apply in readOnly mode
 			});
@@ -35,9 +41,14 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 
 	  //Evt when editor value change
 	  $scope.aceChanged = function(e) {
-		  if ($scope.isEvtOnChangeActivate === true){
-			  $scope.lwDocs["1234"].adocSrc = $scope.editor.getValue();
-			  $scope.sendAdoc("1234");
+		  if ($scope.isDiffOnEditor === true){
+			  $scope.lwDocs["1234"].state = "Diff are loaded, apply it or unload it by click on Compute diff.";
+		  }
+		  else {
+			  if ($scope.isEvtOnChangeActivate === true){
+				  $scope.lwDocs["1234"].adocSrc = $scope.editor.getValue();
+				  $scope.sendAdoc("1234");
+			  }
 		  }
 		  //TODO handle "is writing" event
 	  };
@@ -58,6 +69,7 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 				if (angular.equals(obj.data.sourceToMerge, "") == false){
 					//receive diff
 					$scope.editor.setValue(obj.data.sourceToMerge);
+					$scope.isDiffOnEditor = true;
 				} else {
 					$scope.editor.setValue(obj.data.source);
 				}
@@ -98,6 +110,7 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 		}
 	};
 	
+	
 	//Load the asciidoc source associated to the last output, to the source editor
 	$scope.loadLastAdoc = function(idAdoc) {
 		if (angular.isUndefined($scope.lwDocs[idAdoc].html5.source)){
@@ -112,16 +125,38 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 	};
 	
 	$scope.applyPatch = function(idAdoc) {
-		console.log("TODO");
+		if (angular.equals(WebSocketService.status(idAdoc), WebSocket.OPEN)){
+			if(angular.isUndefined($scope.lwDocs[idAdoc].author) || angular.equals($scope.lwDocs[idAdoc].author,"")){
+				$scope.lwDocs[idAdoc].state = "You need to add an author name.";
+				return
+			}
+			if ($scope.isDiffOnEditor === false){
+				  $scope.lwDocs["1234"].state = "No Patch to apply.";
+				  return;
+			}
+			WebSocketService.sendAdocSourceToApplyPatch(idAdoc, $scope.lwDocs[idAdoc].adocSrc, 
+					$scope.lwDocs[idAdoc].author, $scope.lwDocs[idAdoc].adoc.sourceToMerge);
+			$scope.isDiffOnEditor = false;
+			$scope.lwDocs[idAdoc].state = "Patch Apply !";
+		}
+		else {
+			$scope.lwDocs[idAdoc].state = "You work on OFFLINE MODE !!. You need to CONNECT to do this action.";
+		}
 	};
 	
 	//Show diff between the asciidoc source and asciidoc sent by another writer
 	$scope.computeDiff = function(idAdoc) {
+		if ($scope.isDiffOnEditor === true){
+			$scope.isDiffOnEditor = false;
+			$scope.editor.setValue($scope.lwDocs[idAdoc].adocSrc);
+			return;
+		}
 		if (angular.equals(WebSocketService.status(idAdoc), WebSocket.OPEN)){
 			if(angular.isUndefined($scope.lwDocs[idAdoc].author) || angular.equals($scope.lwDocs[idAdoc].author,"")){
 				$scope.lwDocs[idAdoc].state = "You need to add an author name.";
 				return;
-			} else if (angular.isUndefined($scope.lwDocs[idAdoc].html5.source) || angular.equals($scope.lwDocs[idAdoc].html5.source,"")){
+			} else if (angular.isUndefined($scope.lwDocs[idAdoc].html5) 
+					|| angular.isUndefined($scope.lwDocs[idAdoc].html5.source) || angular.equals($scope.lwDocs[idAdoc].html5.source,"")){
 				$scope.lwDocs[idAdoc].state = "No source to compare with.";
 				return;
 			} else if (angular.equals($scope.lwDocs[idAdoc].html5.currentWriter,$scope.lwDocs[idAdoc].author)){

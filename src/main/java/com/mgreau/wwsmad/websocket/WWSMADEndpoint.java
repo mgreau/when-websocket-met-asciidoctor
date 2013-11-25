@@ -1,10 +1,8 @@
-package com.mgreau.wildfly.websocket;
+package com.mgreau.wwsmad.websocket;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,31 +20,31 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
-import com.mgreau.wildfly.asciidoctor.AsciidoctorProcessor;
-import com.mgreau.wildfly.websocket.decoders.MessageDecoder;
-import com.mgreau.wildfly.websocket.encoders.AsciidocMessageEncoder;
-import com.mgreau.wildfly.websocket.encoders.NotificationMessageEncoder;
-import com.mgreau.wildfly.websocket.encoders.OutputMessageEncoder;
-import com.mgreau.wildfly.websocket.messages.AsciidocMessage;
-import com.mgreau.wildfly.websocket.messages.Message;
-import com.mgreau.wildfly.websocket.messages.NotificationMessage;
-import com.mgreau.wildfly.websocket.messages.OutputMessage;
-import com.mgreau.wildfly.websocket.messages.TypeFormat;
-import com.mgreau.wildfly.websocket.messages.TypeMessage;
-
-import difflib.DiffRow;
-import difflib.DiffRowGenerator;
+import com.mgreau.wwsmad.asciidoctor.AsciidoctorProcessor;
+import com.mgreau.wwsmad.diff.DiffAdoc;
+import com.mgreau.wwsmad.diff.DiffProvider;
+import com.mgreau.wwsmad.websocket.decoders.MessageDecoder;
+import com.mgreau.wwsmad.websocket.encoders.AsciidocMessageEncoder;
+import com.mgreau.wwsmad.websocket.encoders.NotificationMessageEncoder;
+import com.mgreau.wwsmad.websocket.encoders.OutputMessageEncoder;
+import com.mgreau.wwsmad.websocket.messages.AsciidocMessage;
+import com.mgreau.wwsmad.websocket.messages.Message;
+import com.mgreau.wwsmad.websocket.messages.NotificationMessage;
+import com.mgreau.wwsmad.websocket.messages.OutputMessage;
+import com.mgreau.wwsmad.websocket.messages.TypeFormat;
+import com.mgreau.wwsmad.websocket.messages.TypeMessage;
 
 /**
- * WSMAD : WebSocket met Asciidoctor !
+ * WSMAD : When WebSocket met Asciidoctor !
  * 
  * @author greau.maxime@gmail.com
  * 
  */
-@ServerEndpoint(value = "/adoc/{adoc-id}", decoders = { MessageDecoder.class }, encoders = {
-		AsciidocMessageEncoder.class, OutputMessageEncoder.class,
-		NotificationMessageEncoder.class })
-public class WSMADEndpoint {
+@ServerEndpoint(value = "/adoc/{adoc-id}", 
+				decoders = { MessageDecoder.class }, 
+				encoders = { AsciidocMessageEncoder.class, OutputMessageEncoder.class,
+							NotificationMessageEncoder.class })
+public class WWSMADEndpoint {
 
 	private static final Logger logger = Logger.getLogger("WSMADEndpoint");
 
@@ -63,7 +61,12 @@ public class WSMADEndpoint {
 	@Inject
 	AsciidoctorProcessor processor;
 	
+	@Inject @DiffProvider("JGit")
+	DiffAdoc diffJGit;
 	
+	@Inject @DiffProvider("Google")
+	DiffAdoc diffGoogle;
+
 	/**
 	 * Send, to all peers connected to this asciidoc file, the Output Message
 	 * resulted of an asciidoc source processor.
@@ -78,7 +81,7 @@ public class WSMADEndpoint {
 		nfMsg.setNbConnected(nbReadersByAdoc.get(adocId).get());
 		nfMsg.setAdocId(adocId);
 		nfMsg.setType(TypeMessage.notification);
-		
+
 		try {
 			for (Session session : peers) {
 				if (Boolean.TRUE
@@ -89,6 +92,35 @@ public class WSMADEndpoint {
 								msg.toString());
 						sendNotificationMessage(session, nfMsg, adocId);
 					}
+				}
+			}
+		} catch (IOException | EncodeException e) {
+			logger.log(Level.SEVERE, e.getCause().toString());
+		}
+	}
+	
+	/**
+	 * Send, to one peer
+	 * 
+	 * @param msg
+	 *            OutputMessage
+	 * @param adocId
+	 *            unique id for this asciidoc file
+	 */
+	public static void sendMessage(Session session, Message msg, String adocId) {
+		NotificationMessage nfMsg = new NotificationMessage();
+		nfMsg.setNbConnected(nbReadersByAdoc.get(adocId).get());
+		nfMsg.setAdocId(adocId);
+		nfMsg.setType(TypeMessage.notification);
+
+		try {
+			if (Boolean.TRUE
+					.equals(session.getUserProperties().get(adocId))) {
+				if (session.isOpen()) {
+					session.getBasicRemote().sendObject(msg);
+					logger.log(Level.INFO, " Outpout Sent : ",
+							msg.toString());
+					sendNotificationMessage(session, nfMsg, adocId);
 				}
 			}
 		} catch (IOException | EncodeException e) {
@@ -158,26 +190,21 @@ public class WSMADEndpoint {
 			// TODO handle if the name is modified
 		}
 
-		//Send request to show diff
-		if ("diff".equals(msg.getAction())){
-			DiffRowGenerator generator = new DiffRowGenerator.Builder().showInlineDiffs(true).
-					 ignoreWhiteSpaces(false).ignoreBlankLines(false).columnWidth(100).build();
-			StringBuffer diffText = new StringBuffer();
-			for (DiffRow diff : generator.generateDiffRows(split(msg.getAdocSource()), split(msg.getAdocSourceToMerge()))){
-				diffText.append(diff.getNewLine());
-				diffText.append("\n");
-				diffText.append(diff.getOldLine());
-			}
-			msg.setAdocSourceToMerge(diffText.toString());
+		// Send request to show diff
+		if ("diff".equals(msg.getAction())) {
+			msg.setAdocSourceToMerge(diffGoogle.rawDiff(msg.getAdocSource(), msg.getAdocSourceToMerge()));
 			msg.setType(TypeMessage.snapshot);
 			msg.setAdocId(adocId);
 			msg.setFormat(TypeFormat.asciidoc);
-			sendMessage(msg, adocId);
-		}
-		else if ("patch".equals(msg.getAction())){
-			
-		}
-		else {
+			sendMessage(session, msg, adocId);
+		} else if ("patch".equals(msg.getAction())) {
+			msg.setAdocSourceToMerge(diffGoogle.applyPatch(msg.getAdocSource(), msg.getPatchToApply()));
+			msg.setType(TypeMessage.snapshot);
+			msg.setAdocId(adocId);
+			msg.setFormat(TypeFormat.asciidoc);
+			sendMessage(session, msg, adocId);
+
+		} else {
 			OutputMessage html = new OutputMessage(TypeFormat.html5);
 			html.setAdocId(adocId);
 			html.setType(TypeMessage.output);
@@ -185,7 +212,8 @@ public class WSMADEndpoint {
 			long start = System.currentTimeMillis();
 			html.setTimeToRender(System.currentTimeMillis() - start);
 			try {
-				html.setContent(processor.renderAsDocument(msg.getAdocSource(), ""));
+				html.setContent(processor.renderAsDocument(msg.getAdocSource(),
+						""));
 				html.setDocHeader(processor.renderDocumentHeader(msg
 						.getAdocSource()));
 			} catch (RuntimeException rEx) {
@@ -242,7 +270,7 @@ public class WSMADEndpoint {
 
 	@OnError
 	public void error(Session session, Throwable t) {
-		//TODO send a notification to alert user
+		// TODO send a notification to alert user
 		logger.log(Level.SEVERE, t.toString());
 		logger.log(Level.SEVERE, "Connection error!");
 	}
@@ -275,9 +303,6 @@ public class WSMADEndpoint {
 		nfMsg.setType(TypeMessage.notification);
 		return nfMsg;
 	}
-	
-	private List<String> split(String content) {
-        return Arrays.asList(content.split("\n"));
-    }
+
 
 }
