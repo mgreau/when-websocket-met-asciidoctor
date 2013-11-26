@@ -63,17 +63,27 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 		try {
 			var obj = JSON.parse(message);
 
-			//Asciidoc message from server (get diff or patch snapshot)
+			//Asciidoc message from server (last version from other writer or patch)
 			if (angular.equals(obj.type, "snapshot")){
 				$scope.lwDocs[idAdoc].adoc = obj.data;
-				if (angular.equals(obj.data.sourceToMerge, "") == false){
-					//receive diff
-					$scope.editor.setValue(obj.data.sourceToMerge);
-					$scope.isDiffOnEditor = true;
-				} else {
-					$scope.editor.setValue(obj.data.source);
-				}
+				$scope.editor.setValue(obj.data.source);
+				$scope.isDiffOnEditor = false;
 				$scope.lwDocs[idAdoc].state = "Just Get last Asciidoc version";
+				$scope.lwDocs[idAdoc].key = idAdoc;
+			} 
+			else if (angular.equals(obj.type, "patch")){
+				$scope.lwDocs[idAdoc].adoc = obj.data;
+				$scope.editor.setValue(obj.data.sourceToMerge);
+				$scope.isDiffOnEditor = false;
+				$scope.lwDocs[idAdoc].state = "Patch Apply!";
+				$scope.lwDocs[idAdoc].key = idAdoc;
+			} 
+			else if (angular.equals(obj.type, "diff")){
+				$scope.lwDocs[idAdoc].adoc = obj.data;
+				//receive diff
+				$scope.isDiffOnEditor = true;
+				$scope.editor.setValue(obj.data.sourceToMerge);
+				$scope.lwDocs[idAdoc].state = "Diff";
 				$scope.lwDocs[idAdoc].key = idAdoc;
 			} 
 			// output Message from server
@@ -134,10 +144,10 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 				  $scope.lwDocs["1234"].state = "No Patch to apply.";
 				  return;
 			}
-			WebSocketService.sendAdocSourceToApplyPatch(idAdoc, $scope.lwDocs[idAdoc].adocSrc, 
-					$scope.lwDocs[idAdoc].author, $scope.lwDocs[idAdoc].adoc.sourceToMerge);
 			$scope.isDiffOnEditor = false;
 			$scope.lwDocs[idAdoc].state = "Patch Apply !";
+			WebSocketService.sendAdocSourceToApplyPatch(idAdoc, $scope.lwDocs[idAdoc].adocSrc, 
+					$scope.lwDocs[idAdoc].author, $scope.lwDocs[idAdoc].adoc.sourceToMerge);
 		}
 		else {
 			$scope.lwDocs[idAdoc].state = "You work on OFFLINE MODE !!. You need to CONNECT to do this action.";
@@ -163,6 +173,7 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 				$scope.lwDocs[idAdoc].state = "You are the last writer, no need to compute diff.";
 				return;
 			}
+			$scope.lwDocs[idAdoc].adocSrc = $scope.editor.getValue();
 			WebSocketService.sendAdocSourceForDiff(idAdoc, $scope.lwDocs[idAdoc].adocSrc, $scope.lwDocs[idAdoc].author, $scope.lwDocs[idAdoc].html5.source);
 		}
 		else {

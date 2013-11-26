@@ -3,7 +3,9 @@
 
 === When WebSocket met Asciidoctor
 
-This project gives you the posibility to work on Asciidoctor project with a team :
+This project gives you the possibility to work on Asciidoctor project with a team :
+
+image::patch-demo.png[Patch feature example]
 
 * Realtime Writing Asciidoc file and automatically view HTML 5 rendered
 ** each time you write something if you are connected and you have clicked on *Send On Change*
