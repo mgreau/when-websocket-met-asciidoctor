@@ -24,6 +24,6 @@ package com.mgreau.wwsmad.websocket.messages;
  */
 public enum TypeMessage {
 
-	notification, snapshot, output;
+	notification, snapshot, diff, patch, output;
 	
 }

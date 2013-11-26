@@ -193,13 +193,13 @@ public class WWSMADEndpoint {
 		// Send request to show diff
 		if ("diff".equals(msg.getAction())) {
 			msg.setAdocSourceToMerge(diffGoogle.rawDiff(msg.getAdocSource(), msg.getAdocSourceToMerge()));
-			msg.setType(TypeMessage.snapshot);
+			msg.setType(TypeMessage.diff);
 			msg.setAdocId(adocId);
 			msg.setFormat(TypeFormat.asciidoc);
 			sendMessage(session, msg, adocId);
 		} else if ("patch".equals(msg.getAction())) {
 			msg.setAdocSourceToMerge(diffGoogle.applyPatch(msg.getAdocSource(), msg.getPatchToApply()));
-			msg.setType(TypeMessage.snapshot);
+			msg.setType(TypeMessage.patch);
 			msg.setAdocId(adocId);
 			msg.setFormat(TypeFormat.asciidoc);
 			sendMessage(session, msg, adocId);
