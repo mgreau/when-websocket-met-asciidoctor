@@ -25,10 +25,13 @@ body {
 iframe {
 	border: 1px solid black;
 }
+.container-fluid {
+  padding: 0px 15px;
+}
 </style>
 </head>
 <body ng-app="wWSmADapp" ng-controller="LiveWritingCtrl">
-	<div class="container" ng-repeat="lwDoc in lwDocs">
+	<div class="container-fluid" ng-repeat="lwDoc in lwDocs">
 		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse"
