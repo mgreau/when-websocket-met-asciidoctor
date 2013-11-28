@@ -1,0 +1,47 @@
+<div class="collapse navbar-collapse">
+	<p class="navbar-text">
+		<span class="label label-default">{{theDoc.status}}</span> <br />
+		<button ng-show="theDoc.status == 'CONNECTED'"
+			class="navbar-btn btn-danger btn-xs"
+			ng-click="disconnect(theDoc.key)">
+			<span class="glyphicon glyphicon-off"></span> Exit.
+		</button>
+		<button ng-show="theDoc.status == 'DISCONNECTED'"
+			class="navbar-btn btn-success btn-xs" ng-click="connect(theDoc.key)"
+			title="Connect OR You can also work on offline mode!">Click
+			to connect</button>
+	</p>
+	<p class="navbar-text">
+		<span title="Number of writer" class="glyphicon glyphicon-user"></span>
+		<em>Online writers :</em> <span title="Number of writers"
+			class="badge">{{theDoc.notification.nbWriters}}</span> <br /> <span
+			ng-repeat="writer in theDoc.notification.writers"
+			class="label label-success">{{writer}}</span>
+	</p>
+	<p class="navbar-text">
+		<span title="Number of readers" class="glyphicon glyphicon-eye-open"></span>
+		<em>Online readers :</em> <span title="Number of viewer" class="badge">{{theDoc.notification.nbConnected}}</span>
+		<br /> <span title="Time to render HTML5"
+			class="glyphicon glyphicon-cog"></span> <em>Process time : <span
+			class="label label-danger">{{theDoc.html5.timeToRender}} ms</span>
+		</em> <br /> <em ng-show="isEditorActivate">Signed in as <b>{{theDoc.author}}</b>.
+		</em>
+	</p>
+	<p class="navbar-text">
+		<span class="label label-warning"
+			ng-show="theDoc.status == 'DISCONNECTED'"> <span
+			title="Offline" class="glyphicon glyphicon-exclamation-sign"></span>
+			<strong>Offline mode.</strong></span> <span class="label label-info"
+			ng-show="theDoc.status == 'CONNECTED'"> You can work on <strong>real-time
+				writing mode</strong>.
+		</span> <br /> <span><em><strong>{{theDoc.state}}</strong></em></span>
+	</p>
+	<p class="navbar-text navbar-right">
+		<span title="Last writer" class="glyphicon glyphicon-saved"></span>
+		Last writer : <span class="label label-success">{{theDoc.html5.currentWriter}}</span>
+		<br />
+		<button class="navbar-btn btn-primary btn-xs" type="button"
+			ng-click="loadLastAdoc(theDoc.key)">Load the last Asciidoc
+			source</button>
+	</p>
+</div>
