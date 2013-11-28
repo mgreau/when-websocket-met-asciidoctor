@@ -1,0 +1,21 @@
+<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+	<div class="row">
+		<button id="modeKey" ng-class="{isEvtOnChangeActivate: active}"
+			type="button" ng-click="modeAdocOnChange(false)"
+			class="btn btn-default"
+			title="Asciidoc source will be sent only on Ctrl+S command">Send
+			on Ctrl+S</button>
+		<button id="modeChange" ng-class="{isEvtOnChangeActivate: active}"
+			type="button" ng-click="modeAdocOnChange(true)"
+			class="btn btn-default">Send on Change</button>
+		<button type="button" ng-click="computeDiff(lwDoc.key)"
+			class="btn btn-default">Compute Diff</button>
+		<button type="button" ng-click="applyPatch(lwDoc.key)"
+			class="btn btn-default">Apply Patch</button>
+	</div>
+	<div class="row" ui-ace="{
+	  onLoad: aceLoaded,
+	  onChange: aceChanged
+	}">
+	</div>
+</div>

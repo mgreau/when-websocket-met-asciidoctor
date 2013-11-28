@@ -1,0 +1,19 @@
+body {
+	padding-top: 110px;
+}
+
+.ace_editor {
+	height: 800px;
+}
+
+.ace_content {
+	background-color: black;
+	color: white;
+}
+
+iframe {
+	border: 1px solid black;
+}
+.container-fluid {
+  padding: 0px 15px;
+}
