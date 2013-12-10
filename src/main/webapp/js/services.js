@@ -103,10 +103,11 @@ app.factory('WebSocketService', function($window) {
 app.factory('DocRESTService', function($http, $window) {
 	var appPath = $window.location.pathname.split('/')[1];
 	var myService = {
-		    async: function() {
+		    async: function(url) {
 		      // $http returns a promise, which has a then function, which
 				// also returns a promise
-		      var promise = $http.get('/'+ appPath + '/rest/documents/sample-adoc').then(function (response) {
+		    	//ex url : '/rest/documents/sample-adoc'
+		      var promise = $http.get('/'+ appPath + url).then(function (response) {
 		        // The then function here is an opportunity to modify the
 				// response
 		        console.log(response);

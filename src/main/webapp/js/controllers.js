@@ -1,4 +1,4 @@
-app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService, WebSocketService) {
+app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService, WebSocketService, $location, Social) {
 	
 	//Real-time Collaborative Writing Docs
 	$scope.lwDocs = new Object();
@@ -6,7 +6,7 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 	$scope.isEvtOnChangeActivate = false;
 	$scope.isDiffOnEditor = false;
 
-	DocRESTService.async().then(function(datas) {
+	DocRESTService.async('/rest/documents/sample-adoc').then(function(datas) {
 	    		$scope.lwDocs["1234"] = new Object();
 	    		$scope.lwDocs["1234"].key = "1234";
 	    		$scope.lwDocs["1234"].status = 'DISCONNECTED';
@@ -55,7 +55,6 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 	  
 	$scope.modeAdocOnChange = function(value) {
 		$scope.isEvtOnChangeActivate = value;
-		
 	};
 
 	//Messages sent by peer server are handled here
@@ -201,5 +200,22 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 	$scope.disconnect = function(idAdoc) {
 		WebSocketService.disconnect(idAdoc);
 	};
+	
+	//Agorava - OAuth
+	  $scope.startDance = function (service) {
+	    Social.startDance(service.name).then(function (response) {
+	      var url = response.data;
+	      console.log(url);
+	      window.open(url, service.name + ' OAuth','toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=400,height=400,modal=yes');
+	    });
+	  };
+	  
+	  $scope.refreshService = function (service) {
+	    $scope.session.refreshService(service);
+	  };
+
+	  $scope.refreshSession = function (session) {
+	    $scope.session.refreshOAuth(session);
+	  };
 
 });

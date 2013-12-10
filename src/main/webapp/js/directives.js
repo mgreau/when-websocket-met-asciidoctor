@@ -51,18 +51,15 @@ app.directive("collaborativemessage", function(){
 	};
 });
 
-app.directive("auth", function(){
+app.directive("auth", function(DocRESTService){
 	return{
 		restrict: 'AE',
 		templateUrl: "templates/auth.html",
 		replace: true,
 		link: function (scope, element, attrs, ctrl) {
 			
-			scope.theNewDoc = "";
-
-			scope.$watch(attrs.doc, function(newVal, oldVal) {
-        		scope.theNewDoc = newVal;
-    		});
+			scope.urlOAuthTwitter = "";
+			
 			
 			
 		}

@@ -6,6 +6,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.agorava.api.atinject.Current;
+import org.agorava.api.oauth.OAuthSession;
+import org.agorava.api.service.OAuthLifeCycleService;
+import org.agorava.spi.UserProfile;
+import org.agorava.twitter.Twitter;
+import org.agorava.twitter.TwitterTimelineService;
+import org.agorava.twitter.TwitterUserService;
+
 import com.mgreau.wwsmad.asciidoctor.AsciidoctorProcessor;
 
 @Path("documents")
@@ -23,9 +31,9 @@ public class WSMADREST {
 		return getSampleDoc();
 	}
 
-	private String getSampleDoc(){
+	private String getSampleDoc() {
 		return processor.readFromStream(Thread.currentThread()
 				.getContextClassLoader().getResourceAsStream(sample));
 	}
-
+	
 }

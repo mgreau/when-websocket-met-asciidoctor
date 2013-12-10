@@ -1,27 +1,99 @@
 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+
+	<div class="row">
+
+		<script id="metamorph-1-start" type="text/x-placeholder"></script>
+		<script id="metamorph-21-start" type="text/x-placeholder"></script>
+
+		<div class="row text-center">
+			<form class="form-signin" data-ember-action="2">
+				<h2 class="form-signin-heading">Sign in</h2>
+
+				<small class="text-muted">Connect [your service] with your
+					favorite social network</small> <br> <br>
+				<p>
+					<a class="btn btn-primary social-login-btn social-linkedin"
+						href="/auth/linkedin"><i class="fa fa-linkedin"></i></a> <a
+						class="btn btn-primary social-login-btn social-twitter"
+						href="{{urlOAuthTwitter}}"><i class="fa fa-twitter"></i></a>
+				</p>
+
+				<div class="btn-group social-login-more">
+					<button type="button"
+						class="btn btn-default dropdown-toggle btn-block"
+						data-toggle="dropdown">More...</button>
+					<ul class="dropdown-menu text-left " role="menu">
+						<li><a href="#"><i class="fa fa-tumblr-sign"></i>  
+								Tumblr</a></li>
+						<li><a href="#"><i class="fa fa-github-alt"></i>   Github</a></li>
+						<li><a href="#"><i class="fa fa-dropbox"></i>   Dropbox</a></li>
+						<li><a href="/auth/amazon"><span class="zocial-amazon"></span>
+								  Amazon</a></li>
+						<li><a href="#"><span class="zocial-bitbucket"></span>  
+								Bitbucket</a></li>
+						<li><a href="#"><span class="zocial-evernote"></span>  
+								Evernote</a></li>
+						<li><a href="#"><span class="zocial-meetup"></span>  
+								Meetup</a></li>
+						<li><a href="#"><i class="fa fa-windows"></i>   Windows
+								Live</a></li>
+						<li><a href="#"><i class="fa fa-weibo"></i>   Weibo</a></li>
+						<li><a href="#"><i class="fa fa-foursquare"></i>  
+								Foursquare</a></li>
+						<li><a href="#"><i class="fa fa-stackexchange"></i>  
+								Stack Exchange</a></li>
+						<li><a href="#"><i class="fa fa-trello"></i>   Trello</a></li>
+						<li><a href="#"><span class="zocial-wordpress"></span>  
+								Wordpress</a></li>
+					</ul>
+				</div>
+				<br> <br> <small class="text-muted">Or sign in
+					with [your service]</small> <br> <br> <input id="ember360"
+					class="ember-view ember-text-field form-control login-input"
+					placeholder="Email Address" type="text"> <input
+					id="ember361"
+					class="ember-view ember-text-field form-control login-input-pass"
+					placeholder="Password" type="password">
+
+				<script id="metamorph-22-start" type="text/x-placeholder"></script>
+				<script id="metamorph-22-end" type="text/x-placeholder"></script>
+
+				<button class="btn btn-lg btn-primary btn-block btn-center"
+					type="submit" data-bindattr-3="3">Sign in</button>
+				<br> <small class="create-account text-muted">Dont have
+					a [your service] or social network account?
+					<button id="ember363" class="ember-view btn btn-sm btn-default">
+						Sign Up</button>
+				</small>
+			</form>
+		</div>
+	</div>
 	<div class="row">
 		<div class="col-md-6 ">
 			<div class="panel panel-default">
-				<form class="form form-signup" ng-submit="enableEditor(theNewDoc.key)">
-				<div class="panel-body">
-					<h5 class="text-center">CREATE A SPACE</h5>
-					
+				<form class="form form-signup"
+					ng-submit="enableEditor(theNewDoc.key)">
+					<div class="panel-body">
+						<h5 class="text-center">CREATE A SPACE</h5>
+
 						<div class="form-group">
 							<div class="input-group">
 								<span class="input-group-addon"><span
 									class="glyphicon glyphicon-user"></span></span> <input type="text"
-									class="form-control" ng-model="theNewDoc.author" required placeholder="Github account" />
+									class="form-control" ng-model="theNewDoc.author" required
+									placeholder="Github account" />
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="input-group">
 								<span class="input-group-addon"><span
-									class="glyphicon glyphicon-file"></span> </span> <input
-									type="text" class="form-control" placeholder="Doc URL" />
+									class="glyphicon glyphicon-file"></span> </span> <input type="text"
+									class="form-control" placeholder="Doc URL" />
 							</div>
 						</div>
-				</div>
-				<button class="btn btn-sm btn-primary btn-block" type="submit"> SUBMIT</button>
+					</div>
+					<button class="btn btn-sm btn-primary btn-block" type="submit">
+						SUBMIT</button>
 				</form>
 			</div>
 		</div>
@@ -40,11 +112,10 @@
 						<div class="form-group">
 							<div class="input-group">
 								<span class="input-group-addon"><span
-									class="glyphicon glyphicon-barcode"></span> </span> <input
-									type="text" class="form-control" placeholder="Document ID" />
+									class="glyphicon glyphicon-barcode"></span> </span> <input type="text"
+									class="form-control" placeholder="Document ID" />
 							</div>
 						</div>
-						
 				</div>
 				<a href="http://www.jquery2dotnet.com"
 					class="btn btn-sm btn-primary btn-block" role="button"> SUBMIT</a>
