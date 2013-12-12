@@ -2,10 +2,12 @@ package com.mgreau.wwsmad.websocket;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.concurrent.TimeUnit;
 
 import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
@@ -14,75 +16,65 @@ import javax.websocket.WebSocketContainer;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.junit.InSequence;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.mgreau.wwsmad.StarterService;
+
 @RunWith(Arquillian.class)
 public class WWSMADEndpointTest {
 
-    private static final String RESPONSE = "Hello World!";
+	final String ADOC_URL = "adoc/";
+	final String ADOC_ID = "121213";
 
-    @ArquillianResource
-    URI base;
+	@ArquillianResource
+	URI base;
 
-    /**
-     * Arquillian specific method for creating a file which can be deployed
-     * while executing the test.
-     */
-    @Deployment(testable=false)
-    public static WebArchive createDeployment() {
-        WebArchive war = ShrinkWrap.create(WebArchive.class)
-                .addPackage(WWSMADEndpoint.class.getPackage());
-        System.out.println(war.toString(true));
-        return war;
-    }
+	@Deployment(testable = false)
+	public static WebArchive createDeployment() {
+		return ShrinkWrap.create(WebArchive.class)
+				.addPackages(true, StarterService.class.getPackage())
+				.addAsManifestResource("MANIFEST.MF")
+				.addAsWebInfResource("beans.xml");
+	}
+	
+	@Test
+	@InSequence(1)
+	public void testNotificationOnOpenConnection() throws URISyntaxException,
+			DeploymentException, IOException, InterruptedException {
+		final String JSONNotificationOnOpen = "{\"type\":\"notification\",\"adocId\":\""+ ADOC_ID +"\",\"data\":{\"nbConnected\":1,\"nbWriters\":0,\"writers\":{}}}";
+		Session session = connectToServer(WSEndpointClientTest.class,
+				ADOC_URL+ADOC_ID);
+		assertNotNull(session);
 
-    /**
-     * The basic test method for the class {@link WWSMADEndpoint}
-     *
-     *
-     * @throws DeploymentException
-     * @throws IOException
-     * @throws URISyntaxException
-     */
-    @Test
-    public void testNotificationOnOpen() throws DeploymentException, IOException, URISyntaxException, InterruptedException {
-        Session session = connectToServer("1234");
-        assertNotNull(session);
-        System.out.println("Waiting for 2 seconds to receive response");
-        Thread.sleep(2000);
-        assertNotNull(WSEndpointClientTest.response);
-        assertEquals(RESPONSE, WSEndpointClientTest.response);
-    }
-
-   
-
-    /**
-     * Method used to supply connection to the server by passing the naming of
-     * the websocket endpoint
-     *
-     * @param endpoint
-     * @return
-     * @throws DeploymentException
-     * @throws IOException
-     * @throws URISyntaxException
-     */
-    public Session connectToServer(String endpoint) throws DeploymentException, IOException, URISyntaxException {
-        WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-        URI uri = new URI("ws://"
-                        + base.getHost()
-                        + ":"
-                        + base.getPort()
-                        + "/"
-                        + base.getPath()
-                        + "/adoc/"
-
-                        + endpoint);
-        System.out.println("Connecting to: " + uri);
-        return container.connectToServer(WSEndpointClientTest.class, uri);
-                
-    }
+		assertTrue(WSEndpointClientTest.latch.await(2, TimeUnit.SECONDS));
+		assertEquals(JSONNotificationOnOpen, WSEndpointClientTest.response);
+	}
+	
+	/**
+	 * WebSocket is not yet supported by default by Arquillian, so we need to change the
+	 * schema manually.
+	 * 
+	 * @param endpoint
+	 * @param uriPart
+	 * @return
+	 * @throws DeploymentException
+	 * @throws IOException
+	 * @throws URISyntaxException
+	 */
+	public Session connectToServer(Class<?> endpoint, String uriPart)
+			throws DeploymentException, IOException, URISyntaxException {
+		WebSocketContainer container = ContainerProvider
+				.getWebSocketContainer();
+		assertNotNull(container);
+		assertNotNull(base);
+		URI uri = new URI("ws://" + base.getHost() + ":" + base.getPort()
+				+ base.getPath() + uriPart);
+		System.out.println("Connecting to: " + uri);
+		return container.connectToServer(endpoint, uri);
+	}
 }

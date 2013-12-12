@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.0" name="org.asciidoctor">
+  <resources>
+	<resource-root path="asciidoctor-java-integration-0.1.4.jar"/>
+	<resource-root path="jruby-complete-1.7.4.jar"/>
+  </resources>
+  
+  <dependencies>
+	   <module name="javax.management.j2ee.api"/>
+	   <module name="javax.api"/>
+ </dependencies>
+  
+ </module>

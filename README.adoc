@@ -1,12 +1,26 @@
-== Real-time collaborative writing for Asciidoc files
+= wWSmAD : Real-time collaborative editor for Asciidoc files
+Maxime Greau <https://github.com/mgreau[@mgreau]>
+:awestruct-layout: base 
 :imagesdir: ./doc/img
+:idprefix:
+:idseparator: -
+:online-demo: http://wildfly-mgreau.rhcloud.com/wWSmAD/
 
-=== When WebSocket met Asciidoctor
+ifndef::safe-mode-name[]
 
-This project gives you the possibility to work on Asciidoctor project with a team :
+[float]
+= wWSmAD : Real-time collaborative editor for Asciidoc files
+endif::[]
+
+You can try it online thanks to OpenShift : +{online-demo}+
+
+This project gives you the possibility to work on Asciidoctor files with a team.
 
 image::patch-demo.png[Patch feature example]
 
+== Features on 0.1.0-Alpha1
+
+* By default, you are a +reader+. It means that you 
 * Realtime Writing Asciidoc file and automatically view HTML 5 rendered
 ** each time you write something if you are connected and you have clicked on *Send On Change*
 ** each time you press "Ctrl+S" if you are connected and you have clicked on *Send On Ctrl+S* button
@@ -17,36 +31,54 @@ image::patch-demo.png[Patch feature example]
 ** you see the number of writers (people who send adoc file)
 ** you see the name of the last author
 
-image::live-writing.png[Screenshot of the WebSocket Java EE 7 demo with a severals matches and AngularJS deployed on WildFly]
+== Changelog
 
-=== Technology used
 
-* Asciidoctor
-** AsciidoctorJ
+== Roadmap
+
+
+
+== Technology used
+
+* Asciidoctor project
+** AsciidoctorJ 0.1.4
 * Java EE 7 
-** CDI
-** WebSocket => (Undertow)
-** JSON-P
+** CDI 1.1
+** WebSocket 1.0
+** JSON-P 1.0
+** EJB 3.1
 * Web Client
-** AngularJS
-* App server
-** WildFly 8
+** AngularJS 1.0.8
+** Ace Editor
+** Bootstrap 3.0
+* Tests
+** JUnit 4.8
+** Arquillian 1.1.2
+* Java EE 7 Compliance App server
+** WildFly 8.0.0-Beta1
 
-=== Install on your WildFly 8 Application Server
-  
-. Build the war and test into WildFly with maven/arquillian : 
+== Install wWSmAD on your laptop
 
-   mvn clean package -Pwildfly-managed-arquillian
+. First you need to deploy the Asciidoctor module into your WildFly server
 
 . Start wildfly : 
 
    $JBOSS_HOME/bin/standalone.sh
+  
+. Build the war and test into WildFly with maven/arquillian : 
+
+   mvn clean package -Pwildfly-managed-arquillian
    
 .  Deploy the app automatically with maven : 
 
-   mvn jboss-as:deploy -Dmaven.test.skip=true
+   mvn wildfly:deploy -Dmaven.test.skip=true
 
-. Launch your browser :
+. Launch your browser and enjoy :)
 
    *  http://localhost:8080/wWSmAD
+
+== History
+
+.The first deployed version on OpenShift on November 2013
+image::live-writing.png[Screenshot of the first deployed version of wWSmAD]
 
