@@ -5,6 +5,7 @@ Maxime Greau <https://github.com/mgreau[@mgreau]>
 :idprefix:
 :idseparator: -
 :online-demo: http://wildfly-mgreau.rhcloud.com/wWSmAD/
+:milestones: https://github.com/mgreau/when-websocket-met-asciidoctor/issues/milestones
 
 ifndef::safe-mode-name[]
 
@@ -20,7 +21,9 @@ image::patch-demo.png[Patch feature example]
 
 == Features on 0.1.0-Alpha1
 
-* By default, you are a +reader+. It means that you 
+* By default when you click to +connect+, you are a +*reader*+ :
+** It means that you can see what happens on HTML5 preview but 
+* When you add a name and click to +Enable editor+, you become a +*writer*+ :
 * Realtime Writing Asciidoc file and automatically view HTML 5 rendered
 ** each time you write something if you are connected and you have clicked on *Send On Change*
 ** each time you press "Ctrl+S" if you are connected and you have clicked on *Send On Ctrl+S* button
@@ -31,8 +34,14 @@ image::patch-demo.png[Patch feature example]
 ** you see the number of writers (people who send adoc file)
 ** you see the name of the last author
 
+[IMPORTANT]
+====
+This version is an early alpha version. For now all connected people *work on the same and unique document*.
+====
+
 == Changelog
 
+You can read all changes between release in the link:changelog.adoc[changelog file].
 
 == Roadmap
 
@@ -59,7 +68,9 @@ image::patch-demo.png[Patch feature example]
 
 == Install wWSmAD on your laptop
 
-. First you need to deploy the Asciidoctor module into your WildFly server
+. First you need to deploy the link:module/README.adoc[Asciidoctor module] into your WildFly server
+
+include::module/README.adoc[Asciidoctor module documentation]
 
 . Start wildfly : 
 

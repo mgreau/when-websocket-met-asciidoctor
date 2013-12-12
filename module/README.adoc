@@ -1,24 +1,29 @@
 == Asciidoctor WildFly module
 
-This is the module you have to deploy on your WildFly server in order to make asciidoctor processor works:
+This is the module you have to deploy on your WildFly server in order to make asciidoctor processor work :
 
 === Install the Asciidoctor module
 
-. stop your server instance
-. copy the +org+ directory to $JBOSS_HOME/modules
-. you should have the file below :
-.. $BOSS_HOME/modules/org/asciidoctor/main/module.xml
-. Then copy asciidoctor-java-integration-0.1.4.jar and jruby-complete-1.7.4.jar from your .m2 repository to the main directory in order to have :
-.. $BOSS_HOME/modules/org/asciidoctor/main/asciidoctor-java-integration-0.1.4.jar
-.. $BOSS_HOME/modules/org/asciidoctor/main/jruby-complete-1.7.4.jar
-. start your server
+. Stop your server instance
+. Copy the +org+ directory to *$JBOSS_HOME/modules*
+. You should have the file below :
+.. +$JBOSS_HOME/modules/org/asciidoctor/main/module.xml+
+. Then copy *asciidoctor-java-integration-0.1.4.jar* and *jruby-complete-1.7.4.jar* files from your .m2 repository to the main module directory in order to have :
+.. +$JBOSS_HOME/modules/org/asciidoctor/main/asciidoctor-java-integration-0.1.4.jar+
+.. +$JBOSS_HOME/modules/org/asciidoctor/main/jruby-complete-1.7.4.jar+
+. Start your server
 
-Then the wWSmAD project configure the +maven-war-plugin+ in order to generate a MANIFEST.MF file with :
+Then the wWSmAD project configure the +maven-war-plugin+ in order to generate a *+MANIFEST.MF+* file with this line :
 
-* Dependencies: org.asciidoctor
+* 'Dependencies: org.asciidoctor'
 
-It means that the WAR depends on Asciidoctor module so that no AsciidoctorJ libraries are present in WEB-INF/lib and the processor 
-will work whatever your system configuration
+It means that the WAR depends on Asciidoctor module so that no AsciidoctorJ libraries are present in WEB-INF/lib and the processor will work whatever your system configuration.
 
 === Errors you should not have if your installation is OK
 
+When the Asciidoctor module doesn't exist and you try to add asciidoctor libraries into your WAR, you will have the stacktrace below :
+
+[source,text]
+----
+include::../doc/include/openshift-error.txt[]
+----
