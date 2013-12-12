@@ -4,7 +4,7 @@ import java.util.logging.Logger;
 
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
-
+import javax.inject.Named;
 
 public class LoggerProducer {
 

@@ -4,9 +4,9 @@
 
     <defaultProtocol type="Servlet 3.0"/>
 
-    <container qualifier="test" default="true">
+     <container qualifier="test" default="true">
         <configuration>
-            <property name="jbossHome">${serverRoot:target/wildfly-8.0.0.Beta1}</property>
+            <property name="jbossHome">${serverRoot}</property>
             <property name="serverConfig">${serverProfile:standalone-full.xml}</property>
         </configuration>
     </container>

@@ -1,14 +1,12 @@
 package com.mgreau.wwsmad.diff;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
-import static com.mgreau.wwsmad.diff.diff_match_patch.*;
+
+import com.mgreau.wwsmad.diff.diff_match_patch.Diff;
+import com.mgreau.wwsmad.diff.diff_match_patch.Patch;
 
 @DiffProvider("Google")
 public class DiffAdocGoogle implements DiffAdoc {
