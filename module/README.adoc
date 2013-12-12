@@ -6,8 +6,9 @@ This is the module you have to deploy on your WildFly server in order to make as
 
 . stop your server instance
 . copy the +org+ directory to $JBOSS_HOME/modules
-. you should have the files below :
+. you should have the file below :
 .. $BOSS_HOME/modules/org/asciidoctor/main/module.xml
+. Then copy asciidoctor-java-integration-0.1.4.jar and jruby-complete-1.7.4.jar from your .m2 repository to the main directory in order to have :
 .. $BOSS_HOME/modules/org/asciidoctor/main/asciidoctor-java-integration-0.1.4.jar
 .. $BOSS_HOME/modules/org/asciidoctor/main/jruby-complete-1.7.4.jar
 . start your server
