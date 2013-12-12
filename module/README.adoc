@@ -13,17 +13,26 @@ This is the module you have to deploy on your WildFly server in order to make as
 .. +$JBOSS_HOME/modules/org/asciidoctor/main/jruby-complete-1.7.4.jar+
 . Start your server
 
-Then the wWSmAD project configure the +maven-war-plugin+ in order to generate a *+MANIFEST.MF+* file with this line :
+Then the wWSmAD project configure the +maven-war-plugin+ in order to generate a *MANIFEST.MF* file with this line :
 
 * 'Dependencies: org.asciidoctor'
 
 It means that the WAR depends on Asciidoctor module so that no AsciidoctorJ libraries are present in WEB-INF/lib and the processor will work whatever your system configuration.
 
-=== Errors you should not have if your installation is OK
+=== Errors that you should not have if your installation is OK
 
 When the Asciidoctor module doesn't exist and you try to add asciidoctor libraries into your WAR, you will have the stacktrace below :
 
 [source,text]
 ----
-include::../doc/include/openshift-error.txt[]
+Caused by: java.lang.reflect.InvocationTargetException
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) [rt.jar:1.7.0_45]
+        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57) [rt.jar:1.7.0_45]
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) [rt.jar:1.7.0_45]
+        at java.lang.reflect.Method.invoke(Method.java:606) [rt.jar:1.7.0_45]
+        at org.jboss.weld.injection.producer.DefaultLifecycleCallbackInvoker.invokeMethods(DefaultLifecycleCallbackInvoker.java:89) [weld-core-impl-2.1.0.CR1.jar:2013-09-26 16:53]
+        ... 51 more
+Caused by: org.jruby.exceptions.RaiseException: (LoadError) no such file to load -- asciidoctor
+        at org.jruby.RubyKernel.require(org/jruby/RubyKernel.java:1054) [jruby-complete-1.7.4.jar:]
+        at RUBY.require(classpath:/META-INF/jruby.home/lib/ruby/shared/rubygems/custom_require.rb:36)   at RUBY.(root)(<script>:2)
 ----
