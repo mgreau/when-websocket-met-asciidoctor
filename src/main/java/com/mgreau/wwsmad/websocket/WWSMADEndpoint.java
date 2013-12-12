@@ -52,17 +52,14 @@ public class WWSMADEndpoint {
 	static Set<Session> peers = Collections
 			.synchronizedSet(new HashSet<Session>());
 
-	/** Handle number of readers by adoc file */
+	/** Handle number of readers (people who don't send asciidoc source) by adoc file */
 	static Map<String, AtomicInteger> nbReadersByAdoc = new ConcurrentHashMap<>();
 
-	/** Handle number of writers by adoc file */
+	/** Handle number of writers (people who send at least one asciidoc source)  by adoc file */
 	static Map<String, Set<String>> writersByAdoc = new ConcurrentHashMap<String, Set<String>>();
 
 	@Inject
 	AsciidoctorProcessor processor;
-	
-	@Inject @DiffProvider("JGit")
-	DiffAdoc diffJGit;
 	
 	@Inject @DiffProvider("Google")
 	DiffAdoc diffGoogle;

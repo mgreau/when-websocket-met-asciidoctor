@@ -1,0 +1,23 @@
+== Asciidoctor WildFly module
+
+This is the module you have to deploy on your WildFly server in order to make asciidoctor processor works:
+
+=== Install the Asciidoctor module
+
+. stop your server instance
+. copy the +org+ directory to $JBOSS_HOME/modules
+. you should have the files below :
+.. $BOSS_HOME/modules/org/asciidoctor/main/module.xml
+.. $BOSS_HOME/modules/org/asciidoctor/main/asciidoctor-java-integration-0.1.4.jar
+.. $BOSS_HOME/modules/org/asciidoctor/main/jruby-complete-1.7.4.jar
+. start your server
+
+Then the wWSmAD project configure the +maven-war-plugin+ in order to generate a MANIFEST.MF file with :
+
+* Dependencies: org.asciidoctor
+
+It means that the WAR depends on Asciidoctor module so that no AsciidoctorJ libraries are present in WEB-INF/lib and the processor 
+will work whatever your system configuration
+
+=== Errors you should not have if your installation is OK
+
