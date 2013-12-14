@@ -51,19 +51,29 @@ public class WWSMADEndpointTest {
 		// onOpen - notifOnOpen
 		MyBasicEndpointClient.latch = new CountDownLatch(2);
 
-		final String JSONNotificationOnOpen = "{\"type\":\"notification\",\"adocId\":\""
-				+ ADOC_ID
-				+ "\",\"data\":{\"nbConnected\":1,\"nbWriters\":0,\"writers\":{}}}";
-		Session session = connectToServer(MyBasicEndpointClient.class, ADOC_URL
+		Session session1 = connectToServer(MyBasicEndpointClient.class, ADOC_URL
 				+ ADOC_ID);
-		assertNotNull(session);
+		assertNotNull(session1);
+		Session session2 = null;
 
 		try {
 			assertTrue(MyBasicEndpointClient.latch.await(2, TimeUnit.SECONDS));
-			assertEquals(JSONNotificationOnOpen,
+			//One user connected
+			assertEquals(getNotificationOnOpenConnection("1"),
 					MyBasicEndpointClient.notificationMessage);
+			
+			MyBasicEndpointClient.latch = new CountDownLatch(2);
+			session2 = connectToServer(MyBasicEndpointClient.class, ADOC_URL
+					+ ADOC_ID);
+			assertNotNull(session2);
+			assertTrue(MyBasicEndpointClient.latch.await(2, TimeUnit.SECONDS));
+			//Two users connected
+			assertEquals(getNotificationOnOpenConnection("2"),
+					MyBasicEndpointClient.notificationMessage);
+			
 		} finally {
-			session.close();
+			session1.close();
+			session2.close();
 		}
 	}
 
@@ -114,4 +124,10 @@ public class WWSMADEndpointTest {
 	}
 
 	private String data = "{\"type\":\"adoc\",\"source\":\"= Hello Test\\nDoc Writer <doc@example.com>\\nv1.0, 2013-11-11\\n:toc:\\n:numbered:\\n:source-highlighter: coderay\\n\\nAn introduction to http://asciidoc.orgdf[AsciiDoc].\\n\\n\\n\",\"writer\":\"@mgreau\"}";
+
+	private String getNotificationOnOpenConnection(String nb){
+		return "{\"type\":\"notification\",\"adocId\":\""
+				+ ADOC_ID
+				+ "\",\"data\":{\"nbConnected\":"+nb+",\"nbWriters\":0,\"writers\":{}}}";
+	}
 }
