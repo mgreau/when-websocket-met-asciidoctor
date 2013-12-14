@@ -207,10 +207,11 @@ public class WWSMADEndpoint {
 			html.setType(TypeMessage.output);
 			html.setCurrentWriter(msg.getCurrentWriter());
 			long start = System.currentTimeMillis();
-			html.setTimeToRender(System.currentTimeMillis() - start);
+			
 			try {
 				html.setContent(processor.renderAsDocument(msg.getAdocSource(),
 						""));
+				html.setTimeToRender(System.currentTimeMillis() - start);
 				html.setDocHeader(processor.renderDocumentHeader(msg
 						.getAdocSource()));
 			} catch (RuntimeException rEx) {
