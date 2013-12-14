@@ -208,30 +208,32 @@
 			<properties>
 				<serverProfile>standalone-full.xml</serverProfile>
 				<serverRoot>${env.JBOSS_HOME}</serverRoot>
+				<undertow.version>1.0.0.Beta27</undertow.version>
+				<resteasy.version>3.0.5.Final</resteasy.version>
 			</properties>
 			<dependencies>
 				<dependency>
 					<groupId>io.undertow</groupId>
 					<artifactId>undertow-websockets-jsr</artifactId>
-					<version>1.0.0.Beta25</version>
+					<version>${undertow.version}</version>
 					<scope>test</scope>
 				</dependency>
 				<dependency>
 					<groupId>org.jboss.resteasy</groupId>
 					<artifactId>resteasy-client</artifactId>
-					<version>3.0.5.Final</version>
+					<version>${resteasy.version}</version>
 					<scope>test</scope>
 				</dependency>
 				<dependency>
 					<groupId>org.jboss.resteasy</groupId>
 					<artifactId>resteasy-jaxb-provider</artifactId>
-					<version>3.0.5.Final</version>
+					<version>${resteasy.version}</version>
 					<scope>test</scope>
 				</dependency>
 				<dependency>
 					<groupId>org.jboss.resteasy</groupId>
 					<artifactId>resteasy-json-p-provider</artifactId>
-					<version>3.0.5.Final</version>
+					<version>${resteasy.version}</version>
 					<scope>test</scope>
 				</dependency>
 				<dependency>
