@@ -24,9 +24,9 @@ It's based on {asciidoctor-url}[Asciidoctor project] thanks to {asciidoctor-url}
 
 image::patch-demo.png[Patch feature example]
 
-== Features on 0.1.0-Alpha1
+== 0.1.0-Alpha1 features
 
-* By default when you click to +connect+, you are a +*reader*+ :
+* By default when you click on +connect+, you are a +*reader*+ :
 ** It means that you can see what happens on HTML5 preview but you can't send any source version
 * When you +add a name+ and click to +Enable editor+, you become a +*writer*+ :
 ** so you can update the asciidoc source in realtime and automatically view HTML 5 rendered :
