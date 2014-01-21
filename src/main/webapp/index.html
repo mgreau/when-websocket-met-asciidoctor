@@ -5,30 +5,20 @@
 	Asciidoctor - Wildfly 8 - OpenShit</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="description" content="Real-time collaborative writing on Asciidoc file" />
+<meta name="description"
+	content="Real-time collaborative writing on Asciidoc file" />
 <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
 <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body ng-app="wWSmADapp" ng-controller="LiveWritingCtrl">
 	<div class="container-fluid" ng-repeat="lwDoc in lwDocs">
-		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse"
-					data-target="#bs-example-navbar-collapse-1">
-					<span class="sr-only">Toggle navigation</span> <span
-						class="icon-bar"></span> <span class="icon-bar"></span> <span
-						class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="#">wWSmAd</a>
-				<br/>&nbsp;&nbsp;<small><em>v. 0.1.0-Alpha2-SNAPSHOT</em></small>
-			</div>
-			<collaborativemessage doc="lwDoc"></collaborativemessage>
-		</nav>
+		<collaborativemessage doc="lwDoc"></collaborativemessage>
 		<div class="row">
 			<asciidoceditor key="lwDoc.key"></asciidoceditor>
 			<auth ng-show="lwDoc.status == 'DISCONNECTED'" doc="lwDoc"></auth>
-			<html5render ng-show="lwDoc.status == 'CONNECTED'" html5="lwDoc.html5" key="lwDoc.key"></html5render>
+			<html5render ng-show="lwDoc.status == 'CONNECTED'"
+				html5="lwDoc.html5" key="lwDoc.key"></html5render>
 		</div>
 	</div>
 	<script src="js/ng/angular.min.js"></script>

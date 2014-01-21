@@ -1,47 +1,64 @@
-<div class="collapse navbar-collapse">
-	<p class="navbar-text">
-		<span class="label label-default">{{theDoc.status}}</span> <br />
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="panel panel-default recipients">
+		<div class="panel-heading">
 		<button ng-show="theDoc.status == 'CONNECTED'"
-			class="navbar-btn btn-danger btn-xs"
-			ng-click="disconnect(theDoc.key)">
-			<span class="glyphicon glyphicon-off"></span> Exit.
-		</button>
-		<button ng-show="theDoc.status == 'DISCONNECTED'"
-			class="navbar-btn btn-success btn-xs" ng-click="connect(theDoc.key)"
-			title="Connect OR You can also work on offline mode!">Click
-			to connect</button>
-	</p>
-	<p class="navbar-text">
-		<span title="Number of writer" class="glyphicon glyphicon-user"></span>
-		<em>Online writers :</em> <span title="Number of writers"
-			class="badge">{{theDoc.notification.nbWriters}}</span> <br /> <span
-			ng-repeat="writer in theDoc.notification.writers"
-			class="label label-success">{{writer}}</span>
-	</p>
-	<p class="navbar-text">
-		<span title="Number of readers" class="glyphicon glyphicon-eye-open"></span>
-		<em>Online readers :</em> <span title="Number of viewer" class="badge">{{theDoc.notification.nbConnected}}</span>
-		<br /> <span title="Time to render HTML5"
-			class="glyphicon glyphicon-cog"></span> <em>Process time : <span
-			class="label label-danger">{{theDoc.html5.timeToRender}} ms</span>
-		</em> <br /> <em ng-show="isEditorActivate">Signed in as <b>{{theDoc.author}}</b>.
-		</em>
-	</p>
-	<p class="navbar-text">
-		<span class="label label-warning"
-			ng-show="theDoc.status == 'DISCONNECTED'"> <span
-			title="Offline" class="glyphicon glyphicon-exclamation-sign"></span>
-			<strong>Offline mode.</strong></span> <span class="label label-info"
-			ng-show="theDoc.status == 'CONNECTED'"> You can work on <strong>real-time
-				writing mode</strong>.
-		</span> <br /> <span><em><strong>{{theDoc.state}}</strong></em></span>
-	</p>
-	<p class="navbar-text navbar-right">
-		<span title="Last writer" class="glyphicon glyphicon-saved"></span>
-		Last writer : <span class="label label-success">{{theDoc.html5.currentWriter}}</span>
-		<br />
-		<button class="navbar-btn btn-primary btn-xs" type="button"
-			ng-click="loadLastAdoc(theDoc.key)">Load the last Asciidoc
-			source</button>
-	</p>
-</div>
+				class="navbar-btn btn-danger btn-xs"
+				ng-click="disconnect(theDoc.key)" title="Exit from this space (ID:232030)">
+				<span class="glyphicon glyphicon-off"></span>
+			</button>
+			<span class="label label-danger"
+				ng-show="theDoc.status == 'DISCONNECTED'"> <span
+				title="Offline" class="glyphicon glyphicon-exclamation-sign"></span>
+				<strong>OFFLINE Mode.</strong></span> <span class="label label-success"
+				ng-show="theDoc.status == 'CONNECTED'"><strong>ONLINE Mode.</strong>
+			</span>
+			 | Realtime Collaborative Editor v0.1-alpha2 |
+			<button class="navbar-btn btn-primary btn-xs" type="button" ng-show="theDoc.status == 'CONNECTED'" 
+					ng-click="loadLastAdoc(theDoc.key)">Load the last Asciidoc
+					source</button>
+				| 		
+			<span title="Time to render HTML5" class="glyphicon glyphicon-cog"></span>
+				<em>Process time : <span class="label label-warning">{{theDoc.html5.timeToRender}}
+						ms</span>
+				</em> 
+		</div>
+
+		<div class="panel-body">
+			<div class="recipient current-user" title="Signed as">
+				<img src="http://placehold.it/50x50" /> {{theDoc.author}}
+				<div class="email">travis@company.com</div>
+			</div>
+			<div class="recipient" title="Marshall Hitt
+marshall@company.com">
+				<img src="http://placehold.it/50x50" /> Marshall Hitt
+				<div class="email">marshall@company.com</div>
+			</div>
+			<div class="recipient" title="Joe Cadena
+joe@company.com">
+				<img src="http://placehold.it/50x50" /> Joe Cadena
+				<div class="email">joe@company.com</div>
+			</div>
+			<div class="recipient" title="Writers / Readers infos">
+				<span title="Number of writer" class="glyphicon glyphicon-user"></span>
+				<em>Online writers :</em> <span title="Number of writers"
+					class="badge">{{theDoc.notification.nbWriters}}</span> <br /> <span
+					ng-repeat="writer in theDoc.notification.writers"
+					class="label label-success">{{writer}}</span> <span
+					title="Number of readers" class="glyphicon glyphicon-eye-open"></span>
+				<em>Online readers :</em> <span title="Number of viewer"
+					class="badge">{{theDoc.notification.nbConnected}}</span>
+			</div>
+			<div class="recipient" title="Status info">
+				<span title="Last writer" class="glyphicon glyphicon-saved"></span>
+				Status : <span class="label label-default">{{theDoc.status}}</span> 
+				<br />
+				<span title="Last writer" class="glyphicon glyphicon-saved"></span>
+				State : <span class="label label-default">{{theDoc.state}}</span> 
+			</div>
+			<div class="clearfix"></div>
+		</div>
+		<div class="panel-footer">
+		
+		</div>
+	</div>
+</nav>
