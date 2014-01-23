@@ -6,4 +6,3 @@ target/
 .factorypath
 .idea/
 *~
-src/main/webapp/libs/*
