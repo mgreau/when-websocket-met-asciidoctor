@@ -15,7 +15,7 @@
 			 | Realtime Collaborative Editor v0.1-alpha2 |
 			<button class="navbar-btn btn-primary btn-xs" type="button" ng-show="theDoc.status == 'CONNECTED'" 
 					ng-click="loadLastAdoc(theDoc.key)">Load the last Asciidoc
-					source</button>
+					source by {{theDoc.author}}</button> 
 				| 		
 			<span title="Time to render HTML5" class="glyphicon glyphicon-cog"></span>
 				<em>Process time : <span class="label label-warning">{{theDoc.html5.timeToRender}}
@@ -24,26 +24,15 @@
 		</div>
 
 		<div class="panel-body">
-			<div class="recipient current-user" title="Signed as">
-				<img src="http://placehold.it/50x50" /> {{theDoc.author}}
-				<div class="email">travis@company.com</div>
+			<div class="recipient current-user" title="Signed as" ng-repeat="writer in theDoc.notification.writers">
+				<img src="http://placehold.it/50x50" /> {{writer}} 
+				<div class="email">email@com</div>
 			</div>
-			<div class="recipient" title="Marshall Hitt
-marshall@company.com">
-				<img src="http://placehold.it/50x50" /> Marshall Hitt
-				<div class="email">marshall@company.com</div>
-			</div>
-			<div class="recipient" title="Joe Cadena
-joe@company.com">
-				<img src="http://placehold.it/50x50" /> Joe Cadena
-				<div class="email">joe@company.com</div>
-			</div>
+			
 			<div class="recipient" title="Writers / Readers infos">
 				<span title="Number of writer" class="glyphicon glyphicon-user"></span>
 				<em>Online writers :</em> <span title="Number of writers"
 					class="badge">{{theDoc.notification.nbWriters}}</span> <br /> <span
-					ng-repeat="writer in theDoc.notification.writers"
-					class="label label-success">{{writer}}</span> <span
 					title="Number of readers" class="glyphicon glyphicon-eye-open"></span>
 				<em>Online readers :</em> <span title="Number of viewer"
 					class="badge">{{theDoc.notification.nbConnected}}</span>
