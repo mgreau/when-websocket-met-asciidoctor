@@ -1,0 +1,11 @@
+{
+    "name": "wWSmAD",
+    "version": "0.1.0-alpha2",
+    "dependencies": {
+        "angular": "1.0.8",
+        "angular-bootstrap": "0.10.0",
+        "angular-ui-ace": "latest",
+        "angular-resource": "latest",
+        "bootstrap": "latest"
+    }    
+}
