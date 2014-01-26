@@ -1,4 +1,31 @@
 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-	<iframe id="html5-rendered" srcdoc="{{theHtml5.output}}" width="100%"
-		height="800px"> </iframe>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<div class="row" style="height:17px;">
+				<div class="col-sm-8">
+						<button ng-click="loadLastAdoc(theDoc.key)" type="button"
+							class="btn btn-xs" data-toggle="tooltip" title="Source code">
+							<span class="glyphicon glyphicon-download-alt" ></span> Load last Asciidoc 
+						</button>
+						<img ng-show="theDoc.author != theDoc.html5.currentWriter " src="http://placehold.it/20/55C1E7/fff&amp;text=W" alt="User Avatar" class="img-square"> 
+						<img ng-show="theDoc.author == theDoc.html5.currentWriter " src="http://placehold.it/20/FA6F57/fff&amp;text=ME" alt="User Avatar" class="img-circle"> 
+						<em> {{theDoc.html5.currentWriter}} </em>
+				</div>
+				<div class="col-sm-2">
+					<span title="Time to render HTML5" class="glyphicon glyphicon-cog"></span>
+					<span class="label label-warning">{{theDoc.html5.timeToRender}} ms</span>
+				</div>
+				<div class="col-sm-2">
+					<progressbar max="max" value="dynamic" type="success"> <span
+						style="color: black; white-space: nowrap;">{{dynamic}} /
+						{{max}}</span> </progressbar>
+				</div>
+			</div>
+		</div>
+		<div class="panel-body" style="padding:0px;">
+			<iframe id="html5-rendered" srcdoc="{{theHtml5.output}}" width="100%"
+				height="800px"> </iframe>
+		</div>
+	</div>
 </div>

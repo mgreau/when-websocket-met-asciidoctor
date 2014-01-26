@@ -1,23 +1,40 @@
 body {
-	padding-top: 170px;
+	padding-top: 150px;
 }
 
 .ace_editor {
 	height: 800px;
 }
 
-.ace_content {
-	background-color: black;
-	color: white;
-}
 
 iframe {
-	border: 1px solid black;
+	border: 1px solid white;
 }
 .container-fluid {
   padding: 0px 15px;
 }
 
+/**
+Fix Angular-ui
+**/
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+/**
+nav bar
+**/
+.navbar-btn, .navbar-btn.btn-xs {
+margin-top: 0px;
+margin-bottom: 0px;
+}
+
+.alert{
+	padding: 10px;
+	margin-bottom:0px;
+}
+
+/** 
+Users bar
+**/
 .recipients .panel-body {
     overflow: auto;
     max-height: 200px; 
@@ -48,6 +65,10 @@ iframe {
 }
 .recipients .recipient .current-user {
     background-color: #CCC;
+}
+
+.recipients .recipient.messages {
+     width: 450px;
 }
 
 .panel {
