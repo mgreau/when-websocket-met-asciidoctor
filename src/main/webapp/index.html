@@ -1,33 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Real-time collaborative editor : When - Websocket met
-	Asciidoctor - Wildfly 8 - OpenShit</title>
+<title>Realtime Collaborative Editor for Asciidoctor</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="description"
-	content="Real-time collaborative writing on Asciidoc file" />
+	content="Realtime Collaborative Editor for Asciidoctor" />
 <link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body ng-app="wWSmADapp" ng-controller="LiveWritingCtrl">
-	<div class="container-fluid" ng-repeat="lwDoc in lwDocs">
-		<collaborativemessage doc="lwDoc"></collaborativemessage>
+<body ng-app="wWSmADapp" ng-controller="RCEAdocCtrl">
+	<div class="container-fluid" ng-repeat="rceAdoc in rceAdocs">
+		<collaborativemessage doc="rceAdoc"></collaborativemessage>
 		<div class="row">
-			<asciidoceditor key="lwDoc.key"></asciidoceditor>
-			<auth ng-show="lwDoc.status == 'DISCONNECTED'" doc="lwDoc"></auth>
-			<html5render ng-show="lwDoc.status == 'CONNECTED'"
-				html5="lwDoc.html5" key="lwDoc.key"></html5render>
+			<asciidoceditor key="rceAdoc.key"></asciidoceditor>
+			<auth ng-show="rceAdoc.status == 'DISCONNECTED'" doc="rceAdoc"></auth>
+			<html5render ng-show="rceAdoc.status == 'CONNECTED'"
+				html5="rceAdoc.html5" key="rceAdoc.key"></html5render>
 		</div>
 	</div>
 	<script src="libs/angular/angular.min.js"></script>
 	<script src="libs/angular-resource/angular-resource.min.js"></script>
-	<script src="libs/angular-bootstrap/ui-bootstrap.min.js"></script>
+	<script src="libs/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 	<script src="libs/ace-builds/src-min/ace.js"></script>
 	<script src="libs/angular-ui-ace/ui-ace.min.js"></script>
+	
 	<script src="js/app.js"></script>
 	<script src="js/services.js"></script>
+	<script src="js/offlineServices.js"></script>
 	<script src="js/controllers.js"></script>
 	<script src="js/directives.js"></script>
 	<script>

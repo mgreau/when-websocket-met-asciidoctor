@@ -5,44 +5,36 @@
 				class="navbar-btn btn-danger btn-xs"
 				ng-click="disconnect(theDoc.key)" title="Exit from this space (ID:232030)">
 				<span class="glyphicon glyphicon-off"></span>
-			</button>
+			</button> 
+			<span ng-show="theDoc.status == 'CONNECTED'"> | </span>
 			<span class="label label-danger"
 				ng-show="theDoc.status == 'DISCONNECTED'"> <span
 				title="Offline" class="glyphicon glyphicon-exclamation-sign"></span>
 				<strong>OFFLINE Mode.</strong></span> <span class="label label-success"
 				ng-show="theDoc.status == 'CONNECTED'"><strong>ONLINE Mode.</strong>
+			</span>  | 
+		Realtime Collaborative Editor for Asciidoctor | v0.1-alpha2 | 
+			 <span ng-show="theDoc.status == 'CONNECTED'">
+				<span title="Number of writer" class="glyphicon glyphicon-user"></span>
+					<em>Online writers :</em> <span title="Number of writers"
+						class="badge badge">{{theDoc.notification.nbWriters}}</span>
+						 | 
+				 <span
+						title="Number of readers" class="glyphicon glyphicon-eye-open"></span>
+					<em>Online readers :</em> <span title="Number of viewer"
+						class="badge">{{theDoc.notification.nbConnected}}</span>
 			</span>
-			 | Realtime Collaborative Editor v0.1-alpha2 |
-			<button class="navbar-btn btn-primary btn-xs" type="button" ng-show="theDoc.status == 'CONNECTED'" 
-					ng-click="loadLastAdoc(theDoc.key)">Load the last Asciidoc
-					source by {{theDoc.author}}</button> 
-				| 		
-			<span title="Time to render HTML5" class="glyphicon glyphicon-cog"></span>
-				<em>Process time : <span class="label label-warning">{{theDoc.html5.timeToRender}}
-						ms</span>
-				</em> 
 		</div>
 
 		<div class="panel-body">
 			<div class="recipient current-user" title="Signed as" ng-repeat="writer in theDoc.notification.writers">
-				<img src="http://placehold.it/50x50" /> {{writer}} 
-				<div class="email">email@com</div>
+				<img ng-show="theDoc.author != writer " src="http://placehold.it/50/55C1E7/fff&amp;text=W" alt="User Avatar" class="img-square"> 
+				<img ng-show="theDoc.author == writer " src="http://placehold.it/50/FA6F57/fff&amp;text=ME" alt="User Avatar" class="img-circle"> 
+				{{writer}} 
+				<div class="email">writer</div>
 			</div>
-			
-			<div class="recipient" title="Writers / Readers infos">
-				<span title="Number of writer" class="glyphicon glyphicon-user"></span>
-				<em>Online writers :</em> <span title="Number of writers"
-					class="badge">{{theDoc.notification.nbWriters}}</span> <br /> <span
-					title="Number of readers" class="glyphicon glyphicon-eye-open"></span>
-				<em>Online readers :</em> <span title="Number of viewer"
-					class="badge">{{theDoc.notification.nbConnected}}</span>
-			</div>
-			<div class="recipient" title="Status info">
-				<span title="Last writer" class="glyphicon glyphicon-saved"></span>
-				Status : <span class="label label-default">{{theDoc.status}}</span> 
-				<br />
-				<span title="Last writer" class="glyphicon glyphicon-saved"></span>
-				State : <span class="label label-default">{{theDoc.state}}</span> 
+			<div class="recipient messages" title="Messages">
+				<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{theDoc.state}}</alert>
 			</div>
 			<div class="clearfix"></div>
 		</div>

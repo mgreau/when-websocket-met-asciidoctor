@@ -100,6 +100,24 @@ app.factory('WebSocketService', function($window) {
 });
 
 
+
+
+//Service to handle Offline mode
+// it uses IndexedDB to store files locally
+app.factory('OfflineService', function($window, WebSocketService) {
+	var service = {};
+	
+	// Close the WebSocket connection
+	service.storeAdoc = function(idAdoc, adoc, writer) {
+		
+		
+	};
+    return service;
+	
+});
+
+//app initialisation
+//TODO : improve it
 app.factory('DocRESTService', function($http, $window) {
 	var appPath = $window.location.pathname.split('/')[1];
 	var myService = {
@@ -120,12 +138,3 @@ app.factory('DocRESTService', function($http, $window) {
 		  };
 	return myService;
 });
-
-app.factory('WriterService', function($window, WebSocketService) {
-	var service = {};
-
- 
-    return service;
-	
-});
-
