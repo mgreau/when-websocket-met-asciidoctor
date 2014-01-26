@@ -1,37 +1,51 @@
-app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService, WebSocketService) {
+app.controller("RCEAdocCtrl", function($scope, DocRESTService, OfflineService, WebSocketService) {
 	
-	//Real-time Collaborative Writing Docs
-	$scope.lwDocs = new Object();
+	//RCEAdoc : Realtime Collaborative Editor for Asciidoctor
+	$scope.rceAdocs = new Object();
 	$scope.isEditorActivate = false;
 	$scope.isEvtOnChangeActivate = false;
 	$scope.isDiffOnEditor = false;
+	
+	//Editor buttons
+	$scope.radioModel = 'onCtrlS';
+	
+	//Progress Bar
+	$scope.max = 100;
+	$scope.dynamic = 100;
+    $scope.type = 'success';
+    
+	//TODO : handle private space
+	var spaceID = "1234";
 
+	//First call fore each client 
 	DocRESTService.async().then(function(datas) {
-	    		$scope.lwDocs["1234"] = new Object();
-	    		$scope.lwDocs["1234"].key = "1234";
-	    		$scope.lwDocs["1234"].status = 'DISCONNECTED';
-	    		$scope.lwDocs["1234"].adocSrc = datas;
-	    		$scope.lwDocs["1234"].state = "Init Asciidoc source.";
-	    		$scope.lwDocs["1234"].author = "";
+	    		$scope.rceAdocs[spaceID] = new Object();
+	    		$scope.rceAdocs[spaceID].key = spaceID;
+	    		$scope.rceAdocs[spaceID].status = 'DISCONNECTED';
+	    		$scope.rceAdocs[spaceID].adocSrc = datas;
+	    		$scope.rceAdocs[spaceID].state = "WELCOME ! You can create a new space OR join a team.";
+	    		$scope.rceAdocs[spaceID].author = "";
+	    		$scope.addAlert("info", $scope.rceAdocs[spaceID].state);
 	});
 	
 	$scope.aceLoaded = function(_editor) {
 		$scope.editor = _editor;
 	    // Options
 		$scope.editor.setReadOnly(true);
-		$scope.editor.insert($scope.lwDocs["1234"].adocSrc);
+		$scope.editor.insert($scope.rceAdocs[spaceID].adocSrc);
 		
 		$scope.editor.commands.addCommand({
 			    name: 'sendAsciidocToServer',
 			    bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
 			    exec: function(editor) {
 			    	if ($scope.isDiffOnEditor === true){
-						  $scope.lwDocs["1234"].state = "Diff are loaded, apply it or unload it by click on Compute diff.";
+						  $scope.rceAdocs[spaceID].state = "Diff are loaded, apply it or unload it by click on Compute diff.";
+						  $scope.addAlert("info", $scope.rceAdocs[idAdoc].state);
 					 }
 					 else {
 				    	if ($scope.isEvtOnChangeActivate === false){
-					    	$scope.lwDocs["1234"].adocSrc = editor.getValue();
-							$scope.sendAdoc("1234");
+					    	$scope.rceAdocs[spaceID].adocSrc = editor.getValue();
+							$scope.sendAdoc(spaceID);
 				    	}
 					 }
 			    },
@@ -42,12 +56,13 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 	  //Evt when editor value change
 	  $scope.aceChanged = function(e) {
 		  if ($scope.isDiffOnEditor === true){
-			  $scope.lwDocs["1234"].state = "Diff are loaded, apply it or unload it by click on Compute diff.";
+			  $scope.rceAdocs[spaceID].state = "Diff are loaded, apply it or unload it by click on Compute diff.";
+			  $scope.addAlert("info", $scope.rceAdocs[idAdoc].state);
 		  }
 		  else {
 			  if ($scope.isEvtOnChangeActivate === true){
-				  $scope.lwDocs["1234"].adocSrc = $scope.editor.getValue();
-				  $scope.sendAdoc("1234");
+				  $scope.rceAdocs[spaceID].adocSrc = $scope.editor.getValue();
+				  $scope.sendAdoc(spaceID);
 			  }
 		  }
 		  //TODO handle "is writing" event
@@ -65,42 +80,45 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 
 			//Asciidoc message from server (last version from other writer or patch)
 			if (angular.equals(obj.type, "snapshot")){
-				$scope.lwDocs[idAdoc].adoc = obj.data;
+				$scope.rceAdocs[idAdoc].adoc = obj.data;
 				$scope.editor.setValue(obj.data.source);
 				$scope.isDiffOnEditor = false;
-				$scope.lwDocs[idAdoc].state = "Just Get last Asciidoc version";
-				$scope.lwDocs[idAdoc].key = idAdoc;
+				$scope.rceAdocs[idAdoc].state = "Just Get last Asciidoc version";
+				$scope.rceAdocs[idAdoc].key = idAdoc;
 			} 
 			else if (angular.equals(obj.type, "patch")){
-				$scope.lwDocs[idAdoc].adoc = obj.data;
+				$scope.rceAdocs[idAdoc].adoc = obj.data;
 				$scope.editor.setValue(obj.data.sourceToMerge);
 				$scope.isDiffOnEditor = false;
-				$scope.lwDocs[idAdoc].state = "Patch Apply!";
-				$scope.lwDocs[idAdoc].key = idAdoc;
+				$scope.rceAdocs[idAdoc].state = "Patch Apply!";
+				$scope.rceAdocs[idAdoc].key = idAdoc;
 			} 
 			else if (angular.equals(obj.type, "diff")){
-				$scope.lwDocs[idAdoc].adoc = obj.data;
+				$scope.rceAdocs[idAdoc].adoc = obj.data;
 				//receive diff
 				$scope.isDiffOnEditor = true;
 				$scope.editor.setValue(obj.data.sourceToMerge);
-				$scope.lwDocs[idAdoc].state = "Diff";
-				$scope.lwDocs[idAdoc].key = idAdoc;
+				$scope.rceAdocs[idAdoc].state = "Diff";
+				$scope.rceAdocs[idAdoc].key = idAdoc;
 			} 
 			// output Message from server
 			else if (angular.equals(obj.type, "output")){
-				$scope.lwDocs[idAdoc].html5 = obj.data;
-				$scope.lwDocs[idAdoc].state = "New HTML5 output version";
-				$scope.lwDocs[idAdoc].key = idAdoc;
+				$scope.rceAdocs[idAdoc].html5 = obj.data;
+				$scope.rceAdocs[idAdoc].state = "New HTML5 output version";
+				$scope.rceAdocs[idAdoc].key = idAdoc;
+				//progress bar to 100
+				$scope.dynamic = 100;
 			}
 			else if (angular.equals(obj.type, "notification")){
-				$scope.lwDocs[idAdoc].notification = obj.data;
-				$scope.lwDocs[idAdoc].state = "Notification received.";
-				$scope.lwDocs[idAdoc].key = idAdoc;
+				$scope.rceAdocs[idAdoc].notification = obj.data;
+				$scope.rceAdocs[idAdoc].key = idAdoc;
 			}
+			
+			$scope.addAlert("success", $scope.rceAdocs[idAdoc].state);
 
 		} catch (exception) {
 			//Message WebSocket lifecycle
-			$scope.lwDocs[idAdoc].status = message;
+			$scope.rceAdocs[idAdoc].status = message;
 			console.log(message);
 		}
 		$scope.$apply();
@@ -109,48 +127,56 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 	//Send the asciidoc file to the server in order to see the ouput result
 	$scope.sendAdoc = function(idAdoc) {
 		if (angular.equals(WebSocketService.status(idAdoc), WebSocket.OPEN)){
-			if(angular.isUndefined($scope.lwDocs[idAdoc].author) || angular.equals($scope.lwDocs[idAdoc].author,"")){
-				$scope.lwDocs[idAdoc].state = "You need to add an author name.";
+			if(angular.isUndefined($scope.rceAdocs[idAdoc].author) || angular.equals($scope.rceAdocs[idAdoc].author,"")){
+				$scope.rceAdocs[idAdoc].state = "You need to add an author name.";
 				return
 			}
-			WebSocketService.sendAdocSource(idAdoc, $scope.lwDocs[idAdoc].adocSrc, $scope.lwDocs[idAdoc].author);
+			//progress bar to 0
+			$scope.dynamic = 0;
+			WebSocketService.sendAdocSource(idAdoc, $scope.rceAdocs[idAdoc].adocSrc, $scope.rceAdocs[idAdoc].author);
 		}
 		else {
-			$scope.lwDocs[idAdoc].state = "You work on OFFLINE MODE !!. You need to CONNECT to do this action.";
+			$scope.rceAdocs[idAdoc].state = "You work on OFFLINE MODE !!. You need to CONNECT to do this action.";
+			$scope.addAlert("danger", $scope.rceAdocs[idAdoc].state);
 		}
 	};
 	
 	
 	//Load the asciidoc source associated to the last output, to the source editor
 	$scope.loadLastAdoc = function(idAdoc) {
-		if (angular.isUndefined($scope.lwDocs[idAdoc].html5.source)){
+		if (angular.isUndefined($scope.rceAdocs[idAdoc].html5.source)){
 			console.log("No html5.source content");
-			$scope.lwDocs[idAdoc].state = "You already have the last version.";
+			$scope.rceAdocs[idAdoc].state = "You already have the last version.";
+			$scope.addAlert("info", $scope.rceAdocs[idAdoc].state);
 		}
 		else {
-			$scope.lwDocs[idAdoc].adocSrc = $scope.lwDocs[idAdoc].html5.source;
-			$scope.editor.setValue($scope.lwDocs[idAdoc].adocSrc);
-			$scope.lwDocs[idAdoc].state = "Last asciidoc source loaded !!.";
+			$scope.rceAdocs[idAdoc].adocSrc = $scope.rceAdocs[idAdoc].html5.source;
+			$scope.editor.setValue($scope.rceAdocs[idAdoc].adocSrc);
+			$scope.rceAdocs[idAdoc].state = "Last asciidoc source loaded !!.";
+			$scope.addAlert("success", $scope.rceAdocs[idAdoc].state);
 		}
 	};
 	
 	$scope.applyPatch = function(idAdoc) {
 		if (angular.equals(WebSocketService.status(idAdoc), WebSocket.OPEN)){
-			if(angular.isUndefined($scope.lwDocs[idAdoc].author) || angular.equals($scope.lwDocs[idAdoc].author,"")){
-				$scope.lwDocs[idAdoc].state = "You need to add an author name.";
+			if(angular.isUndefined($scope.rceAdocs[idAdoc].author) || angular.equals($scope.rceAdocs[idAdoc].author,"")){
+				$scope.rceAdocs[idAdoc].state = "You need to add an author name.";
+				$scope.addAlert("danger", $scope.rceAdocs[idAdoc].state);
 				return
 			}
 			if ($scope.isDiffOnEditor === false){
-				  $scope.lwDocs["1234"].state = "No Patch to apply.";
+				  $scope.rceAdocs[spaceID].state = "No Patch to apply.";
+				  $scope.addAlert("danger", $scope.rceAdocs[idAdoc].state);
 				  return;
 			}
 			$scope.isDiffOnEditor = false;
-			$scope.lwDocs[idAdoc].state = "Patch Apply !";
-			WebSocketService.sendAdocSourceToApplyPatch(idAdoc, $scope.lwDocs[idAdoc].adocSrc, 
-					$scope.lwDocs[idAdoc].author, $scope.lwDocs[idAdoc].adoc.sourceToMerge);
+			$scope.rceAdocs[idAdoc].state = "Patch Apply !";
+			WebSocketService.sendAdocSourceToApplyPatch(idAdoc, $scope.rceAdocs[idAdoc].adocSrc, 
+					$scope.rceAdocs[idAdoc].author, $scope.rceAdocs[idAdoc].adoc.sourceToMerge);
 		}
 		else {
-			$scope.lwDocs[idAdoc].state = "You work on OFFLINE MODE !!. You need to CONNECT to do this action.";
+			$scope.rceAdocs[idAdoc].state = "You work on OFFLINE MODE !!. You need to CONNECT to do this action.";
+			$scope.addAlert("danger", $scope.rceAdocs[idAdoc].state);
 		}
 	};
 	
@@ -158,48 +184,96 @@ app.controller("LiveWritingCtrl", function($scope, DocRESTService, WriterService
 	$scope.computeDiff = function(idAdoc) {
 		if ($scope.isDiffOnEditor === true){
 			$scope.isDiffOnEditor = false;
-			$scope.editor.setValue($scope.lwDocs[idAdoc].adocSrc);
+			$scope.editor.setValue($scope.rceAdocs[idAdoc].adocSrc);
 			return;
 		}
 		if (angular.equals(WebSocketService.status(idAdoc), WebSocket.OPEN)){
-			if(angular.isUndefined($scope.lwDocs[idAdoc].author) || angular.equals($scope.lwDocs[idAdoc].author,"")){
-				$scope.lwDocs[idAdoc].state = "You need to add an author name.";
+			if(angular.isUndefined($scope.rceAdocs[idAdoc].author) || angular.equals($scope.rceAdocs[idAdoc].author,"")){
+				$scope.rceAdocs[idAdoc].state = "You need to add an author name.";
+				$scope.addAlert("danger", $scope.rceAdocs[idAdoc].state);
 				return;
-			} else if (angular.isUndefined($scope.lwDocs[idAdoc].html5) 
-					|| angular.isUndefined($scope.lwDocs[idAdoc].html5.source) || angular.equals($scope.lwDocs[idAdoc].html5.source,"")){
-				$scope.lwDocs[idAdoc].state = "No source to compare with.";
+			} else if (angular.isUndefined($scope.rceAdocs[idAdoc].html5) 
+					|| angular.isUndefined($scope.rceAdocs[idAdoc].html5.source) || angular.equals($scope.rceAdocs[idAdoc].html5.source,"")){
+				$scope.rceAdocs[idAdoc].state = "No source to compare with.";
+				$scope.addAlert("danger", $scope.rceAdocs[idAdoc].state);
 				return;
-			} else if (angular.equals($scope.lwDocs[idAdoc].html5.currentWriter,$scope.lwDocs[idAdoc].author)){
-				$scope.lwDocs[idAdoc].state = "You are the last writer, no need to compute diff.";
+			} else if (angular.equals($scope.rceAdocs[idAdoc].html5.currentWriter,$scope.rceAdocs[idAdoc].author)){
+				$scope.rceAdocs[idAdoc].state = "You are the last writer, no need to compute diff.";
+				$scope.addAlert("danger", $scope.rceAdocs[idAdoc].state);
 				return;
 			}
-			$scope.lwDocs[idAdoc].adocSrc = $scope.editor.getValue();
-			WebSocketService.sendAdocSourceForDiff(idAdoc, $scope.lwDocs[idAdoc].adocSrc, $scope.lwDocs[idAdoc].author, $scope.lwDocs[idAdoc].html5.source);
+			$scope.rceAdocs[idAdoc].adocSrc = $scope.editor.getValue();
+			WebSocketService.sendAdocSourceForDiff(idAdoc, $scope.rceAdocs[idAdoc].adocSrc, $scope.rceAdocs[idAdoc].author, $scope.rceAdocs[idAdoc].html5.source);
 		}
 		else {
-			$scope.lwDocs[idAdoc].state = "You work on OFFLINE MODE !!. You need to CONNECT to do this action.";
+			$scope.rceAdocs[idAdoc].state = "You work on OFFLINE MODE !!. You need to CONNECT to do this action.";
+			$scope.addAlert("danger", $scope.rceAdocs[idAdoc].state);
 		}
 	};
 	
 	//
 	$scope.enableEditor = function(idAdoc) {
-		if(angular.isUndefined($scope.lwDocs[idAdoc].author) || angular.equals($scope.lwDocs[idAdoc].author,"")){
-			$scope.lwDocs[idAdoc].state = "You need to add an author name!!";
+		if(angular.isUndefined($scope.rceAdocs[idAdoc].author) || angular.equals($scope.rceAdocs[idAdoc].author,"")){
+			$scope.rceAdocs[idAdoc].state = "You need to add an author name!!";
+			$scope.addAlert("danger", $scope.rceAdocs[idAdoc].state);
 			return
 		}
 		$scope.editor.setReadOnly(false);
 		$scope.isEditorActivate = true;
-		$scope.lwDocs[idAdoc].state = "You can write your doc !";
+		$scope.rceAdocs[idAdoc].state = "You can write your doc !";
+		$scope.addAlert("success", $scope.rceAdocs[idAdoc].state);
 	};
 
 	//WebSocket connection in order to send data to the server
 	$scope.connect = function(idAdoc) {
 		WebSocketService.connect(idAdoc);
 	};
+	
+	//Alert messages
+	$scope.alerts = [];
+    
+    $scope.closeAlert = function(index) {
+        $scope.alerts.splice(index, 1);
+      };
+      
+	$scope.addAlert = function(typeAlert, message) {
+		$scope.alerts = [];
+		$scope.alerts.push({ type: typeAlert, msg: message});
+	};
 
 	//Disconnect from the server, work offline ?
 	$scope.disconnect = function(idAdoc) {
 		WebSocketService.disconnect(idAdoc);
+		//Activate the offline mode with storage
+		console.log("Activate the offline mode with storage");
+		OfflineService.open(function(){
+			OfflineService.getAllItems(function(row){
+	                $scope.slides.push(row);                       //get all the slides and put them in DOM
+	                if(! $scope.imgBuf[row.imageAll[0]]){          //load small image which is stored in IndexedDB
+	                	OfflineService.getItem('images', row.imageAll[0], function(item){
+	                        $scope.imgBuf[row.imageAll[0]] = item.imgBuf;        //enable image display in web page
+	                    });
+	                }
+	                if(parseInt(row.price) > $scope.cost.endPrice ){
+	                    $scope.cost.endPrice  = parseInt(row.price);
+	                }                                             //set max value of search item: end price
+	                var start = new Date();
+	                var currentDateString = row.date.replace(/-/g,'');
+	                start.setFullYear(parseInt(currentDateString.substring(0,4)), parseInt(currentDateString.substring(4,6)) -1, parseInt(currentDateString.substring(6)));
+	                if(start < $scope.date.start) {
+	                    $scope.date.start = start;                //set max value of search item: end date
+	                }
+	            },
+	            function(){
+	                $scope.slides.sort(function(a, b) {
+	                    return ((a.timeStamp > b.timeStamp) ? -1 : ((a.timeStamp < b.timeStamp) ? 1 : 0));
+	                });                                         // sort by the time added by default
+	                $scope.flags.title = 'Offline DB demo';
+	                $scope.flags.isViewLoading = false;
+	                $scope.currentPage = 1;
+	                $scope.$apply();
+	            });
+	        });
 	};
 
 });
