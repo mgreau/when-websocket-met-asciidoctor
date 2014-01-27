@@ -25,7 +25,7 @@
 						class="badge">{{theDoc.notification.nbConnected}}</span>
 			</span>
 			 | 
-			<span ng-show="theDoc.status == 'CONNECTED'">Signed as {{theDoc.author}}</span>
+			<span ng-show="theDoc.status == 'CONNECTED'"><em>Signed as {{theDoc.author}}</em></span>
 		</div>
 
 		<div class="panel-body">
@@ -59,6 +59,12 @@
 							class="btn btn-xs btn-default">Compute Diff</button>
 						<button type="button" ng-click="applyPatch(rceAdoc.key)"
 							class="btn btn-xs btn-default">Apply Patch</button>
+							
+						<!-- Save offline feature -->
+						<button type="button" ng-click="saveOnDisk(rceAdoc.key)"
+							class="btn btn-xs btn-default">Save on disk</button>
+						<button type="button" ng-click="loadFromDisk(rceAdoc.key)"
+							class="btn btn-xs btn-default">Load from disk</button>
 					</div>
 				</div>
 				<div class="col-sm-5" ng-show="theDoc.status == 'CONNECTED'" >

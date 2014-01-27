@@ -56,7 +56,7 @@ app.controller("RCEAdocCtrl", function($scope, DocRESTService, OfflineService, W
 	  //Evt when editor value change
 	  $scope.aceChanged = function(e) {
 		  if ($scope.isDiffOnEditor === true){
-			  $scope.rceAdocs[spaceID].state = "Diff are loaded, apply it or unload it by click on Compute diff.";
+			  $scope.rceAdocs[spaceID].state = "Diff are loaded, apply it or unload it by clicking the 'Compute diff' button.";
 			  $scope.addAlert("info", $scope.rceAdocs[idAdoc].state);
 		  }
 		  else {
@@ -65,7 +65,6 @@ app.controller("RCEAdocCtrl", function($scope, DocRESTService, OfflineService, W
 				  $scope.sendAdoc(spaceID);
 			  }
 		  }
-		  //TODO handle "is writing" event
 	  };
 	  
 	$scope.modeAdocOnChange = function(value) {
@@ -206,7 +205,7 @@ app.controller("RCEAdocCtrl", function($scope, DocRESTService, OfflineService, W
 			WebSocketService.sendAdocSourceForDiff(idAdoc, $scope.rceAdocs[idAdoc].adocSrc, $scope.rceAdocs[idAdoc].author, $scope.rceAdocs[idAdoc].html5.source);
 		}
 		else {
-			$scope.rceAdocs[idAdoc].state = "You work on OFFLINE MODE !!. You need to CONNECT to do this action.";
+			$scope.rceAdocs[idAdoc].state = "You work on OFFLINE MODE !!. You need to be CONNECTED to do this action.";
 			$scope.addAlert("danger", $scope.rceAdocs[idAdoc].state);
 		}
 	};
@@ -220,13 +219,20 @@ app.controller("RCEAdocCtrl", function($scope, DocRESTService, OfflineService, W
 		}
 		$scope.editor.setReadOnly(false);
 		$scope.isEditorActivate = true;
-		$scope.rceAdocs[idAdoc].state = "You can write your doc !";
+		$scope.rceAdocs[idAdoc].state = "You can write the doc and send your version on Ctrl+S command OR on each change.";
 		$scope.addAlert("success", $scope.rceAdocs[idAdoc].state);
 	};
 
 	//WebSocket connection in order to send data to the server
 	$scope.connect = function(idAdoc) {
 		WebSocketService.connect(idAdoc);
+	};
+	
+	//Disconnect from the server, work offline ?
+	$scope.disconnect = function(idAdoc) {
+		WebSocketService.disconnect(idAdoc);
+		//Activate the offline mode with storage
+		$scope.addAlert("warning", "You are working on Offline, don't forget to Save on disk!");
 	};
 	
 	//Alert messages
@@ -240,40 +246,23 @@ app.controller("RCEAdocCtrl", function($scope, DocRESTService, OfflineService, W
 		$scope.alerts = [];
 		$scope.alerts.push({ type: typeAlert, msg: message});
 	};
-
-	//Disconnect from the server, work offline ?
-	$scope.disconnect = function(idAdoc) {
-		WebSocketService.disconnect(idAdoc);
-		//Activate the offline mode with storage
-		console.log("Activate the offline mode with storage");
-		OfflineService.open(function(){
-			OfflineService.getAllItems(function(row){
-	                $scope.slides.push(row);                       //get all the slides and put them in DOM
-	                if(! $scope.imgBuf[row.imageAll[0]]){          //load small image which is stored in IndexedDB
-	                	OfflineService.getItem('images', row.imageAll[0], function(item){
-	                        $scope.imgBuf[row.imageAll[0]] = item.imgBuf;        //enable image display in web page
-	                    });
-	                }
-	                if(parseInt(row.price) > $scope.cost.endPrice ){
-	                    $scope.cost.endPrice  = parseInt(row.price);
-	                }                                             //set max value of search item: end price
-	                var start = new Date();
-	                var currentDateString = row.date.replace(/-/g,'');
-	                start.setFullYear(parseInt(currentDateString.substring(0,4)), parseInt(currentDateString.substring(4,6)) -1, parseInt(currentDateString.substring(6)));
-	                if(start < $scope.date.start) {
-	                    $scope.date.start = start;                //set max value of search item: end date
-	                }
-	            },
-	            function(){
-	                $scope.slides.sort(function(a, b) {
-	                    return ((a.timeStamp > b.timeStamp) ? -1 : ((a.timeStamp < b.timeStamp) ? 1 : 0));
-	                });                                         // sort by the time added by default
-	                $scope.flags.title = 'Offline DB demo';
-	                $scope.flags.isViewLoading = false;
-	                $scope.currentPage = 1;
-	                $scope.$apply();
-	            });
-	        });
+	
+	//Save the editor content into IndexDB
+	$scope.saveOnDisk = function(idAdoc) {
+		var data =   {
+	            id: idAdoc,
+	            name: "adocSource",
+	            param: $scope.editor.getValue()
+	        };
+	  OfflineService.addItem(data);
+	};
+	
+	//Load the latest backup from IndexDB into editor
+	$scope.loadFromDisk = function(idAdoc) {
+		OfflineService.getAllThings();
+        var data = OfflineService.getItem(idAdoc);
+        $scope.editor.setValue(data.param);
+        $scope.addAlert("success", "Last backup asciidoc source loaded !");
 	};
 
 });
