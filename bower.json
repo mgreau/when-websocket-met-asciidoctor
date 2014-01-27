@@ -6,6 +6,7 @@
     "angular-bootstrap": "0.10.0",
     "angular-ui-ace": "latest",
     "angular-resource": "latest",
-    "bootstrap": "latest"
+    "bootstrap": "latest",
+    "angular-indexeddb": "emil10001/angular-indexeddb"
   }
 }
