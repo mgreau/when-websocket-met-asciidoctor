@@ -22,6 +22,12 @@ Fix Angular-ui
 /**
 nav bar
 **/
+.navbar {
+	margin-bottom: 0px;
+	height: 142px;
+	border-color: black;
+}
+
 .navbar-btn, .navbar-btn.btn-xs {
 margin-top: 0px;
 margin-bottom: 0px;
@@ -38,6 +44,7 @@ Users bar
 .recipients .panel-body {
     overflow: auto;
     max-height: 200px; 
+    padding: 6px;
 }
 .recipients .recipient {
     display: block;
