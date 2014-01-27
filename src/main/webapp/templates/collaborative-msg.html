@@ -24,6 +24,8 @@
 					<em>Online readers :</em> <span title="Number of viewer"
 						class="badge">{{theDoc.notification.nbConnected}}</span>
 			</span>
+			 | 
+			<span ng-show="theDoc.status == 'CONNECTED'">Signed as {{theDoc.author}}</span>
 		</div>
 
 		<div class="panel-body">
@@ -39,7 +41,43 @@
 			<div class="clearfix"></div>
 		</div>
 		<div class="panel-footer">
-		
+			<div class="row" style="height:17px;">
+				<div class="col-sm-6">
+					<!-- Send to server mode -->
+					<div class="btn-group">
+						<button id="modeKey" ng-class="{isEvtOnChangeActivate: active}"
+							type="button" ng-click="modeAdocOnChange(false)"
+							class="btn btn-xs btn-default" ng-model="radioModel" btn-radio="'onCtrlS'"
+							title="Asciidoc source will be sent only on Ctrl+S command">Send
+							on Ctrl+S</button>
+						<button id="modeChange" ng-class="{isEvtOnChangeActivate: active}"
+							type="button" ng-click="modeAdocOnChange(true)" ng-model="radioModel" btn-radio="'onChange'"
+							class="btn btn-xs btn-default">Send on Change</button>
+							
+						<!-- Patch feature -->
+						<button type="button" ng-click="computeDiff(rceAdoc.key)"
+							class="btn btn-xs btn-default">Compute Diff</button>
+						<button type="button" ng-click="applyPatch(rceAdoc.key)"
+							class="btn btn-xs btn-default">Apply Patch</button>
+					</div>
+				</div>
+				<div class="col-sm-5" ng-show="theDoc.status == 'CONNECTED'" >
+						<button ng-click="loadLastAdoc(theDoc.key)" type="button"
+							class="btn btn-xs" data-toggle="tooltip" title="Source code">
+							<span class="glyphicon glyphicon-download-alt" ></span> Load last Asciidoc 
+						</button>
+						<img ng-show="theDoc.author != theDoc.html5.currentWriter " src="http://placehold.it/20/55C1E7/fff&amp;text=W" alt="User Avatar" class="img-square"> 
+						<img ng-show="theDoc.author == theDoc.html5.currentWriter " src="http://placehold.it/20/FA6F57/fff&amp;text=ME" alt="User Avatar" class="img-circle"> 
+						<em> {{theDoc.html5.currentWriter}} </em>
+					<span title="Time to render HTML5" class="glyphicon glyphicon-cog"></span>
+					<span class="label label-warning">{{theDoc.html5.timeToRender}} ms</span>
+				</div>
+				<div class="col-sm-1" ng-show="theDoc.status == 'CONNECTED'">
+					<progressbar max="max" value="dynamic" type="success"> <span
+						style="color: black; white-space: nowrap;">{{dynamic}} /
+						{{max}}</span> </progressbar>
+				</div>
+			</div>
 		</div>
 	</div>
 </nav>
