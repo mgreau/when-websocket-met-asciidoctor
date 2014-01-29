@@ -1,27 +1,17 @@
 
 //Service to handle Offline mode
 // it uses IndexedDB to store files locally
-app.factory('OfflineService', function($window, WebSocketService, IDB) {
+app.factory('OfflineService', function($rootScope, $window, WebSocketService, IDB) {
 	
 	var service = {};
 	var LIST_O_STUFF = "adocStore";
-
-    var myDefaultList = [
-        {
-            id: 1,
-            name: "adoc1",
-            param: "a non-key, non-index parameter"
-        }
-    ];
-
-    service.listOThings = [];
 
     service.addItem = function(item){
         IDB.put(LIST_O_STUFF, item);
     };
     
     service.getItem = function(key){
-        IDB.getItem(LIST_O_STUFF, key);
+        return listOThings[4];
     };
 
     service.removeAll = function(){
@@ -31,13 +21,38 @@ app.factory('OfflineService', function($window, WebSocketService, IDB) {
     service.removeItem = function(id) {
         IDB.remove(LIST_O_STUFF, id);
     };
+    
+    var myDefaultList = [
+        {
+            id: 1,
+            name: "thing1",
+            param: "a non-key, non-index parameter"
+        },
+        {
+            id: 2,
+            name: "thing2",
+            param: "a non-key, non-index parameter"
+        },
+        {
+            id: 3,
+            name: "thing3",
+            param: "a non-key, non-index parameter"
+        },
+        {
+            id: 4,
+            name: "thing1",
+            param: "has same name, but different id as 1"
+        }
+    ];
 
-    service.update = function (data) {
-        $scope.$apply(function () {
+    var listOThings = [];
+	
+	service.update = function (data) {
+        $rootScope.$apply(function () {
             console.log('update, apply', data);
-            $scope.listOThings = data;
-            if (!$scope.listOThings || $scope.listOThings.length <= 0) {
-                $scope.listOThings = [];
+            listOThings = data;
+            if (!listOThings || listOThings.length <= 0) {
+                listOThings = [];
                 IDB.batchInsert(LIST_O_STUFF, myDefaultList);
             }
         });
@@ -51,7 +66,7 @@ app.factory('OfflineService', function($window, WebSocketService, IDB) {
             data = args[2];
         console.log('update', dbname, storeName, data);
         if (dbname === dbParams.name && LIST_O_STUFF === storeName)
-            this.update(data);
+            service.update(data);
     };
 
     service.getAllThings = function (transaction) {
@@ -69,7 +84,7 @@ app.factory('OfflineService', function($window, WebSocketService, IDB) {
             transaction = data[2];
         console.log('getAll', dbname, storeName, transaction);
         if (dbname === dbParams.name && LIST_O_STUFF === storeName)
-            this.getAllThings(transaction);
+            service.getAllThings(transaction);
     };
 
     // This callback is for after the database is initialized the first time
@@ -79,19 +94,8 @@ app.factory('OfflineService', function($window, WebSocketService, IDB) {
         console.log('postInit', dbname, transaction);
         if (dbname !== dbParams.name)
             return;
-
-        this.getAllThings(transaction);
+        service.getAllThings(transaction);
     };
 
-
-    (function () {
-        // if the db has not been initialized, then the listeners should work
-        if (!IDB.db)
-            return;
-        // if the db has been initialized, then the listeners won't get the events,
-        // and we need to just do a request immediately
-        service.getAllThings();
-    })();
-    
     return service;
 });

@@ -1,4 +1,4 @@
-app.controller("RCEAdocCtrl", function($scope, DocRESTService, OfflineService, WebSocketService) {
+app.controller("RCEAdocCtrl", function($scope, $rootScope, DocRESTService, OfflineService, WebSocketService, IDB) {
 	
 	//RCEAdoc : Realtime Collaborative Editor for Asciidoctor
 	$scope.rceAdocs = new Object();
@@ -16,7 +16,7 @@ app.controller("RCEAdocCtrl", function($scope, DocRESTService, OfflineService, W
     
 	//TODO : handle private space
 	var spaceID = "1234";
-
+	
 	//First call fore each client 
 	DocRESTService.async().then(function(datas) {
 	    		$scope.rceAdocs[spaceID] = new Object();
@@ -259,10 +259,31 @@ app.controller("RCEAdocCtrl", function($scope, DocRESTService, OfflineService, W
 	
 	//Load the latest backup from IndexDB into editor
 	$scope.loadFromDisk = function(idAdoc) {
-		OfflineService.getAllThings();
-        var data = OfflineService.getItem(idAdoc);
+        var data = OfflineService.getItem(1);
         $scope.editor.setValue(data.param);
         $scope.addAlert("success", "Last backup asciidoc source loaded !");
 	};
+	
+	$rootScope.$on('failure', function () {
+        console.log('failed to open db');
+    });
+    $rootScope.$on('dbopenupgrade', OfflineService.postInitDb);
+    $rootScope.$on('dbopen', OfflineService.postInitDb);
+
+    $rootScope.$on('getinit', OfflineService.dbupdate);
+    $rootScope.$on('getall', OfflineService.dbupdate);
+    $rootScope.$on('remove', OfflineService.getAll);
+    $rootScope.$on('put', OfflineService.getAll);
+    $rootScope.$on('clear', OfflineService.getAll);
+    $rootScope.$on('batchinsert', OfflineService.getAll);
+    
+    (function () {
+        // if the db has not been initialized, then the listeners should work
+        if (!IDB.db)
+            return;
+        // if the db has been initialized, then the listeners won't get the events,
+        // and we need to just do a request immediately
+        OfflineService.getAllThings();
+    })();
 
 });
