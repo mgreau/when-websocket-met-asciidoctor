@@ -18,7 +18,7 @@ public class WSMADREST {
 
 	@GET
 	@Path("sample-adoc")
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	public String getAdocFile() {
 		return getSampleDoc();
 	}

@@ -1,8 +1,16 @@
-app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, OfflineService, WebSocketService, IDB) {
+app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTService, OfflineService, WebSocketService, IDB) {
 	
-	 JsonService.get(function(data, _editor){
-		 console.log("Load sample.adoc");
-		 _editor.insert(data.source);
+	$scope.sampleAd = "Loading sample asciidoc file..";
+	JsonService.query(function (response) {
+	    angular.forEach(response, function (item) {
+	        if (item.id) {
+	            console.log(item.source);
+	            $scope.sampleAd = item.source;
+	            if ($scope.editor){
+	            	$scope.editor.setValue($scope.sampleAd);
+	            }
+	        }
+	    });
 	});
 	
 	//RCEAdoc : Realtime Collaborative Editor for Asciidoctor
@@ -33,7 +41,7 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, OfflineS
 	    // Options
 		$scope.editor.setReadOnly(true);
 		//init with sample.json 
-		$scope.editor.insert("Loading...");
+		$scope.editor.setValue($scope.sampleAd);
 		
 		$scope.editor.commands.addCommand({
 			    name: 'sendAsciidocToServer',

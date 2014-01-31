@@ -117,12 +117,14 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
+					<!--
 					<archive>
 						<manifestEntries>
-							<!-- WildFly module -->
+							 WildFly module 
 							<Dependencies>org.asciidoctor</Dependencies>
 						</manifestEntries>
 					</archive>
+					-->
 				</configuration>
 			</plugin>
 			<!-- To deploy on Wildfly -->
