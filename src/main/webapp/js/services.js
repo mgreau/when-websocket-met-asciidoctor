@@ -1,3 +1,8 @@
+//Java EE7 asciidocor sample
+app.factory('JsonService', function($resource) {
+  return $resource('sample.json');
+});
+
 //Service to handle WebSocket protocol 
 app.factory('WebSocketService', function($window) {
 	
