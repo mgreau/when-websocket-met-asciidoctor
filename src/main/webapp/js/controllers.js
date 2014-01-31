@@ -1,4 +1,9 @@
-app.controller("RCEAdocCtrl", function($scope, $rootScope, DocRESTService, OfflineService, WebSocketService, IDB) {
+app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, OfflineService, WebSocketService, IDB) {
+	
+	 JsonService.get(function(data, _editor){
+		 console.log("Load sample.adoc");
+		 _editor.insert(data.source);
+	});
 	
 	//RCEAdoc : Realtime Collaborative Editor for Asciidoctor
 	$scope.rceAdocs = new Object();
@@ -17,22 +22,18 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, DocRESTService, Offli
 	//TODO : handle private space
 	var spaceID = "1234";
 	
-	//First call fore each client 
-	DocRESTService.async().then(function(datas) {
-	    		$scope.rceAdocs[spaceID] = new Object();
-	    		$scope.rceAdocs[spaceID].key = spaceID;
-	    		$scope.rceAdocs[spaceID].status = 'DISCONNECTED';
-	    		$scope.rceAdocs[spaceID].adocSrc = datas;
-	    		$scope.rceAdocs[spaceID].state = "WELCOME ! You can create a new space OR join a team.";
-	    		$scope.rceAdocs[spaceID].author = "";
-	    		$scope.addAlert("info", $scope.rceAdocs[spaceID].state);
-	});
+	$scope.rceAdocs[spaceID] = new Object();
+	$scope.rceAdocs[spaceID].key = spaceID;
+	$scope.rceAdocs[spaceID].status = 'DISCONNECTED';
+	$scope.rceAdocs[spaceID].state = "WELCOME ! You can create a new space OR join a team.";
+	$scope.rceAdocs[spaceID].author = "";
 	
 	$scope.aceLoaded = function(_editor) {
 		$scope.editor = _editor;
 	    // Options
 		$scope.editor.setReadOnly(true);
-		$scope.editor.insert($scope.rceAdocs[spaceID].adocSrc);
+		//init with sample.json 
+		$scope.editor.insert("Loading...");
 		
 		$scope.editor.commands.addCommand({
 			    name: 'sendAsciidocToServer',

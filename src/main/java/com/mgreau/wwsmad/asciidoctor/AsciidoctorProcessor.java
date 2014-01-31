@@ -26,10 +26,10 @@ public class AsciidoctorProcessor {
 	public String renderAsDocument(String source, String baseDir) {
 		logger.info("Start rendering adoc");
 		return delegate.render(source, OptionsBuilder.options()
-				.safe(SafeMode.SAFE).backend("html5").headerFooter(true).eruby("erubis")
+				.safe(SafeMode.UNSAFE).backend("html5").headerFooter(true).eruby("erubis")
 				//.option("base_dir", baseDir)
 				.attributes(AttributesBuilder.attributes()
-						.attribute("icons!", "")
+						.attribute("icons!", "").attribute("allow-uri-read")
 						.attribute("copycss!", "").asMap()).asMap());
 	}
     // end::render[]
