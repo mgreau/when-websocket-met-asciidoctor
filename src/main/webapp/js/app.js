@@ -17,6 +17,7 @@ var dbParams = {
 
 var app = angular.module('wWSmADapp', 
 		[	
+		 	'ngResource',
 		 	'ui.ace', 
 		 	'ui.bootstrap',
 		 	'angular-indexeddb'
