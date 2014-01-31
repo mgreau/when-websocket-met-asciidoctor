@@ -28,7 +28,7 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
     $scope.type = 'success';
     
 	//TODO : handle private space
-	var spaceID = "1234";
+	var spaceID = (Math.random() + 1).toString(36).substring(7);
 	
 	$scope.rceAdocs[spaceID] = new Object();
 	$scope.rceAdocs[spaceID].key = spaceID;
