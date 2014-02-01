@@ -9,6 +9,8 @@ app.directive("html5render", function(){
 			scope.theAdocId = "";
     		scope.$watch(attrs.html5, function(newVal, oldVal) {
         		scope.theHtml5 = newVal;
+        		//#
+        		//var range = angular.element(document.querySelector('#html5-rendered'))[0].contentWindow.getSelection().getRangeAt(0);
     		});
 
     		scope.$watch(attrs.key, function(newVal, oldVal) {
@@ -63,7 +65,6 @@ app.directive("auth", function(){
 			scope.$watch(attrs.doc, function(newVal, oldVal) {
         		scope.theNewDoc = newVal;
     		});
-			
 			
 		}
 	};

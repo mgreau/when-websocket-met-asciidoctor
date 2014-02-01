@@ -13,7 +13,7 @@
 <body ng-app="wWSmADapp" ng-controller="RCEAdocCtrl">
 	<div class="container-fluid" ng-repeat="rceAdoc in rceAdocs">
 		<collaborativemessage doc="rceAdoc"></collaborativemessage>
-		<div class="row">
+		<div class="row" >
 			<asciidoceditor key="rceAdoc.key"></asciidoceditor>
 			<auth ng-show="rceAdoc.status == 'DISCONNECTED'" doc="rceAdoc"></auth>
 			<html5render ng-show="rceAdoc.status == 'CONNECTED'"
@@ -26,6 +26,7 @@
 	<script src="libs/ace-builds/src-min/ace.js"></script>
 	<script src="libs/angular-ui-ace/ui-ace.min.js"></script>
 	<script src="libs/angular-indexeddb/IDB.js"></script>
+	<script src="libs/angular-fullscreen/src/angular-fullscreen.js"></script>
 	
 	<script src="js/app.js"></script>
 	<script src="js/services.js"></script>

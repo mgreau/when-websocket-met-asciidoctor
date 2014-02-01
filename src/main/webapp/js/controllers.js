@@ -13,6 +13,13 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 	    });
 	});
 	
+	// Initially, do not go into full screen
+    $scope.isRenderFullscreen = false;
+
+    $scope.toggleRenderFullscreen = function() {
+        $scope.isRenderFullscreen = !$scope.isRenderFullscreen;
+    };
+    
 	//RCEAdoc : Realtime Collaborative Editor for Asciidoctor
 	$scope.rceAdocs = new Object();
 	$scope.isEditorActivate = false;
@@ -29,6 +36,8 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
     
 	//TODO : handle private space
 	var spaceID = (Math.random() + 1).toString(36).substring(7);
+	$scope.initID = spaceID;
+	
 	
 	$scope.rceAdocs[spaceID] = new Object();
 	$scope.rceAdocs[spaceID].key = spaceID;
@@ -59,7 +68,8 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 					 }
 			    },
 			    readOnly: false // false if this command should not apply in readOnly mode
-			});
+		});
+		
 	  };
 
 	  //Evt when editor value change
@@ -85,6 +95,7 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 	WebSocketService.subscribe(function(idAdoc, message) {
 		try {
 			var obj = JSON.parse(message);
+			$scope.rceAdocs[idAdoc].key = idAdoc;
 
 			//Asciidoc message from server (last version from other writer or patch)
 			if (angular.equals(obj.type, "snapshot")){
@@ -92,14 +103,12 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 				$scope.editor.setValue(obj.data.source);
 				$scope.isDiffOnEditor = false;
 				$scope.rceAdocs[idAdoc].state = "Just Get last Asciidoc version";
-				$scope.rceAdocs[idAdoc].key = idAdoc;
 			} 
 			else if (angular.equals(obj.type, "patch")){
 				$scope.rceAdocs[idAdoc].adoc = obj.data;
 				$scope.editor.setValue(obj.data.sourceToMerge);
 				$scope.isDiffOnEditor = false;
 				$scope.rceAdocs[idAdoc].state = "Patch Apply!";
-				$scope.rceAdocs[idAdoc].key = idAdoc;
 			} 
 			else if (angular.equals(obj.type, "diff")){
 				$scope.rceAdocs[idAdoc].adoc = obj.data;
@@ -107,23 +116,19 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 				$scope.isDiffOnEditor = true;
 				$scope.editor.setValue(obj.data.sourceToMerge);
 				$scope.rceAdocs[idAdoc].state = "Diff";
-				$scope.rceAdocs[idAdoc].key = idAdoc;
 			} 
 			// output Message from server
 			else if (angular.equals(obj.type, "output")){
 				$scope.rceAdocs[idAdoc].html5 = obj.data;
 				$scope.rceAdocs[idAdoc].state = "New HTML5 output version";
-				$scope.rceAdocs[idAdoc].key = idAdoc;
 				//progress bar to 100
 				$scope.dynamic = 100;
 			}
 			else if (angular.equals(obj.type, "notification")){
 				$scope.rceAdocs[idAdoc].notification = obj.data;
-				$scope.rceAdocs[idAdoc].key = idAdoc;
+				
 			}
-			
 			$scope.addAlert("success", $scope.rceAdocs[idAdoc].state);
-
 		} catch (exception) {
 			//Message WebSocket lifecycle
 			$scope.rceAdocs[idAdoc].status = message;
@@ -137,6 +142,7 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 		if (angular.equals(WebSocketService.status(idAdoc), WebSocket.OPEN)){
 			if(angular.isUndefined($scope.rceAdocs[idAdoc].author) || angular.equals($scope.rceAdocs[idAdoc].author,"")){
 				$scope.rceAdocs[idAdoc].state = "You need to add an author name.";
+				$scope.addAlert("danger", $scope.rceAdocs[idAdoc].state);
 				return
 			}
 			//progress bar to 0
@@ -233,8 +239,27 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 	};
 
 	//WebSocket connection in order to send data to the server
-	$scope.connect = function(idAdoc) {
-		WebSocketService.connect(idAdoc);
+	$scope.connect = function(spaceID) {
+		//Create a space
+		console.log("Create a space "+ spaceID);
+		WebSocketService.connect(spaceID);
+	};
+	
+	$scope.joinATeam = function(joinSpaceID, writer) {
+		console.log("Join a team "+ joinSpaceID);
+		spaceID = joinSpaceID;
+		WebSocketService.connect(joinSpaceID);
+		$scope.initSpace(joinSpaceID, writer);
+	};
+	
+	$scope.initSpace = function(id, writer) {
+		$scope.rceAdocs = new Object();
+		$scope.rceAdocs[id] = new Object();
+		$scope.rceAdocs[id].key = id;
+		$scope.rceAdocs[id].status = 'CONNECTED';
+		$scope.rceAdocs[id].state = "CONGRATS ! You joined the Team ("+id+")";
+		$scope.rceAdocs[id].author = writer;
+		$scope.addAlert("success", $scope.rceAdocs[id].state);
 	};
 	
 	//Disconnect from the server, work offline ?
