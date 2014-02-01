@@ -5,7 +5,8 @@
 			
 		</div>
 		<div class="panel-body" style="padding:0px;">
-			<iframe id="html5-rendered" srcdoc="{{theHtml5.output}}" width="100%"
+			<p ng-show="!theHtml5.output">Send your asciidoc source version in order to see the HTML5 rendered.</p>
+			<iframe ng-show="theHtml5.output" fullscreen="isRenderFullscreen" id="html5-rendered" srcdoc="{{theHtml5.output}}" width="100%"
 				height="800px"> </iframe>
 		</div>
 	</div>

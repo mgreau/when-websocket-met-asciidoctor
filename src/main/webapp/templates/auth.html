@@ -10,11 +10,11 @@
 							<div class="input-group">
 								<span class="input-group-addon"><span
 									class="glyphicon glyphicon-user"></span></span> <input type="text"
-									class="form-control" ng-model="theNewDoc.author" required placeholder="Writer name" />
+									class="form-control" ng-model="theNewDoc.author" ng-required="true" placeholder="Writer name" />
 							</div>
 						</div>
 				</div>
-				<button ng-click="connect(theDoc.key)" class="btn btn-sm btn-primary btn-block" type="submit"> SUBMIT</button>
+				<button ng-click="connect(theNewDoc.key)" class="btn btn-sm btn-primary btn-block" type="submit"> SUBMIT</button>
 				</form>
 			</div>
 		</div>
@@ -26,20 +26,20 @@
 						<div class="form-group">
 							<div class="input-group">
 								<span class="input-group-addon"><span
-									class="glyphicon glyphicon-user"></span></span> <input type="text"
-									class="form-control" placeholder="Writer name" />
+									class="glyphicon glyphicon-user"></span></span> <input type="text" ng-required="true"
+									class="form-control" placeholder="Writer name" ng-model="theNewDoc.author"/>
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="input-group">
 								<span class="input-group-addon"><span
-									class="glyphicon glyphicon-barcode"></span> </span> <input
-									type="text" class="form-control" placeholder="Document ID" />
+									class="glyphicon glyphicon-barcode"></span> </span> <input ng-model="theNewDoc.key"
+									type="text" class="form-control" placeholder="Document ID" ng-required="true" />
 							</div>
 						</div>
 						
 				</div>
-				<button ng-click="connect(theDoc.key)" class="btn btn-sm btn-primary btn-block" type="submit"> SUBMIT</button>
+				<button ng-click="joinATeam(theNewDoc.key, theNewDoc.author)" class="btn btn-sm btn-primary btn-block" type="submit"> SUBMIT</button>
 				</form>
 			</div>
 		</div>
