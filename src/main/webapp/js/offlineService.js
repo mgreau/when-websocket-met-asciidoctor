@@ -10,8 +10,19 @@ app.factory('OfflineService', function($rootScope, $window, WebSocketService, ID
         IDB.put(LIST_O_STUFF, item);
     };
     
-    service.getItem = function(key){
-        return listOThings[4];
+    service.getItem = function(adSpaceID){
+    	var res ="";
+
+    	listOThings.every(function(element, index, array) {
+    	    console.log("element:", element);
+    	    if (element.id == adSpaceID) {
+    	    	res = element;
+    	        return false;
+    	    }
+    	    return true;
+
+    	});
+        return res;
     };
 
     service.removeAll = function(){
@@ -23,26 +34,7 @@ app.factory('OfflineService', function($rootScope, $window, WebSocketService, ID
     };
     
     var myDefaultList = [
-        {
-            id: 1,
-            name: "thing1",
-            param: "a non-key, non-index parameter"
-        },
-        {
-            id: 2,
-            name: "thing2",
-            param: "a non-key, non-index parameter"
-        },
-        {
-            id: 3,
-            name: "thing3",
-            param: "a non-key, non-index parameter"
-        },
-        {
-            id: 4,
-            name: "thing1",
-            param: "has same name, but different id as 1"
-        }
+        
     ];
 
     var listOThings = [];
@@ -59,7 +51,6 @@ app.factory('OfflineService', function($rootScope, $window, WebSocketService, ID
     };
 
     service.dbupdate = function (event, args) {
-        console.log("list-o-things DBUPDATE");
         console.log('args', args);
         var dbname = args[0],
             storeName = args[1],

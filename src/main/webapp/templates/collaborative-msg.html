@@ -3,15 +3,15 @@
 		<div class="panel-heading">
 		<button ng-show="theDoc.status == 'CONNECTED'"
 				class="navbar-btn btn-danger btn-xs"
-				ng-click="disconnect(theDoc.key)" title="Exit from this space (ID:232030)">
+				ng-click="disconnect(theDoc.key)" title="Exit from this space (ID:{{adSpaceID}})">
 				<span class="glyphicon glyphicon-off"></span>
 			</button> 
 			<span ng-show="theDoc.status == 'CONNECTED'"> | </span>
 			<span class="label label-danger"
 				ng-show="theDoc.status == 'DISCONNECTED'"> <span
 				title="Offline" class="glyphicon glyphicon-exclamation-sign"></span>
-				<strong>OFFLINE Mode.</strong></span> <span class="label label-success"
-				ng-show="theDoc.status == 'CONNECTED'"><strong>ONLINE Mode.</strong>
+				<strong>OFFLINE.</strong></span> <span class="label label-success"
+				ng-show="theDoc.status == 'CONNECTED'"><strong>ONLINE.</strong>
 			</span>  | 
 		Realtime Collaborative Editor for Asciidoctor | v0.1-alpha2 | 
 			 <span ng-show="theDoc.status == 'CONNECTED'">
@@ -24,8 +24,8 @@
 					<em>Online readers :</em> <span title="Number of viewer"
 						class="badge">{{theDoc.notification.nbConnected}}</span>
 			</span>
-			 | 
-			<span ng-show="theDoc.status == 'CONNECTED'"><em>Signed as {{theDoc.author}}</em></span>
+			<span ng-show="theDoc.status == 'CONNECTED'"> | <em>Signed as {{user}}</em></span>
+			<span ng-show="theDoc.status == 'CONNECTED'">  |  <em>Space ID : {{adSpaceID}}</em></span>
 		</div>
 
 		<div class="panel-body">
@@ -48,11 +48,11 @@
 						<button id="modeKey" ng-class="{isEvtOnChangeActivate: active}"
 							type="button" ng-click="modeAdocOnChange(false)"
 							class="btn btn-xs btn-default" ng-model="radioModel" btn-radio="'onCtrlS'"
-							title="Asciidoc source will be sent only on Ctrl+S command">Send
-							on Ctrl+S</button>
+							title="Asciidoc source will be sent only on Ctrl+R command">Render
+							on Alt+R</button>
 						<button id="modeChange" ng-class="{isEvtOnChangeActivate: active}"
 							type="button" ng-click="modeAdocOnChange(true)" ng-model="radioModel" btn-radio="'onChange'"
-							class="btn btn-xs btn-default">Send on Change</button>
+							class="btn btn-xs btn-default">Render on Change</button>
 							
 						<!-- Patch feature -->
 						<button type="button" id="diff" ng-click="computeDiff(rceAdoc.key)"
@@ -74,11 +74,11 @@
 							class="btn btn-xs" title="Source code">
 							<span class="glyphicon glyphicon-download-alt" ></span>
 						</button>
-						<img ng-show="theDoc.author != theDoc.html5.currentWriter " src="http://placehold.it/20/55C1E7/fff&amp;text=W" alt="User Avatar" class="img-square"> 
-						<img ng-show="theDoc.author == theDoc.html5.currentWriter " src="http://placehold.it/20/FA6F57/fff&amp;text=ME" alt="User Avatar" class="img-circle"> 
+						<span class="label label-warning">
+							<span title="Time to render HTML5" class="glyphicon glyphicon-cog"></span> {{theDoc.html5.timeToRender}} ms</span>
+						<img title="Last author" ng-show="theDoc.author != theDoc.html5.currentWriter " src="http://placehold.it/20/55C1E7/fff&amp;text=W" alt="User Avatar" class="img-square"> 
+						<img title="Last author" ng-show="theDoc.author == theDoc.html5.currentWriter " src="http://placehold.it/20/FA6F57/fff&amp;text=ME" alt="User Avatar" class="img-circle"> 
 						<em> {{theDoc.html5.currentWriter}} </em>
-					<span title="Time to render HTML5" class="glyphicon glyphicon-cog"></span>
-					<span class="label label-warning">{{theDoc.html5.timeToRender}} ms</span>
 				</div>
 				<div class="col-sm-1" ng-show="theDoc.status == 'CONNECTED'">
 					<progressbar max="max" value="dynamic" type="success"> <span
