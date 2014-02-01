@@ -20,7 +20,8 @@ var app = angular.module('wWSmADapp',
 		 	'ngResource',
 		 	'ui.ace', 
 		 	'ui.bootstrap',
-		 	'angular-indexeddb'
+		 	'angular-indexeddb',
+		 	'FBAngular'
 	 	]
 );
 
