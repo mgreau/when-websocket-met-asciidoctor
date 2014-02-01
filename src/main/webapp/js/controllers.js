@@ -13,6 +13,11 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 	    });
 	});
 	
+	//User connected
+	$scope.user;
+	//ID for the AsciiDoctor Space
+	$scope.adSpaceID;
+	
 	// Initially, do not go into full screen
     $scope.isRenderFullscreen = false;
 
@@ -54,7 +59,7 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 		
 		$scope.editor.commands.addCommand({
 			    name: 'sendAsciidocToServer',
-			    bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
+			    bindKey: {win: 'Ctrl-R',  mac: 'Option-R'},
 			    exec: function(editor) {
 			    	if ($scope.isDiffOnEditor === true){
 						  $scope.rceAdocs[spaceID].state = "Diff are loaded, apply it or unload it by click on Compute diff.";
@@ -115,12 +120,12 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 				//receive diff
 				$scope.isDiffOnEditor = true;
 				$scope.editor.setValue(obj.data.sourceToMerge);
-				$scope.rceAdocs[idAdoc].state = "Diff";
+				$scope.rceAdocs[idAdoc].state = "Compute Diff";
 			} 
 			// output Message from server
 			else if (angular.equals(obj.type, "output")){
 				$scope.rceAdocs[idAdoc].html5 = obj.data;
-				$scope.rceAdocs[idAdoc].state = "New HTML5 output version";
+				$scope.rceAdocs[idAdoc].state = "New HTML5 output version at " + new Date;
 				//progress bar to 100
 				$scope.dynamic = 100;
 			}
@@ -226,30 +231,55 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 	};
 	
 	//
-	$scope.enableEditor = function(idAdoc) {
-		if(angular.isUndefined($scope.rceAdocs[idAdoc].author) || angular.equals($scope.rceAdocs[idAdoc].author,"")){
-			$scope.rceAdocs[idAdoc].state = "You need to add an author name!!";
-			$scope.addAlert("danger", $scope.rceAdocs[idAdoc].state);
+	$scope.enableEditor = function(adSpaceID) {
+		if (angular.isUndefined($scope.rceAdocs[adSpaceID].author) || angular.equals($scope.rceAdocs[adSpaceID].author,"")){
+			$scope.rceAdocs[adSpaceID].state = "You need to add an author name!!";
+			$scope.addAlert("danger", $scope.rceAdocs[adSpaceID].state);
 			return
+		} else {
+			$scope.editor.setReadOnly(false);
+			$scope.isEditorActivate = true;
+			$scope.rceAdocs[adSpaceID].state = "Write your doc and see a preview of the HTML rendering with Ctrl + R or each change.";
+			$scope.addAlert("success", $scope.rceAdocs[adSpaceID].state);
 		}
-		$scope.editor.setReadOnly(false);
-		$scope.isEditorActivate = true;
-		$scope.rceAdocs[idAdoc].state = "You can write the doc and send your version on Ctrl+S command OR on each change.";
-		$scope.addAlert("success", $scope.rceAdocs[idAdoc].state);
 	};
 
 	//WebSocket connection in order to send data to the server
-	$scope.connect = function(spaceID) {
+	$scope.connect = function(user) {
 		//Create a space
-		console.log("Create a space "+ spaceID);
-		WebSocketService.connect(spaceID);
+		console.log("Create a space " + $scope.initID);
+		$scope.user = user;
+		
+		if (angular.isUndefined($scope.user) || angular.equals($scope.user,'')){
+			$scope.rceAdocs[$scope.initID].state = "Your name is required !";
+			$scope.addAlert("danger", "Your name is required !");
+			return;
+		}else {
+			$scope.adSpaceID = $scope.initID;
+			WebSocketService.connect($scope.initID);
+			$scope.rceAdocs[$scope.initID].author = user;
+		}
+		
 	};
 	
-	$scope.joinATeam = function(joinSpaceID, writer) {
-		console.log("Join a team "+ joinSpaceID);
-		spaceID = joinSpaceID;
-		WebSocketService.connect(joinSpaceID);
-		$scope.initSpace(joinSpaceID, writer);
+	$scope.joinATeam = function(user, adSpaceID) {
+		console.log("Join a team ");
+		$scope.user = user;
+		$scope.adSpaceID = adSpaceID;
+		if (angular.isUndefined($scope.user) || angular.equals($scope.user,'')){
+			$scope.rceAdocs[$scope.initID].state = "Your name is required !";
+			$scope.addAlert("danger", "Your name is required !");
+			return;
+		}
+		else if (angular.isUndefined($scope.adSpaceID) || angular.equals($scope.adSpaceID,'') || angular.equals($scope.adSpaceID, $scope.initID) ){
+			$scope.rceAdocs[$scope.initID].state = "The Space ID is required !";
+			$scope.addAlert("danger", $scope.rceAdocs[$scope.initID].state );
+			return;
+		} else {
+			spaceID = $scope.adSpaceID;
+			WebSocketService.connect($scope.adSpaceID);
+			$scope.initSpace($scope.adSpaceID, $scope.user);
+		}
 	};
 	
 	$scope.initSpace = function(id, writer) {
@@ -263,10 +293,12 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 	};
 	
 	//Disconnect from the server, work offline ?
-	$scope.disconnect = function(idAdoc) {
-		WebSocketService.disconnect(idAdoc);
+	$scope.disconnect = function(adSpaceID) {
+		$scope.rceAdocs[adSpaceID].author = "";
+		WebSocketService.disconnect(adSpaceID);
 		//Activate the offline mode with storage
-		$scope.addAlert("warning", "You are working on Offline, don't forget to Save on disk!");
+		$scope.rceAdocs[adSpaceID].state = "You are working on Offline mode, don't forget to Backup locally !";
+		$scope.addAlert("warning", "");
 	};
 	
 	//Alert messages
@@ -282,20 +314,24 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 	};
 	
 	//Save the editor content into IndexDB
-	$scope.saveOnDisk = function(idAdoc) {
+	$scope.saveOnDisk = function(adSpaceID) {
 		var data =   {
-	            id: idAdoc,
+	            id: adSpaceID,
 	            name: "adocSource",
 	            param: $scope.editor.getValue()
 	        };
 	  OfflineService.addItem(data);
+	  $scope.rceAdocs[adSpaceID].state = "Successul local backup (asciidoc source) !";
+      $scope.addAlert("success", "");
 	};
 	
-	//Load the latest backup from IndexDB into editor
-	$scope.loadFromDisk = function(idAdoc) {
-        var data = OfflineService.getItem(1);
+	//Load the latest backup from IndexedDB into editor
+	$scope.loadFromDisk = function(adSpaceID) {
+        var data = OfflineService.getItem(adSpaceID);
+        console.log("Load from IndexedDB with adSpaceID " + data.id);
         $scope.editor.setValue(data.param);
-        $scope.addAlert("success", "Last backup asciidoc source loaded !");
+        $scope.rceAdocs[adSpaceID].state = "Local backup loaded (asciidoc source) !";
+        $scope.addAlert("success", "");
 	};
 	
 	$rootScope.$on('failure', function () {
