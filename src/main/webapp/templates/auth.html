@@ -10,36 +10,35 @@
 							<div class="input-group">
 								<span class="input-group-addon"><span
 									class="glyphicon glyphicon-user"></span></span> <input type="text"
-									class="form-control" ng-model="theNewDoc.author" ng-required="true" placeholder="Writer name" />
+									class="form-control" ng-model="user" ng-required="true" placeholder="Writer name" />
 							</div>
 						</div>
 				</div>
-				<button ng-click="connect(theNewDoc.key)" class="btn btn-sm btn-primary btn-block" type="submit"> SUBMIT</button>
+				<button ng-click="connect(user)" class="btn btn-sm btn-primary btn-block" type="submit"> SUBMIT</button>
 				</form>
 			</div>
 		</div>
 		<div class="col-md-6 ">
 			<div class="panel panel-default">
-				<div class="panel-body">
-					<h5 class="text-center">JOIN A COLLABORATIVE TEAM</h5>
-					<form class="form form-signup" role="form">
+				<form class="form form-signup" id="joinATeam" role="form" ng-submit="enableEditor(adSpaceID)">
+					<div class="panel-body">
+						<h5 class="text-center">JOIN A COLLABORATIVE TEAM</h5>
 						<div class="form-group">
 							<div class="input-group">
 								<span class="input-group-addon"><span
 									class="glyphicon glyphicon-user"></span></span> <input type="text" ng-required="true"
-									class="form-control" placeholder="Writer name" ng-model="theNewDoc.author"/>
+									class="form-control" placeholder="Writer name" ng-model="user"/>
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="input-group">
 								<span class="input-group-addon"><span
-									class="glyphicon glyphicon-barcode"></span> </span> <input ng-model="theNewDoc.key"
-									type="text" class="form-control" placeholder="Document ID" ng-required="true" />
+									class="glyphicon glyphicon-barcode"></span> </span> <input ng-model="adSpaceID"
+									type="text" class="form-control" placeholder="Space ID" ng-required="true" />
 							</div>
 						</div>
-						
-				</div>
-				<button ng-click="joinATeam(theNewDoc.key, theNewDoc.author)" class="btn btn-sm btn-primary btn-block" type="submit"> SUBMIT</button>
+					</div>
+				<button ng-click="joinATeam(user, adSpaceID)" class="btn btn-sm btn-primary btn-block" type="submit"> SUBMIT</button>
 				</form>
 			</div>
 		</div>
