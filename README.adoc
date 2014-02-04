@@ -4,23 +4,17 @@ Maxime Greau <https://github.com/mgreau[@mgreau]>
 :imagesdir: ./doc/img
 :idprefix:
 :idseparator: -
-:online-demo: http://wildfly-mgreau.rhcloud.com/wWSmAD/
+:online-demo: http://wildfly-mgreau.rhcloud.com/ad-editor
 :milestones: https://github.com/mgreau/when-websocket-met-asciidoctor/issues/milestones
 :issues: https://github.com/mgreau/when-websocket-met-asciidoctor/issues
 :asciidoctor-url: http://asciidoctor.org
 :asciidoctorj-url: https://github.com/asciidoctor/asciidoctorj
 
-ifndef::safe-mode-name[]
+You can try the editor online at {online-demo} (running on OpenShift).
 
-[float]
-= Real-time collaborative editor for Asciidoc files
-endif::[]
+This project gives you the possibility to *work on the same AsciiDoc file with a team*.
 
-You can try it online on OpenShift : +{online-demo}+
-
-This project gives you the possibility to *work on the same Asciidoc files with a team*.
-
-It's based on {asciidoctor-url}[Asciidoctor project] thanks to {asciidoctor-url}[AsciidoctorJ].
+It's based on the {asciidoctor-url}[Asciidoctor project] thanks to the Java API provided by {asciidoctor-url}[AsciidoctorJ].
 
 image::patch-demo.png[Patch feature example]
 
