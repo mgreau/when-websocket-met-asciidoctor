@@ -74,7 +74,7 @@
 	</dependencyManagement>
 
 	<build>
-		<finalName>wWSmAD</finalName>
+		<finalName>ad-editor</finalName>
 		<pluginManagement>
 			<plugins>
 				<plugin>
