@@ -23,14 +23,15 @@ image::ad-editor-0.1.0-alpha2.png[Patch feature example]
 
 * Create a *new space* OR *join others author* with a spaceID
 * *Browser storage* with HTML5 IndexedDB for backup (save and load AsciiDoc source)
-* Fullscreen mode for HTML5 preview
+* *Fullscreen mode* for HTML5 preview
 * Improved UI Design
-* Realtime HTML5 preview : 
+* HTML5 preview in realtime : 
 ** *each time the AsciiDoc source is changed* if you have clicked on +Render On Change+
 ** *each time you press "Alt+R"* if you have clicked on +Render On Alt+R+ button
 * *Patch feature* :
 ** if an other author send a version, you can click on +Compute Diff+ button to see differences between your adoc file and the last adoc file
 ** if the patch seems ok, click on +Apply Patch+ and you adoc source will be up to date
+* *Load the last AsciiDoc source* send by an other author
 
 == Changelog
 
