@@ -2,11 +2,11 @@
   "name": "wWSmAD",
   "version": "0.1.0-alpha2",
   "dependencies": {
-    "angular": "1.2.9",
+    "angular": "1.2.11",
     "angular-bootstrap": "0.10.0",
-    "angular-ui-ace": "latest",
-    "angular-resource": "latest",
-    "bootstrap": "latest",
+    "angular-ui-ace": "0.1.0",
+    "angular-resource": "1.2.11",
+    "bootstrap": "3.1.0",
     "angular-indexeddb": "emil10001/angular-indexeddb",
     "angular-fullscreen": "fabiobiondi/angular-fullscreen"
   }
