@@ -32,7 +32,7 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 	$scope.isDiffOnEditor = false;
 	
 	//Editor buttons
-	$scope.radioModel = 'onCtrlS';
+	$scope.radioModel = 'onKeyShortcut';
 	
 	//Progress Bar
 	$scope.max = 100;
@@ -59,7 +59,7 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 		
 		$scope.editor.commands.addCommand({
 			    name: 'sendAsciidocToServer',
-			    bindKey: {win: 'Ctrl-R',  mac: 'Option-R'},
+			    bindKey: {win: 'Altl-R',  mac: 'Option-R'},
 			    exec: function(editor) {
 			    	if ($scope.isDiffOnEditor === true){
 						  $scope.rceAdocs[spaceID].state = "Diff are loaded, apply it or unload it by click on Compute diff.";
@@ -333,6 +333,7 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
         $scope.rceAdocs[adSpaceID].state = "Local backup loaded (asciidoc source) !";
         $scope.addAlert("success", "");
 	};
+	
 	
 	$rootScope.$on('failure', function () {
         console.log('failed to open db');
