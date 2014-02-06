@@ -26,7 +26,7 @@ image::ad-editor-0.1.0-alpha2.png[Patch feature example]
 * Fullscreen mode for HTML5 preview
 * Improved UI Design
 * Realtime HTML5 preview : 
-** *each key entered* if you have clicked on +Render On Change+
+** *each time the AsciiDoc source is changed* if you have clicked on +Render On Change+
 ** *each time you press "Alt+R"* if you have clicked on +Render On Alt+R+ button
 * *Patch feature* :
 ** if an other author send a version, you can click on +Compute Diff+ button to see differences between your adoc file and the last adoc file
@@ -60,7 +60,7 @@ A lot of cool features are planned :) You can read all {issues}[open and closed 
   
   npm install -g bower
   
-.. Installing the bower dependencies needed by this app
+.. Installing the bower dependencies needed by this app (into $APP_HOME/src/main/webapp/libs)
 
   cd $APP_HOME
   bower install
