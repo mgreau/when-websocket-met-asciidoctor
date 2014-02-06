@@ -17,25 +17,21 @@ This project gives you the possibility to *work on the same AsciiDoc file with a
 
 It's based on the {asciidoctor-url}[Asciidoctor project] thanks to the Java API provided by {asciidoctor-url}[AsciidoctorJ].
 
-image::patch-demo.png[Patch feature example]
+image::ad-editor-0.1.0-alpha2.png[Patch feature example]
 
 == 0.1.0-Alpha2 features
 
-* By default when you click on +connect+, you are a +*reader*+ :
-** It means that you can see what happens on HTML5 preview but you can't send any source version
-* When you +add a name+ and click to +Enable editor+, you become a +*writer*+ :
-** so you can update the asciidoc source in realtime and automatically view HTML 5 rendered :
-*** *each time you write something* if you have clicked on +Send On Change+
-*** *each time you press "Ctrl+S"* if you have clicked on +Send On Ctrl+S+ button
-* You can *patch your file with the latest asciidoc source*:
+* Create a *new space* OR *join others author* with a spaceID
+* *Browser storage* with HTML5 IndexedDB for backup (save and load AsciiDoc source)
+* *Fullscreen mode* for HTML5 preview
+* Improved UI Design
+* HTML5 preview in realtime : 
+** *each time the AsciiDoc source is changed* if you have clicked on +Render On Change+
+** *each time you press "Alt+R"* if you have clicked on +Render On Alt+R+ button
+* *Patch feature* :
 ** if an other author send a version, you can click on +Compute Diff+ button to see differences between your adoc file and the last adoc file
 ** if the patch seems ok, click on +Apply Patch+ and you adoc source will be up to date
-* *Several people can work* on the same doc
-** you can see the number of writers (people who send adoc file)
-** you can see the name of the last author
-** ypu can see the numbr of readers (people who don't send an asciidoc source)
-
-
+* *Load the last AsciiDoc source* send by an other author
 
 == Changelog
 
@@ -44,8 +40,6 @@ You can read all changes between each release in the link:CHANGELOG.adoc[changel
 == Roadmap
 
 A lot of cool features are planned :) You can read all {issues}[open and closed issues] and {milestones}[milestones]
-
-
 
 == Install on your laptop
 
@@ -66,9 +60,11 @@ A lot of cool features are planned :) You can read all {issues}[open and closed 
 .. Bower depends on Node and npm. It's installed globally using npm:
   
   npm install -g bower
+  
+.. Installing the bower dependencies needed by this app (into +$APP_HOME/src/main/webapp/libs+)
+
   cd $APP_HOME
   bower install
-  choose AngularJS 2.11
   
 . Build the WAR and test it into WildFly AS with maven/arquillian : 
 
@@ -88,7 +84,7 @@ A lot of cool features are planned :) You can read all {issues}[open and closed 
   
   .. if the app server isn't started
   
-  mvn wildfly:run -Djboss-as.home=<path_to_the_server>
+  mvn wildfly:run -Dmaven.test.skip=true -Djboss-as.home=<path_to_the_server>
 
 . Launch your browser and enjoy :)
 
