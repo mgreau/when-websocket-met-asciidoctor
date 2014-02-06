@@ -9,6 +9,7 @@ Maxime Greau <https://github.com/mgreau[@mgreau]>
 :issues: https://github.com/mgreau/when-websocket-met-asciidoctor/issues
 :asciidoctor-url: http://asciidoctor.org
 :asciidoctorj-url: https://github.com/asciidoctor/asciidoctorj
+:wildfly-url: http://download.jboss.org/wildfly/8.0.0.CR1/wildfly-8.0.0.CR1.zip
 
 You can try the editor online at {online-demo} (running on OpenShift).
 
@@ -18,7 +19,7 @@ It's based on the {asciidoctor-url}[Asciidoctor project] thanks to the Java API 
 
 image::patch-demo.png[Patch feature example]
 
-== 0.1.0-Alpha1 features
+== 0.1.0-Alpha2 features
 
 * By default when you click on +connect+, you are a +*reader*+ :
 ** It means that you can see what happens on HTML5 preview but you can't send any source version
@@ -34,10 +35,7 @@ image::patch-demo.png[Patch feature example]
 ** you can see the name of the last author
 ** ypu can see the numbr of readers (people who don't send an asciidoc source)
 
-[IMPORTANT]
-====
-This version is an early alpha version. For now all connected people *work on the same and unique document*.
-====
+
 
 == Changelog
 
@@ -48,40 +46,29 @@ You can read all changes between each release in the link:CHANGELOG.adoc[changel
 A lot of cool features are planned :) You can read all {issues}[open and closed issues] and {milestones}[milestones]
 
 
-== Technology used
 
-* Asciidoctor project
-** AsciidoctorJ 0.1.4
-* Java EE 7 
-** CDI 1.1
-** WebSocket 1.0
-** JSON-P 1.0
-** EJB 3.1
-* Web Client
-** AngularJS 1.0.8
-** Ace Editor
-** Bootstrap 3.0
-* Tests
-** JUnit 4.8
-** Arquillian 1.1.2
-* Java EE 7 Compliance App server
-** WildFly 8.0.0-Beta1
-
-== Install wWSmAD on your laptop
+== Install on your laptop
 
 [IMPORTANT]
 .Prerequisites
 ====
 * JDK 7
 * Apache Maven 3.1
-* WildFly 8.0.0-Beta1
 ====
 
-. First you need to deploy the link:module/README.adoc[Asciidoctor module] into your WildFly server
+. Clone or download this github project (*+$APP_HOME+*)
 
-. Start wildfly : 
+. Installing the Java EE 7 Compliance App server  
+.. Download {wildfly-url}[WildFly 8.0.0-CR1] (*+$JBOSS_HOME+*)
+.. Then you need to deploy the link:module/README.adoc[Asciidoctor module] into your WildFly app server
 
-   $JBOSS_HOME/bin/standalone.sh
+. Installing Bower
+.. Bower depends on Node and npm. It's installed globally using npm:
+  
+  npm install -g bower
+  cd $APP_HOME
+  bower install
+  choose AngularJS 2.11
   
 . Build the WAR and test it into WildFly AS with maven/arquillian : 
 
@@ -91,18 +78,38 @@ A lot of cool features are planned :) You can read all {issues}[open and closed 
 
    .. if you haven't set the +$JBOSS_HOME+ env variable :
 
-   mvn clean package -Pwildfly-managed-arquillian -DserverRoot=<path_to_your_server>
+   mvn clean package -Pwildfly-managed-arquillian -DserverRoot=<path_to_the_server>
    
 .  Deploy the app automatically with maven : 
 
-   mvn wildfly:deploy -Dmaven.test.skip=true
+  .. if the app server is started
+  
+  mvn wildfly:deploy -Dmaven.test.skip=true
+  
+  .. if the app server isn't started
+  
+  mvn wildfly:run -Djboss-as.home=<path_to_the_server>
 
 . Launch your browser and enjoy :)
 
-   *  http://localhost:8080/wWSmAD
+   *  http://localhost:8080/ad-editor
 
-== History
 
-.The first deployed version on OpenShift on November 2013
-image::live-writing.png[Screenshot of the first deployed version of wWSmAD]
+== Technology used
+
+* Asciidoctor project
+** AsciidoctorJ 0.1.4
+* Java EE 7 
+** CDI 1.1
+** WebSocket 1.0
+** JSON-P 1.0
+** EJB 3.2
+* Web Client
+** AngularJS 1.2.11
+** Ace Editor
+** Bootstrap 3.0
+* Tests
+** JUnit 4.8
+** Arquillian 1.1.2
+* Java EE 7 Compliance App server
 
