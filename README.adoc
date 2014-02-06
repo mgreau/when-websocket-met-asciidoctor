@@ -61,7 +61,7 @@ A lot of cool features are planned :) You can read all {issues}[open and closed 
   
   npm install -g bower
   
-.. Installing the bower dependencies needed by this app (into $APP_HOME/src/main/webapp/libs)
+.. Installing the bower dependencies needed by this app (into +$APP_HOME/src/main/webapp/libs+)
 
   cd $APP_HOME
   bower install
