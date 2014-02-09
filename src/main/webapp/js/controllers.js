@@ -157,6 +157,7 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 		else {
 			$scope.rceAdocs[idAdoc].state = "You work on OFFLINE MODE !!. You need to CONNECT to do this action.";
 			$scope.addAlert("danger", $scope.rceAdocs[idAdoc].state);
+			$scope.rceAdocs[idAdoc].html5.output = OfflineService.getOfflineHTML5($scope.rceAdocs[idAdoc].adocSrc);
 		}
 	};
 	

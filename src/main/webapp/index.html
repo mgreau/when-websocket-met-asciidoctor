@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html manifest="asciidoctor.appcache">
 <head>
 <title>Realtime Collaborative Editor for Asciidoctor</title>
 <meta charset="UTF-8">
@@ -15,8 +15,8 @@
 		<collaborativemessage doc="rceAdoc"></collaborativemessage>
 		<div class="row" >
 			<asciidoceditor key="rceAdoc.key"></asciidoceditor>
-			<auth ng-show="rceAdoc.status == 'DISCONNECTED'" doc="rceAdoc"></auth>
-			<html5render ng-show="rceAdoc.status == 'CONNECTED'"
+			<auth ng-show="!rceAdoc.html5.output" doc="rceAdoc"></auth>
+			<html5render ng-show="rceAdoc.html5.output"
 				html5="rceAdoc.html5" key="rceAdoc.key"></html5render>
 		</div>
 	</div>
