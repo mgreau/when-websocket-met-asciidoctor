@@ -87,6 +87,34 @@ app.factory('OfflineService', function($rootScope, $window, WebSocketService, ID
             return;
         service.getAllThings(transaction);
     };
+    
+    
+    service.getOfflineHTML5 = function (adocSrc){
+    	var strVar="";
+    	strVar += "<!DOCTYPE html>";
+    	strVar += "  <html>";
+    	strVar += "  <head>";
+    	strVar += "    <meta http-equiv=\"Content-Type\" content=\"text\/html; charset=UTF-8\">";
+    	strVar += "    <title>Asciidoctor in JavaScript powered by Opal<\/title>";
+    	strVar += "    <link rel=\"stylesheet\" href=\"offline\/asciidoctor.css\">";
+    	strVar += "  <\/head>";
+    	strVar += "  <body>";
+    	strVar += "    <div id=\"content\">";
+    	strVar += adocSrc;
+    	strVar += "    <\/div>";
+    	strVar += "    <script src=\"offline\/opal.js\"><\/script>";
+    	strVar += "    <script src=\"offline\/asciidoctor.js\"><\/script>";
+    	strVar += "    <script>";
+    	strVar += "      var adoc = document.getElementById('content');";
+    	strVar += "      Opal.hash2(['attributes'], {'attributes': ['notitle!']}); ";
+    	strVar += "      document.getElementById('content').innerHTML = Opal.Asciidoctor.$render(adoc.innerHTML);";
+    	strVar += "    <\/script>";
+    	strVar += "  <\/body>";
+    	strVar += "<\/html>";
+    	strVar += "";
+    	return strVar;
+
+    };
 
     return service;
 });

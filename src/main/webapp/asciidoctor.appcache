@@ -1,0 +1,13 @@
+CACHE MANIFEST
+# 2014-02-10:v1
+
+# Explicitly cached entries
+index.html
+css/style.css
+offline/asciidoctor.css
+offline/asciidoctor.js
+offline/opal.js
+
+# Use from network if available
+NETWORK:
+*
