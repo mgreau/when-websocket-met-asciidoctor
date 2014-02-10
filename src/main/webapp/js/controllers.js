@@ -59,7 +59,7 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 		
 		$scope.editor.commands.addCommand({
 			    name: 'sendAsciidocToServer',
-			    bindKey: {win: 'Altl-R',  mac: 'Option-R'},
+			    bindKey: {win: 'Alt-R',  mac: 'Option-R'},
 			    exec: function(editor) {
 			    	if ($scope.isDiffOnEditor === true){
 						  $scope.rceAdocs[spaceID].state = "Diff are loaded, apply it or unload it by click on Compute diff.";
@@ -155,8 +155,8 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 			WebSocketService.sendAdocSource(idAdoc, $scope.rceAdocs[idAdoc].adocSrc, $scope.rceAdocs[idAdoc].author);
 		}
 		else {
-			$scope.rceAdocs[idAdoc].state = "You work on OFFLINE MODE !!. You need to CONNECT to do this action.";
-			$scope.addAlert("danger", $scope.rceAdocs[idAdoc].state);
+			$scope.rceAdocs[idAdoc].state = "You work on OFFLINE MODE !";
+			$scope.addAlert("warning", $scope.rceAdocs[idAdoc].state);
 			$scope.rceAdocs[idAdoc].html5.output = OfflineService.getOfflineHTML5($scope.rceAdocs[idAdoc].adocSrc);
 		}
 	};
@@ -296,6 +296,7 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 	//Disconnect from the server, work offline ?
 	$scope.disconnect = function(adSpaceID) {
 		$scope.rceAdocs[adSpaceID].author = "";
+		$scope.rceAdocs[adSpaceID].notification.writers = {};
 		WebSocketService.disconnect(adSpaceID);
 		//Activate the offline mode with storage
 		$scope.rceAdocs[adSpaceID].state = "You are working on Offline mode, don't forget to Backup locally !";

@@ -5,7 +5,7 @@ app.factory('OfflineService', function($rootScope, $window, WebSocketService, ID
 	
 	var service = {};
 	var LIST_O_STUFF = "adocStore";
-
+	
     service.addItem = function(item){
         IDB.put(LIST_O_STUFF, item);
     };
@@ -90,6 +90,7 @@ app.factory('OfflineService', function($rootScope, $window, WebSocketService, ID
     
     
     service.getOfflineHTML5 = function (adocSrc){
+    	var asciidoctorOptions = "Opal.hash2(['attributes'], {'attributes': '" + service.buildAsciidoctorOptions() + "' }) ";
     	var strVar="";
     	strVar += "<!DOCTYPE html>";
     	strVar += "  <html>";
@@ -100,14 +101,20 @@ app.factory('OfflineService', function($rootScope, $window, WebSocketService, ID
     	strVar += "  <\/head>";
     	strVar += "  <body>";
     	strVar += "    <div id=\"content\">";
-    	strVar += adocSrc;
     	strVar += "    <\/div>";
     	strVar += "    <script src=\"offline\/opal.js\"><\/script>";
     	strVar += "    <script src=\"offline\/asciidoctor.js\"><\/script>";
     	strVar += "    <script>";
-    	strVar += "      var adoc = document.getElementById('content');";
-    	strVar += "      Opal.hash2(['attributes'], {'attributes': ['notitle!']}); ";
-    	strVar += "      document.getElementById('content').innerHTML = Opal.Asciidoctor.$render(adoc.innerHTML);";
+    	strVar += "      var generatedHtml = undefined;";
+		strVar += "      try{ ";
+		strVar += "      		asciidoctorDocument = Opal.Asciidoctor.$load(\"";
+	    strVar += service.stringEncode(adocSrc) ;
+	    strVar += "\", ";
+	    strVar += asciidoctorOptions;
+	    strVar += ");";
+	    strVar += "			   generatedHtml = asciidoctorDocument.$render();";
+	    strVar += "		 }catch (e) {generatedHtml='Rendering error : ' + e.name + ':' + e.message};";
+    	strVar += "      document.getElementById('content').innerHTML = generatedHtml;";
     	strVar += "    <\/script>";
     	strVar += "  <\/body>";
     	strVar += "<\/html>";
@@ -115,6 +122,78 @@ app.factory('OfflineService', function($rootScope, $window, WebSocketService, ID
     	return strVar;
 
     };
+    
+    /**
+     * Build Asciidoctor options
+     */
+    service.buildAsciidoctorOptions = function (items) {
+        var customAttributes = '';
+        if (items){
+        	customAttributes = items['CUSTOM_ATTRIBUTES_KEY'];
+        }
+        var defaultAttributes = 'showtitle toc2 showauthor icons=font@';
+        if (customAttributes) {
+            attributes = defaultAttributes.concat(' ').concat(customAttributes);
+        } else {
+            attributes = defaultAttributes;
+        }
+        return attributes;
+    };
+    
+	service.stringEncode = function (preescape) {
+		var escaped="";
+		var i=0;
+		for(i=0;i<preescape.length;i++)
+		{
+			escaped=escaped+service.encodeCharx(preescape.charAt(i));
+		}
+		return escaped;
+	};
+	
+	
+	service.encodeCharx = function(original) {
+		var hex=new Array('0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f');
+	   	var found=true;
+	   	var thecharchar=original.charAt(0);
+	   	var thechar=original.charCodeAt(0);
+		switch(thecharchar) {
+				case '\n': return "\\n"; break; //newline
+				case '\r': return "\\r"; break; //Carriage return
+				case '\'': return "\\'"; break;
+				case '"': return "\\\""; break;
+				case '\&': return "\\&"; break;
+				case '\\': return "\\\\"; break;
+				case '\t': return "\\t"; break;
+				case '\b': return "\\b"; break;
+				case '\f': return "\\f"; break;
+				case '/': return "\\x2F"; break;
+				case '<': return "\\x3C"; break;
+				case '>': return "\\x3E"; break;
+				default:
+					found=false;
+					break;
+			}
+			if(!found)
+			{
+				if(thechar>127) {
+					var c=thechar;
+					var a4=c%16;
+					c=Math.floor(c/16); 
+					var a3=c%16;
+					c=Math.floor(c/16);
+					var a2=c%16;
+					c=Math.floor(c/16);
+					var a1=c%16;
+				//	alert(a1);
+					return "\\u"+hex[a1]+hex[a2]+hex[a3]+hex[a4]+"";		
+				}
+				else
+				{
+					return original;
+				}
+			}
+		};
+			
 
     return service;
 });
