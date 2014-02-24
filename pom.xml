@@ -4,7 +4,7 @@
 
 	<groupId>com.mgreau.wwsmad</groupId>
 	<artifactId>when-websocket-met-asciidoctor</artifactId>
-	<version>0.1.0-alpha2-SNAPSHOT</version>
+	<version>0.1.0-alpha3-SNAPSHOT</version>
 	<packaging>war</packaging>
 
 	<name>wWSmAD : When Websocket met Asciidoctor : </name>
@@ -145,6 +145,12 @@
 			<groupId>org.asciidoctor</groupId>
 			<artifactId>asciidoctor-java-integration</artifactId>
 		</dependency>
+		<!-- PostProcessor -->
+		<dependency>
+	      <groupId>org.jsoup</groupId>
+	      <artifactId>jsoup</artifactId>
+	      <version>1.7.1</version>
+	    </dependency>
 
 		<!-- Tests -->
 		<dependency>

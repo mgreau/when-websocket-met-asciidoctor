@@ -15,6 +15,7 @@ import org.asciidoctor.AttributesBuilder;
 import org.asciidoctor.DocumentHeader;
 import org.asciidoctor.OptionsBuilder;
 import org.asciidoctor.SafeMode;
+import org.asciidoctor.extension.ExtensionRegistry;
 
 @ApplicationScoped
 public class AsciidoctorProcessor {
@@ -25,6 +26,10 @@ public class AsciidoctorProcessor {
     // tag::render[]
 	public String renderAsDocument(String source, String baseDir) {
 		logger.info("Start rendering adoc");
+		
+		ExtensionRegistry extensionRegistry = this.delegate.extensionRegistry(); 
+		extensionRegistry.postprocessor(IFrameAnchorPostProcessor.class);
+		
 		return delegate.render(source, OptionsBuilder.options()
 				.safe(SafeMode.UNSAFE).backend("html5").headerFooter(true).eruby("erubis")
 				//.option("base_dir", baseDir)
