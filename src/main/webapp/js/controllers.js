@@ -152,7 +152,9 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 			}
 			//progress bar to 0
 			$scope.dynamic = 0;
-			WebSocketService.sendAdocSource(idAdoc, $scope.rceAdocs[idAdoc].adocSrc, $scope.rceAdocs[idAdoc].author);
+			//TODO handle adoc for PDF and adoc for dzSlides
+			backend = "adoc-for-html5";
+			WebSocketService.sendAdocSource(idAdoc, $scope.rceAdocs[idAdoc].adocSrc, $scope.rceAdocs[idAdoc].author, backend);
 		}
 		else {
 			$scope.rceAdocs[idAdoc].state = "You work on OFFLINE MODE !";

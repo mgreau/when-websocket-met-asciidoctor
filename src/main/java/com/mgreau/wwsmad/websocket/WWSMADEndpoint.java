@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.websocket.EncodeException;
 import javax.websocket.OnClose;
@@ -20,9 +21,10 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
-import com.mgreau.wwsmad.asciidoctor.AsciidoctorProcessor;
-import com.mgreau.wwsmad.diff.DiffAdoc;
-import com.mgreau.wwsmad.diff.DiffProvider;
+import com.mgreau.wwsmad.cdi.AsciidocMessageEvent;
+import com.mgreau.wwsmad.cdi.qualifier.Backend;
+import com.mgreau.wwsmad.cdi.qualifier.ComputeDiff;
+import com.mgreau.wwsmad.cdi.qualifier.Patch;
 import com.mgreau.wwsmad.websocket.decoders.MessageDecoder;
 import com.mgreau.wwsmad.websocket.encoders.AsciidocMessageEncoder;
 import com.mgreau.wwsmad.websocket.encoders.NotificationMessageEncoder;
@@ -30,8 +32,6 @@ import com.mgreau.wwsmad.websocket.encoders.OutputMessageEncoder;
 import com.mgreau.wwsmad.websocket.messages.AsciidocMessage;
 import com.mgreau.wwsmad.websocket.messages.Message;
 import com.mgreau.wwsmad.websocket.messages.NotificationMessage;
-import com.mgreau.wwsmad.websocket.messages.OutputMessage;
-import com.mgreau.wwsmad.websocket.messages.TypeFormat;
 import com.mgreau.wwsmad.websocket.messages.TypeMessage;
 
 /**
@@ -57,12 +57,21 @@ public class WWSMADEndpoint {
 
 	/** Handle number of writers (people who send at least one asciidoc source)  by adoc file */
 	static Map<String, Set<String>> writersByAdoc = new ConcurrentHashMap<String, Set<String>>();
-
-	@Inject
-	AsciidoctorProcessor processor;
 	
-	@Inject @DiffProvider("Google")
-	DiffAdoc diffGoogle;
+	@Inject @Patch
+	Event<AsciidocMessageEvent> patchEvent;
+	
+	@Inject @ComputeDiff
+	Event<AsciidocMessageEvent> diffEvent;
+	
+	@Inject @Backend("html5")
+	Event<AsciidocMessageEvent> html5Event;
+	
+	@Inject @Backend("dzslides")
+	Event<AsciidocMessageEvent> dzEvent;
+	
+	@Inject @Backend("pdf")
+	Event<AsciidocMessageEvent> pdfEvent;
 
 	/**
 	 * Send, to all peers connected to this asciidoc file, the Output Message
@@ -186,43 +195,36 @@ public class WWSMADEndpoint {
 		} else {
 			// TODO handle if the name is modified
 		}
-
-		// Send request to show diff
-		if ("diff".equals(msg.getAction())) {
-			msg.setAdocSourceToMerge(diffGoogle.rawDiff(msg.getAdocSource(), msg.getAdocSourceToMerge()));
-			msg.setType(TypeMessage.diff);
-			msg.setAdocId(adocId);
-			msg.setFormat(TypeFormat.asciidoc);
-			sendMessage(session, msg, adocId);
-		} else if ("patch".equals(msg.getAction())) {
-			msg.setAdocSourceToMerge(diffGoogle.applyPatch(msg.getAdocSource(), msg.getPatchToApply()));
-			msg.setType(TypeMessage.patch);
-			msg.setAdocId(adocId);
-			msg.setFormat(TypeFormat.asciidoc);
-			sendMessage(session, msg, adocId);
-
-		} else {
-			OutputMessage html = new OutputMessage(TypeFormat.html5);
-			html.setAdocId(adocId);
-			html.setType(TypeMessage.output);
-			html.setCurrentWriter(msg.getCurrentWriter());
-			long start = System.currentTimeMillis();
-			
-			try {
-				html.setContent(processor.renderAsDocument(msg.getAdocSource(),
-						""));
-				html.setTimeToRender(System.currentTimeMillis() - start);
-				html.setDocHeader(processor.renderDocumentHeader(msg
-						.getAdocSource()));
-			} catch (RuntimeException rEx) {
-				logger.severe("processing error." + rEx.getCause().toString());
-			}
-			html.setAdocSource(msg.getAdocSource());
-
-			// send the new HTML version to all connected peers
-			sendMessage(html, adocId);
+		
+		final AsciidocMessageEvent event = new AsciidocMessageEvent(session, adocId, msg);
+		if (null == msg.getAction())
+			html5Event.fire(event);
+		else
+		switch (msg.getAction()) {
+			case "diff":
+				diffEvent.fire(event);
+				break;
+	
+			case "patch":
+				patchEvent.fire(event);
+				break;
+	
+			case "renderHtml5":
+				html5Event.fire(event);
+				break;
+				
+			case "renderDz":
+				dzEvent.fire(event);
+				break;
+				
+			case "renderPdf":
+				pdfEvent.fire(event);
+				break;
+	
+			default:
+				html5Event.fire(event);
+				break;
 		}
-
 	}
 
 	@OnOpen
