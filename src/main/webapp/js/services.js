@@ -17,8 +17,8 @@ app.factory('WebSocketService', function($window) {
 		
 		var appPath = $window.location.pathname.split('/')[1];
 		var host = $window.location.hostname;
-		var port = "8080";
 		var protocol = "ws";
+		var port = "8080";
 		if (angular.equals(host, 'wildfly-mgreau.rhcloud.com') ){
 			port = '8000';
 		}
@@ -49,9 +49,9 @@ app.factory('WebSocketService', function($window) {
 		service.ws[idAdoc] = websocket;
 	};
 
-	// Send an adoc source to see the generated html back
-	service.sendAdocSource = function(idAdoc, source, writer) {
-		var jsonObj = {"type" : "adoc", "source" : source, "writer": writer};
+	// Send an adoc source to see the generated output back
+	service.sendAdocSource = function(idAdoc, source, writer, backend) {
+		var jsonObj = {"type" : backend, "source" : source, "writer": writer};
 		service.ws[idAdoc].send(JSON.stringify(jsonObj));
 	};
 	

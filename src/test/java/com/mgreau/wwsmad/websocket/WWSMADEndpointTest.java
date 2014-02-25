@@ -123,7 +123,7 @@ public class WWSMADEndpointTest {
 		return container.connectToServer(endpoint, uri);
 	}
 
-	private String data = "{\"type\":\"adoc\",\"source\":\"= Hello Test\\nDoc Writer <doc@example.com>\\nv1.0, 2013-11-11\\n:toc:\\n:numbered:\\n:source-highlighter: coderay\\n\\nAn introduction to http://asciidoc.orgdf[AsciiDoc].\\n\\n\\n\",\"writer\":\"@mgreau\"}";
+	private String data = "{\"type\":\"adoc-for-html5\",\"source\":\"= Hello Test\\nDoc Writer <doc@example.com>\\nv1.0, 2013-11-11\\n:toc:\\n:numbered:\\n:source-highlighter: coderay\\n\\nAn introduction to http://asciidoc.orgdf[AsciiDoc].\\n\\n\\n\",\"writer\":\"@mgreau\"}";
 
 	private String getNotificationOnOpenConnection(String nb){
 		return "{\"type\":\"notification\",\"adocId\":\""

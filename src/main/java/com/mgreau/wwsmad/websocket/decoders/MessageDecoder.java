@@ -34,17 +34,22 @@ public class MessageDecoder implements Decoder.Text<AsciidocMessage> {
     public AsciidocMessage decode(String string) throws DecodeException {
         AsciidocMessage msg = null;
         if (willDecode(string)) {
+        	 msg = new AsciidocMessage(messageMap.get("writer"), messageMap.get("source"));
             switch (messageMap.get("type")) {
-                case "adoc":
-                    msg = new AsciidocMessage(messageMap.get("writer"), messageMap.get("source"));
+                case "adoc-for-html5":
+                    msg.setAction("renderHtml5");
+                break;
+                case "adoc-for-pdf":
+                    msg.setAction("renderPdf");
+                break;
+                case "adoc-for-dzslides":
+                    msg.setAction("renderDz");
                 break;
                 case "adoc-for-diff":
-                    msg = new AsciidocMessage(messageMap.get("writer"), messageMap.get("source"));
                     msg.setAdocSourceToMerge(messageMap.get("sourceToMerge"));
                     msg.setAction("diff");
                 break;
                 case "adoc-for-patch":
-                    msg = new AsciidocMessage(messageMap.get("writer"), messageMap.get("source"));
                     msg.setPatchToApply(messageMap.get("patch"));
                     msg.setAction("patch");
                 break;
@@ -76,10 +81,6 @@ public class MessageDecoder implements Decoder.Text<AsciidocMessage> {
         Set keys = messageMap.keySet();
         if (keys.contains("type")) {
             switch (messageMap.get("type")) {
-                case "adoc":
-                    if (keys.contains("source"))
-                        decodes = true;
-                break;
                 case "adoc-for-diff":
                     if (keys.contains("source") && keys.contains("sourceToMerge") )
                         decodes = true;
@@ -87,6 +88,10 @@ public class MessageDecoder implements Decoder.Text<AsciidocMessage> {
                 case "adoc-for-patch":
                     if (keys.contains("source") && keys.contains("patch") )
                         decodes = true;
+                break;
+                default:
+                	 if (keys.contains("source"))
+                         decodes = true;
                 break;
             }
         }
