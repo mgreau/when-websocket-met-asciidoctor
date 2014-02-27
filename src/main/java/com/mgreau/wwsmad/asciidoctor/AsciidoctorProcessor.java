@@ -25,17 +25,33 @@ public class AsciidoctorProcessor {
 	
     // tag::render[]
 	public String renderAsDocument(String source, String baseDir) {
-		logger.info("Start rendering adoc");
+		logger.info("[RENDER]::START rendering adoc");
 		
 		ExtensionRegistry extensionRegistry = this.delegate.extensionRegistry(); 
 		extensionRegistry.postprocessor(IFrameAnchorPostProcessor.class);
 		
-		return delegate.render(source, OptionsBuilder.options()
-				.safe(SafeMode.UNSAFE).backend("html5").headerFooter(true).eruby("erubis")
-				//.option("base_dir", baseDir)
-				.attributes(AttributesBuilder.attributes()
-						.attribute("icons!", "").attribute("allow-uri-read")
-						.attribute("copycss!", "").asMap()).asMap());
+		String output = "There is a problem";
+		
+		try{
+			output = delegate.render(
+					source,
+					OptionsBuilder
+							.options()
+							.safe(SafeMode.UNSAFE).headerFooter(true)
+							.eruby("erubis")
+							.attributes(
+									AttributesBuilder.attributes()
+											.attribute("icons!", "")
+											.attribute("allow-uri-read")
+											.attribute("copycss!", "").asMap())
+							.asMap());
+			logger.info("[RENDER]::END rendering adoc");
+
+		} catch(RuntimeException rex){
+			logger.severe("[RENDER]::ERROR rendering adoc");
+		}
+		
+		return output;
 	}
     // end::render[]
 	

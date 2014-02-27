@@ -1,13 +1,29 @@
-<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			
+	<div class="panel panel-default col-xs-12 col-sm-12 col-md-6 col-lg-6" style="background-color:#fff;padding:3px 10px;;border:0px;">
+		<div class="panel-heading"  style="background-color:#fff;padding:3px;border:0px;">
+			<div class="col-sm-10">
+				<div class="btn-group"  >
+						<button type="button" ng-click="toggleRenderFullscreen()" title="FullScreen mode for HTML5 preview"
+							class="btn btn-xs btn-default"><span class="glyphicon glyphicon-fullscreen"></span></button>
+						<button ng-click="loadLastAdoc(theDoc.key)" type="button" title="Load the last Asciidoc source for the HTML5 rendered below"
+							class="btn btn-xs btn-default" title="Source code">
+							<span class="glyphicon glyphicon-download-alt" ></span>
+						</button>
+						<span class="label label-primary">
+							<span title="Time to render HTML5" class="glyphicon glyphicon-cog"></span> {{theDoc.html5.timeToRender}} ms</span>
+						<img title="Last author" ng-show="theDoc.author != theDoc.html5.currentWriter " src="http://placehold.it/20/55C1E7/fff&amp;text=W" alt="User Avatar" class="img-square"> 
+						<img title="Last author" ng-show="theDoc.author == theDoc.html5.currentWriter " src="http://placehold.it/20/FA6F57/fff&amp;text=ME" alt="User Avatar" class="img-circle"> 
+						<em> {{theDoc.html5.currentWriter}} </em>
+				</div>
+			</div>
+			<div class="col-sm-2">	
+						<progressbar  max="max" value="dynamic" type="success"> <span
+						style="color: black; white-space: nowrap;">{{dynamic}} /
+						{{max}}</span> </progressbar>
+			</div>
 		</div>
 		<div class="panel-body" style="padding:0px;">
 			<p ng-show="!theHtml5.output">Write your doc and see a preview of the HTML rendering with Alt + R or each change.</p>
 			<iframe ng-show="theHtml5.output" fullscreen="isRenderFullscreen" id="html5-rendered" srcdoc="{{theHtml5.output}}" width="100%"
-				height="800px"> </iframe>
+				height="1000px"> </iframe>
 		</div>
 	</div>
-</div>

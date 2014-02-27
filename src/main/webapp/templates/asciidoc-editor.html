@@ -1,9 +1,49 @@
-<div  class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-	<div class="row" ui-ace="{
-	  onLoad: aceLoaded,
-	  onChange: aceChanged,
-	  mode: 'asciidoc',
-	  theme: 'terminal'
-	}">
+<div class="panel panel-default col-xs-12 col-sm-12 col-md-6 col-lg-6" style="background-color:#000;padding:3px 10px;border:0px;">
+	<div class="panel-heading" style="background-color:#000;padding:3px;border:0px">
+
+		<div class="btn-group">
+			<button id="modeKey" ng-class="{isEvtOnChangeActivate: active}"
+				type="button" ng-click="modeAdocOnChange(false)"
+				class="btn btn-xs btn-primary" ng-model="radioModel"
+				btn-radio="'onKeyShortcut'"
+				title="Asciidoc source will be sent only on Alt+R command">
+				<span class="glyphicon glyphicon-cog"></span> Alt+R
+			</button>
+
+			<button id="modeChange" ng-class="{isEvtOnChangeActivate: active}"
+				type="button" ng-click="modeAdocOnChange(true)"
+				ng-model="radioModel" btn-radio="'onChange'"
+				title="Asciidoc source will be sent only on each change"
+				class="btn btn-xs btn-primary">
+				<span class="glyphicon glyphicon-cog"></span> Change
+			</button>
+
+			<!-- Patch feature -->
+			<button type="button" id="diff" ng-click="computeDiff(rceAdoc.key)"
+				class="btn btn-xs btn-default" 
+				title="Compute Diff between you AsciiDoc and the last version sent by a user"><span class="glyphicon glyphicon-transfer"></span> Diff</button>
+			<button type="button" id="patch" ng-click="applyPatch(rceAdoc.key)"
+				class="btn btn-xs btn-default" title="Patch your AsciiDoc file with the last AsciiDoc"><span class="glyphicon glyphicon-transfer"></span> Patch</button>
+
+			<!-- Save offline feature -->
+			<button type="button" ng-click="saveOnDisk(rceAdoc.key)"
+				class="btn btn-xs btn-default " title="Save the current AsciiDoc" >
+				<span class="glyphicon glyphicon-hdd"></span> Save
+			</button>
+			<button type="button" ng-click="loadFromDisk(rceAdoc.key)"
+				class="btn btn-xs btn-default" title="Load the last AsciiDoc backup">
+				<span class="glyphicon glyphicon-hdd"></span> Load
+			</button>
+		</div>
+	</div>
+	<div class="panel-body" style="padding: 0px;">
+		<div class="row"
+			ui-ace="{
+		  onLoad: aceLoaded,
+		  onChange: aceChanged,
+		  mode: 'asciidoc',
+		  theme: 'terminal'
+		}">
+		</div>
 	</div>
 </div>

@@ -1,11 +1,18 @@
 package com.mgreau.wwsmad.cdi;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.annotation.ManagedBean;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import org.asciidoctor.Author;
+import org.asciidoctor.DocumentHeader;
 
 import com.mgreau.wwsmad.asciidoctor.AsciidoctorProcessor;
 import com.mgreau.wwsmad.cdi.qualifier.Backend;
@@ -66,14 +73,43 @@ public class AsciidocMessageConsumer {
 		html.setAdocId(event.id);
 		html.setType(TypeMessage.output);
 		html.setCurrentWriter(event.msg.getCurrentWriter());
-		long start = System.currentTimeMillis();
 		
+		//Check if document header is present
+		DocumentHeader docHeader = null;
+		try {
+			logger.info("DocHeader add custom header");
+
+			docHeader = processor.renderDocumentHeader(event.msg
+					.getAdocSource());
+			for (Map.Entry<String, Object> h : docHeader.getAttributes().entrySet()){
+				logger.info(h.getKey() + " : " + h.getValue());
+			}
+			Map<String, Object> headers = docHeader.getAttributes();
+			if (docHeader.getAuthors().size() == 0) {
+				logger.info("DocHeader add author");
+				Author a = new Author();
+				a.setFullName("server wildfly");
+				a.setEmail("test@test.org");
+				a.setFirstName("first");
+				a.setLastName("last");
+				headers.put("author", a.getFullName());
+				headers.put("email", a.getEmail());
+			}
+			
+			headers.put("revdate", "2014-02-26");
+			headers.put("revnumber", "1234");
+			docHeader = DocumentHeader.createDocumentHeader("Doc title", "page title", headers);
+			
+		} catch (RuntimeException rEx) {
+			logger.severe("DocHeader processing error, add custom header" + rEx.getCause().toString());
+		}
+		
+		long start = System.currentTimeMillis();
 		try {
 			html.setContent(processor.renderAsDocument(event.msg.getAdocSource(),
 					""));
+			html.setDocHeader(docHeader);
 			html.setTimeToRender(System.currentTimeMillis() - start);
-			html.setDocHeader(processor.renderDocumentHeader(event.msg
-					.getAdocSource()));
 		} catch (RuntimeException rEx) {
 			html.setTimeToRender(-1);
 			logger.severe("processing error." + rEx.getCause().toString());
