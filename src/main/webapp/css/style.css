@@ -1,9 +1,9 @@
 body {
-	padding-top: 150px;
+	padding-top: 105px;
 }
 
 .ace_editor {
-	height: 800px;
+	height: 1000px;
 }
 
 
@@ -24,8 +24,8 @@ nav bar
 **/
 .navbar {
 	margin-bottom: 0px;
-	height: 142px;
-	border-color: black;
+	height: 100px;
+	border-color: rgba(0, 0, 0, 0.12);
 }
 
 .navbar-btn, .navbar-btn.btn-xs {
@@ -41,6 +41,8 @@ margin-bottom: 0px;
 /**
 ace editor - fullscreen
 **/
+
+
 .fullScreen .fullScreen-editor{ 
 		height: auto!important;
 		width: auto!important;

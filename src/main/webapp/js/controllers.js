@@ -17,6 +17,8 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 	$scope.user;
 	//ID for the AsciiDoctor Space
 	$scope.adSpaceID;
+	//Menu Collapse ?
+	$scope.isCollapsed = false;
 	
 	// Initially, do not go into full screen
     $scope.isRenderFullscreen = false;

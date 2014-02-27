@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation" >
 	<div class="panel panel-default recipients">
 		<div class="panel-heading">
 		<button ng-show="theDoc.status == 'CONNECTED'"
@@ -40,52 +40,5 @@
 			</div>
 			<div class="clearfix"></div>
 		</div>
-		<div class="panel-footer">
-			<div class="row" style="height:17px;">
-				<div class="col-sm-6">
-					<!-- Send to server mode -->
-					<div class="btn-group">
-						<button id="modeKey" ng-class="{isEvtOnChangeActivate: active}"
-							type="button" ng-click="modeAdocOnChange(false)"
-							class="btn btn-xs btn-default" ng-model="radioModel" btn-radio="'onKeyShortcut'"
-							title="Asciidoc source will be sent only on Alt+R command">Render
-							on Alt+R</button>
-						<button id="modeChange" ng-class="{isEvtOnChangeActivate: active}"
-							type="button" ng-click="modeAdocOnChange(true)" ng-model="radioModel" btn-radio="'onChange'"
-							class="btn btn-xs btn-default">Render on Change</button>
-							
-						<!-- Patch feature -->
-						<button type="button" id="diff" ng-click="computeDiff(rceAdoc.key)"
-							class="btn btn-xs btn-default">Compute Diff</button>
-						<button type="button" id="patch" ng-click="applyPatch(rceAdoc.key)"
-							class="btn btn-xs btn-default">Apply Patch</button>
-							
-						<!-- Save offline feature -->
-						<button type="button" ng-click="saveOnDisk(rceAdoc.key)"
-							class="btn btn-xs btn-default">Save on disk</button>
-						<button type="button" ng-click="loadFromDisk(rceAdoc.key)"
-							class="btn btn-xs btn-default">Load from disk</button>
-					</div>
-				</div>
-				<div class="col-sm-5" ng-show="theDoc.status == 'CONNECTED'" >
-						<button type="button" ng-click="toggleRenderFullscreen()" title="FullScreen mode for HTML5 preview"
-							class="btn btn-xs btn-default"><span class="glyphicon glyphicon-fullscreen"></span></button>
-						<button ng-click="loadLastAdoc(theDoc.key)" type="button" title="Load the last Asciidoc source for the HTML5 rendered below"
-							class="btn btn-xs" title="Source code">
-							<span class="glyphicon glyphicon-download-alt" ></span>
-						</button>
-						<span class="label label-warning">
-							<span title="Time to render HTML5" class="glyphicon glyphicon-cog"></span> {{theDoc.html5.timeToRender}} ms</span>
-						<img title="Last author" ng-show="theDoc.author != theDoc.html5.currentWriter " src="http://placehold.it/20/55C1E7/fff&amp;text=W" alt="User Avatar" class="img-square"> 
-						<img title="Last author" ng-show="theDoc.author == theDoc.html5.currentWriter " src="http://placehold.it/20/FA6F57/fff&amp;text=ME" alt="User Avatar" class="img-circle"> 
-						<em> {{theDoc.html5.currentWriter}} </em>
-				</div>
-				<div class="col-sm-1" ng-show="theDoc.status == 'CONNECTED'">
-					<progressbar max="max" value="dynamic" type="success"> <span
-						style="color: black; white-space: nowrap;">{{dynamic}} /
-						{{max}}</span> </progressbar>
-				</div>
-			</div>
 		</div>
-	</div>
 </nav>
