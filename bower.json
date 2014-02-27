@@ -8,9 +8,10 @@
     "angular-resource": "1.2.11",
     "bootstrap": "3.1.0",
     "angular-indexeddb": "emil10001/angular-indexeddb",
-    "angular-fullscreen": "fabiobiondi/angular-fullscreen"
+    "angular-fullscreen": "fabiobiondi/angular-fullscreen",
+    "angular-dropfile-directive": "https://github.com/anthonny/angular-dropfile-directive.git#master"
   },
   "resolutions": {
-    "angular": "~1.2.13"
+    "angular": "1.2.11"
   }
 }
