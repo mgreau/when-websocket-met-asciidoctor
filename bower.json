@@ -9,5 +9,8 @@
     "bootstrap": "3.1.0",
     "angular-indexeddb": "emil10001/angular-indexeddb",
     "angular-fullscreen": "fabiobiondi/angular-fullscreen"
+  },
+  "resolutions": {
+    "angular": "~1.2.13"
   }
 }

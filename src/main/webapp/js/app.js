@@ -21,7 +21,8 @@ var app = angular.module('wWSmADapp',
 		 	'ui.ace', 
 		 	'ui.bootstrap',
 		 	'angular-indexeddb',
-		 	'FBAngular'
+		 	'FBAngular', 
+		 	'aql.directives.dropfile'
 	 	]
 );
 
