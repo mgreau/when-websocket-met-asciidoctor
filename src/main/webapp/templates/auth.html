@@ -4,7 +4,7 @@
 			<div class="panel panel-default">
 				<form class="form form-signup" ng-submit="enableEditor(theNewDoc.key)">
 				<div class="panel-body">
-					<h5 class="text-center">CREATE A SPACE</h5>
+					<h5 class="text-center">CREATE A NEW SPACE</h5>
 					
 						<div class="form-group">
 							<div class="input-group">
@@ -14,7 +14,8 @@
 							</div>
 						</div>
 				</div>
-				<button ng-click="connect(user)" class="btn btn-sm btn-primary btn-block" type="submit"> SUBMIT</button>
+				<button ng-click="startWriting(user,'online')" class="btn btn-sm btn-primary btn-block" type="submit"> MODE ONLINE</button>
+				<button ng-click="startWriting(user,'offline')" class="btn btn-sm btn-danger btn-block" type="submit"> MODE OFFLINE</button>
 				</form>
 			</div>
 		</div>
@@ -22,7 +23,7 @@
 			<div class="panel panel-default">
 				<form class="form form-signup" id="joinATeam" role="form" ng-submit="enableEditor(adSpaceID)">
 					<div class="panel-body">
-						<h5 class="text-center">JOIN A COLLABORATIVE TEAM</h5>
+						<h5 class="text-center">COLLABORATE</h5>
 						<div class="form-group">
 							<div class="input-group">
 								<span class="input-group-addon"><span
@@ -38,7 +39,7 @@
 							</div>
 						</div>
 					</div>
-				<button ng-click="joinATeam(user, adSpaceID)" class="btn btn-sm btn-primary btn-block" type="submit"> SUBMIT</button>
+				<button ng-click="joinATeam(user, adSpaceID)" class="btn btn-sm btn-primary btn-block" type="submit"> JOIN A TEAM (ONLINE)</button>
 				</form>
 			</div>
 		</div>

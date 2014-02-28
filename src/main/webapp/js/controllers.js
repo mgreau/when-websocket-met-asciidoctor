@@ -4,7 +4,6 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 	JsonService.query(function (response) {
 	    angular.forEach(response, function (item) {
 	        if (item.id) {
-	            console.log(item.source);
 	            $scope.sampleAd = item.source;
 	            if ($scope.editor){
 	            	$scope.editor.setValue($scope.sampleAd);
@@ -13,20 +12,11 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 	    });
 	});
 	
-	//User connected
-	$scope.user;
-	//ID for the AsciiDoctor Space
-	$scope.adSpaceID;
-	//Menu Collapse ?
-	$scope.isCollapsed = false;
-	
-	// Initially, do not go into full screen
-    $scope.isRenderFullscreen = false;
+	$scope.user; //User connected
+	$scope.mode; //Writing mode (offline, online)
+	$scope.adSpaceID; //ID for the AsciiDoctor Space
+    $scope.isRenderFullscreen = false; // Initially, do not go into full screen
 
-    $scope.toggleRenderFullscreen = function() {
-        $scope.isRenderFullscreen = !$scope.isRenderFullscreen;
-    };
-    
 	//RCEAdoc : Realtime Collaborative Editor for Asciidoctor
 	$scope.rceAdocs = new Object();
 	$scope.isEditorActivate = false;
@@ -45,12 +35,20 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 	var spaceID = (Math.random() + 1).toString(36).substring(7);
 	$scope.initID = spaceID;
 	
-	
 	$scope.rceAdocs[spaceID] = new Object();
 	$scope.rceAdocs[spaceID].key = spaceID;
 	$scope.rceAdocs[spaceID].status = 'DISCONNECTED';
 	$scope.rceAdocs[spaceID].state = "WELCOME ! You can create a new space OR join a team.";
 	$scope.rceAdocs[spaceID].author = "";
+	
+	//Fullscreen
+    $scope.toggleRenderFullscreen = function() {
+        $scope.isRenderFullscreen = !$scope.isRenderFullscreen;
+    };
+    
+    $scope.showAuth = function() {
+    	$scope.mode = null;
+    };
 	
 	$scope.aceLoaded = function(_editor) {
 		$scope.editor = _editor;
@@ -68,7 +66,9 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 						  $scope.addAlert("info", $scope.rceAdocs[idAdoc].state);
 					 }
 					 else {
-				    	if ($scope.isEvtOnChangeActivate === false){
+				    	if ($scope.isEvtOnChangeActivate === true){
+				    		$scope.addAlert("warning", "The preview is rendering on each change.");
+				    	} else {
 					    	$scope.rceAdocs[spaceID].adocSrc = editor.getValue();
 							$scope.sendAdoc(spaceID);
 				    	}
@@ -92,7 +92,7 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 			  }
 		  }
 	  };
-	  
+	
 	$scope.modeAdocOnChange = function(value) {
 		$scope.isEvtOnChangeActivate = value;
 		
@@ -161,6 +161,9 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 		else {
 			$scope.rceAdocs[idAdoc].state = "You work on OFFLINE MODE !";
 			$scope.addAlert("warning", $scope.rceAdocs[idAdoc].state);
+			if (angular.isUndefined($scope.rceAdocs[idAdoc].html5)){
+				$scope.rceAdocs[idAdoc].html5 = new Object();
+			}
 			$scope.rceAdocs[idAdoc].html5.output = OfflineService.getOfflineHTML5($scope.rceAdocs[idAdoc].adocSrc);
 		}
 	};
@@ -169,7 +172,6 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 	//Load the asciidoc source associated to the last output, to the source editor
 	$scope.loadLastAdoc = function(idAdoc) {
 		if (angular.isUndefined($scope.rceAdocs[idAdoc].html5.source)){
-			console.log("No html5.source content");
 			$scope.rceAdocs[idAdoc].state = "You already have the last version.";
 			$scope.addAlert("info", $scope.rceAdocs[idAdoc].state);
 		}
@@ -199,7 +201,7 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 					$scope.rceAdocs[idAdoc].author, $scope.rceAdocs[idAdoc].adoc.sourceToMerge);
 		}
 		else {
-			$scope.rceAdocs[idAdoc].state = "You work on OFFLINE MODE !!. You need to CONNECT to do this action.";
+			$scope.rceAdocs[idAdoc].state = "You work on OFFLINE MODE !!. You need to be ONLINE to do this action.";
 			$scope.addAlert("danger", $scope.rceAdocs[idAdoc].state);
 		}
 	};
@@ -230,7 +232,7 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 			WebSocketService.sendAdocSourceForDiff(idAdoc, $scope.rceAdocs[idAdoc].adocSrc, $scope.rceAdocs[idAdoc].author, $scope.rceAdocs[idAdoc].html5.source);
 		}
 		else {
-			$scope.rceAdocs[idAdoc].state = "You work on OFFLINE MODE !!. You need to be CONNECTED to do this action.";
+			$scope.rceAdocs[idAdoc].state = "You work on OFFLINE MODE !!. You need to be ONLINE to do this action.";
 			$scope.addAlert("danger", $scope.rceAdocs[idAdoc].state);
 		}
 	};
@@ -244,31 +246,34 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 		} else {
 			$scope.editor.setReadOnly(false);
 			$scope.isEditorActivate = true;
-			$scope.rceAdocs[adSpaceID].state = "Write your doc and see a preview of the HTML rendering with Ctrl + R or each change.";
+			$scope.rceAdocs[adSpaceID].state = "Write your doc and see the HTML rendering.";
 			$scope.addAlert("success", $scope.rceAdocs[adSpaceID].state);
 		}
 	};
 
-	//WebSocket connection in order to send data to the server
-	$scope.connect = function(user) {
-		//Create a space
-		console.log("Create a space " + $scope.initID);
+	//Start writing on offline mode or online mode with WebSocket connection
+	$scope.startWriting = function(user, mode) {
 		$scope.user = user;
 		
 		if (angular.isUndefined($scope.user) || angular.equals($scope.user,'')){
 			$scope.rceAdocs[$scope.initID].state = "Your name is required !";
 			$scope.addAlert("danger", "Your name is required !");
 			return;
-		}else {
+		} else {
+			$scope.mode = mode;
+			//SpaceID
 			$scope.adSpaceID = $scope.initID;
-			WebSocketService.connect($scope.initID);
+			if (angular.equals(mode, 'online')){
+				WebSocketService.connect($scope.initID);
+			}
 			$scope.rceAdocs[$scope.initID].author = user;
+			//To show the preview in the iframe
+			$scope.rceAdocs[$scope.initID].html5 = new Object();
+			$scope.rceAdocs[$scope.initID].html5.output = "You can start writing your documentation !!";
 		}
-		
 	};
 	
 	$scope.joinATeam = function(user, adSpaceID) {
-		console.log("Join a team ");
 		$scope.user = user;
 		$scope.adSpaceID = adSpaceID;
 		if (angular.isUndefined($scope.user) || angular.equals($scope.user,'')){
@@ -299,11 +304,11 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 	
 	//Disconnect from the server, work offline ?
 	$scope.disconnect = function(adSpaceID) {
-		$scope.rceAdocs[adSpaceID].author = "";
 		$scope.rceAdocs[adSpaceID].notification.writers = {};
 		WebSocketService.disconnect(adSpaceID);
 		//Activate the offline mode with storage
-		$scope.rceAdocs[adSpaceID].state = "You are working on Offline mode, don't forget to Backup locally !";
+		$scope.mode = 'offline';
+		$scope.rceAdocs[adSpaceID].state = "You are currently working on Offline mode.";
 		$scope.addAlert("warning", "");
 	};
 	
@@ -327,7 +332,7 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 	            param: $scope.editor.getValue()
 	        };
 	  OfflineService.addItem(data);
-	  $scope.rceAdocs[adSpaceID].state = "Successul local backup (asciidoc source) !";
+	  $scope.rceAdocs[adSpaceID].state = "Your AsciiDoc source is locally saved (" + data.id + ")";
       $scope.addAlert("success", "");
 	};
 	
@@ -336,7 +341,7 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
         var data = OfflineService.getItem(adSpaceID);
         console.log("Load from IndexedDB with adSpaceID " + data.id);
         $scope.editor.setValue(data.param);
-        $scope.rceAdocs[adSpaceID].state = "Local backup loaded (asciidoc source) !";
+        $scope.rceAdocs[adSpaceID].state = "Your local Asciidoc backup is loaded (" + data.id + ")";
         $scope.addAlert("success", "");
 	};
 	
@@ -349,10 +354,11 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 
     $rootScope.$on('getinit', OfflineService.dbupdate);
     $rootScope.$on('getall', OfflineService.dbupdate);
-    $rootScope.$on('remove', OfflineService.getAll);
+    $rootScope.$on('remove'	, OfflineService.getAll);
     $rootScope.$on('put', OfflineService.getAll);
     $rootScope.$on('clear', OfflineService.getAll);
     $rootScope.$on('batchinsert', OfflineService.getAll);
+    
     
     (function () {
         // if the db has not been initialized, then the listeners should work

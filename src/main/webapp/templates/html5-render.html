@@ -1,6 +1,6 @@
 	<div class="panel panel-default col-xs-12 col-sm-12 col-md-6 col-lg-6" style="background-color:#fff;padding:3px 10px;;border:0px;">
 		<div class="panel-heading"  style="background-color:#fff;padding:3px;border:0px;">
-			<div class="col-sm-10">
+			<div class="col-sm-2">
 				<div class="btn-group"  >
 						<button type="button" ng-click="toggleRenderFullscreen()" title="FullScreen mode for HTML5 preview"
 							class="btn btn-xs btn-default"><span class="glyphicon glyphicon-fullscreen"></span></button>
@@ -8,12 +8,14 @@
 							class="btn btn-xs btn-default" title="Source code">
 							<span class="glyphicon glyphicon-download-alt" ></span>
 						</button>
-						<span class="label label-primary">
+				</div>
+			</div>
+			<div class="col-sm-8">
+				<span class="label label-primary">
 							<span title="Time to render HTML5" class="glyphicon glyphicon-cog"></span> {{theDoc.html5.timeToRender}} ms</span>
 						<img title="Last author" ng-show="theDoc.author != theDoc.html5.currentWriter " src="http://placehold.it/20/55C1E7/fff&amp;text=W" alt="User Avatar" class="img-square"> 
 						<img title="Last author" ng-show="theDoc.author == theDoc.html5.currentWriter " src="http://placehold.it/20/FA6F57/fff&amp;text=ME" alt="User Avatar" class="img-circle"> 
 						<em> {{theDoc.html5.currentWriter}} </em>
-				</div>
 			</div>
 			<div class="col-sm-2">	
 						<progressbar  max="max" value="dynamic" type="success"> <span

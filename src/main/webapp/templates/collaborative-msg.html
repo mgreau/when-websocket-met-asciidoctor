@@ -10,7 +10,7 @@
 			<span class="label label-danger"
 				ng-show="theDoc.status == 'DISCONNECTED'"> <span
 				title="Offline" class="glyphicon glyphicon-exclamation-sign"></span>
-				<strong>OFFLINE.</strong></span> <span class="label label-success"
+				<strong>OFFLINE.</strong></span> <a href="#" ng-show="theDoc.status == 'DISCONNECTED'" ng-click="showAuth()">- Connect -</a> <span class="label label-success"
 				ng-show="theDoc.status == 'CONNECTED'"><strong>ONLINE.</strong>
 			</span>  | 
 		Realtime Collaborative Editor for Asciidoctor | v0.1-alpha3 | <a href="https://github.com/mgreau/when-websocket-met-asciidoctor" target="_blank">View Project on GitHub</a> |

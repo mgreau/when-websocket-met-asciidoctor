@@ -14,7 +14,6 @@ app.factory('OfflineService', function($rootScope, $window, WebSocketService, ID
     	var res ="";
 
     	listOThings.every(function(element, index, array) {
-    	    console.log("element:", element);
     	    if (element.id == adSpaceID) {
     	    	res = element;
     	        return false;
@@ -41,7 +40,6 @@ app.factory('OfflineService', function($rootScope, $window, WebSocketService, ID
 	
 	service.update = function (data) {
         $rootScope.$apply(function () {
-            console.log('update, apply', data);
             listOThings = data;
             if (!listOThings || listOThings.length <= 0) {
                 listOThings = [];
@@ -51,17 +49,14 @@ app.factory('OfflineService', function($rootScope, $window, WebSocketService, ID
     };
 
     service.dbupdate = function (event, args) {
-        console.log('args', args);
         var dbname = args[0],
             storeName = args[1],
             data = args[2];
-        console.log('update', dbname, storeName, data);
         if (dbname === dbParams.name && LIST_O_STUFF === storeName)
             service.update(data);
     };
 
     service.getAllThings = function (transaction) {
-        console.log('getAllThings', transaction);
         if (transaction instanceof IDBTransaction)
             IDB.getInit(transaction, LIST_O_STUFF);
         else
@@ -69,11 +64,9 @@ app.factory('OfflineService', function($rootScope, $window, WebSocketService, ID
     };
 
     service.getAll = function (event, data) {
-        console.log("things DBGETALL");
         var dbname = data[0],
             storeName = data[1],
             transaction = data[2];
-        console.log('getAll', dbname, storeName, transaction);
         if (dbname === dbParams.name && LIST_O_STUFF === storeName)
             service.getAllThings(transaction);
     };
@@ -82,7 +75,6 @@ app.factory('OfflineService', function($rootScope, $window, WebSocketService, ID
     service.postInitDb = function (event, data) {
         var dbname = data[0],
             transaction = data[1];
-        console.log('postInit', dbname, transaction);
         if (dbname !== dbParams.name)
             return;
         service.getAllThings(transaction);
