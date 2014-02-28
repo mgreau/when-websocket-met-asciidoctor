@@ -15,7 +15,7 @@ var dbParams = {
     ]
 };
 
-var app = angular.module('wWSmADapp', 
+var app = angular.module('adeditorApp', 
 		[	
 		 	'ngResource',
 		 	'ui.ace', 

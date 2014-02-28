@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.ManagedBean;
@@ -82,20 +83,15 @@ public class AsciidocMessageConsumer {
 			docHeader = processor.renderDocumentHeader(event.msg
 					.getAdocSource());
 			for (Map.Entry<String, Object> h : docHeader.getAttributes().entrySet()){
-				logger.info(h.getKey() + " : " + h.getValue());
+				logger.log(Level.FINER, h.getKey() + " : " + h.getValue());
 			}
+			//FIXME : check which headers are mandatory
 			Map<String, Object> headers = docHeader.getAttributes();
 			if (docHeader.getAuthors().size() == 0) {
 				logger.info("DocHeader add author");
-				Author a = new Author();
-				a.setFullName("server wildfly");
-				a.setEmail("test@test.org");
-				a.setFirstName("first");
-				a.setLastName("last");
-				headers.put("author", a.getFullName());
-				headers.put("email", a.getEmail());
+				headers.put("author", "the Author");
+				headers.put("email", "test@test.fr");
 			}
-			
 			headers.put("revdate", "2014-02-26");
 			headers.put("revnumber", "1234");
 			docHeader = DocumentHeader.createDocumentHeader("Doc title", "page title", headers);
@@ -121,11 +117,11 @@ public class AsciidocMessageConsumer {
 	}
 	
 	public void dzslidesRenderedEvent(@Observes @Backend("dzslides") AsciidocMessageEvent event){
-		
+		//NOT YET IMPLEMENTED
 	}
 	
 	public void pdfRenderedEvent(@Observes @Backend("pdf") AsciidocMessageEvent event){
-		
+		//NOT YET IMPLEMENTED
 	}
 
 

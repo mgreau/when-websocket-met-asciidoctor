@@ -1,0 +1,32 @@
+CACHE MANIFEST
+# 2014-02-28:v0.1.0-alpha3
+
+# Explicitly cached entries
+index.html
+css/style.css
+offline/asciidoctor.css
+offline/asciidoctor.js
+offline/opal.js
+
+templates/asciidoc-editor.html
+templates/auth.html
+templates/collaborative-msg.html
+templates/html5-render.html
+
+libs/angular/angular.min.js
+libs/angular-resource/angular-resource.min.js
+libs/angular-bootstrap/ui-bootstrap-tpls.min.js
+libs/ace-builds/src-min/ace.js
+libs/angular-ui-ace/ui-ace.min.js
+libs/angular-indexeddb/IDB.js
+libs/angular-fullscreen/src/angular-fullscreen.js
+	
+js/app.js
+js/services.js
+js/offlineService.js
+js/controllers.js
+js/directives.js
+
+# Use from network if available
+NETWORK:
+*

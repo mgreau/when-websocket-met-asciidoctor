@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html manifest="asciidoctor.appcache">
+<html manifest="adeditor.appcache">
 <head>
 <title>Realtime Collaborative Editor for Asciidoctor</title>
 <meta charset="UTF-8">
@@ -8,18 +8,25 @@
 	content="Realtime Collaborative Editor for Asciidoctor" />
 <link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="css/style.css">
+
 </head>
 
-<body ng-app="wWSmADapp" ng-controller="RCEAdocCtrl">
+<body ng-app="adeditorApp" ng-controller="RCEAdocCtrl">
 	<div class="container-fluid" ng-repeat="rceAdoc in rceAdocs">
 		<collaborativemessage doc="rceAdoc"></collaborativemessage>
 		<div class="row" >
 			<asciidoceditor key="rceAdoc.key"></asciidoceditor>
-			<auth ng-show="!rceAdoc.html5.output" doc="rceAdoc"></auth>
-			<html5render ng-show="rceAdoc.html5.output"
+			<auth ng-show="!mode" doc="rceAdoc"></auth>
+			<html5render ng-show="mode == 'online' || mode == 'offline' "
 				html5="rceAdoc.html5" key="rceAdoc.key"></html5render>
 		</div>
 	</div>
+	
+<script>
+	//var console = {};
+	//console.log = function(){};
+</script>
+
 	<script src="libs/angular/angular.min.js"></script>
 	<script src="libs/angular-resource/angular-resource.min.js"></script>
 	<script src="libs/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
