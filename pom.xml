@@ -4,7 +4,7 @@
 
 	<groupId>com.mgreau.wwsmad</groupId>
 	<artifactId>when-websocket-met-asciidoctor</artifactId>
-	<version>0.1.0-alpha3-SNAPSHOT</version>
+	<version>0.1.0-alpha3</version>
 	<packaging>war</packaging>
 
 	<name>wWSmAD : When Websocket met Asciidoctor : </name>
