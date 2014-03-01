@@ -88,15 +88,15 @@ public class WWSMADEndpointTest {
 				+ writer + "\":\"" + writer + "\"}}}";
 
 		// notifOnOpen - notifWhenSend Adoc - output
-		MyBasicEndpointClient.latch = new CountDownLatch(4);
+		MyBasicEndpointClient.latch = new CountDownLatch(5);
 
 		Session session = connectToServer(MyBasicEndpointClient.class, ADOC_URL
 				+ ADOC_ID);
 		assertNotNull(session);
 
 		session.getBasicRemote().sendText(data);
-		assertTrue(MyBasicEndpointClient.latch.await(5, TimeUnit.SECONDS));
-		assertEquals(JSONNotificationWhenBecameAWriter,
+		assertTrue("error on waiting...", MyBasicEndpointClient.latch.await(5, TimeUnit.SECONDS));
+		assertEquals("JSON not equals", JSONNotificationWhenBecameAWriter,
 				MyBasicEndpointClient.notificationMessage);
 	}
 

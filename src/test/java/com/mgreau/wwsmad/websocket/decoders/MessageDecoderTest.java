@@ -36,7 +36,7 @@ public class MessageDecoderTest {
 	public void shouldNotDecodeJSONMessage() {
 		assertNotNull(msgDecoder);
 
-		final String JSON = "{\"type\" : \"aadoc\", \"source\" : \"texttest\", \"writer\": \"max\"}";
+		final String JSON = "{\"type\" : \"aadoc\", \"sourrrce\" : \"texttest\", \"writer\": \"max\"}";
 		AsciidocMessage adoc = null;
 
 		try {
