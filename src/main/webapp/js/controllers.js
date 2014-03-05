@@ -66,9 +66,13 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 						  $scope.addAlert("info", $scope.rceAdocs[idAdoc].state);
 					 }
 					 else {
-				    	if ($scope.isEvtOnChangeActivate === true){
-				    		$scope.addAlert("warning", "The preview is rendering on each change.");
-				    	} else {
+				    	if (angular.equals($scope.isEvtOnChangeActivate, true)){
+				    		$scope.rceAdocs[spaceID].state = "The preview is rendering on each change.";
+				    		$scope.addAlert("warning", $scope.rceAdocs[spaceID].state);
+				    	} else if (angular.isUndefined($scope.mode) || angular.equals($scope.mode, null)) {
+				    		$scope.addAlert("danger", "You need to be logged in offline or online mode in order to view the render.");
+				    	}
+				    	else {
 					    	$scope.rceAdocs[spaceID].adocSrc = editor.getValue();
 							$scope.sendAdoc(spaceID);
 				    	}
@@ -263,16 +267,18 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 			$scope.mode = mode;
 			//SpaceID
 			$scope.adSpaceID = $scope.initID;
+			$scope.initSpace($scope.adSpaceID, $scope.user, false);
 			if (angular.equals(mode, 'online')){
 				WebSocketService.connect($scope.initID);
 			}
-			$scope.rceAdocs[$scope.initID].author = user;
+			
 			//To show the preview in the iframe
 			$scope.rceAdocs[$scope.initID].html5 = new Object();
 			$scope.rceAdocs[$scope.initID].html5.output = "You can start writing your documentation !!";
 		}
 	};
 	
+	//
 	$scope.joinATeam = function(user, adSpaceID) {
 		$scope.user = user;
 		$scope.adSpaceID = adSpaceID;
@@ -281,23 +287,30 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 			$scope.addAlert("danger", "Your name is required !");
 			return;
 		}
-		else if (angular.isUndefined($scope.adSpaceID) || angular.equals($scope.adSpaceID,'') || angular.equals($scope.adSpaceID, $scope.initID) ){
+		else if (angular.isUndefined($scope.adSpaceID) || angular.equals($scope.adSpaceID,'') /*|| angular.equals($scope.adSpaceID, $scope.initID) */){
 			$scope.rceAdocs[$scope.initID].state = "The Space ID is required !";
 			$scope.addAlert("danger", $scope.rceAdocs[$scope.initID].state );
 			return;
 		} else {
 			spaceID = $scope.adSpaceID;
 			WebSocketService.connect($scope.adSpaceID);
-			$scope.initSpace($scope.adSpaceID, $scope.user);
+			$scope.initSpace($scope.adSpaceID, $scope.user, true);
 		}
 	};
 	
-	$scope.initSpace = function(id, writer) {
+	//Init a new ADSpace
+	$scope.initSpace = function(id, writer, isPartOfATeam) {
 		$scope.rceAdocs = new Object();
 		$scope.rceAdocs[id] = new Object();
 		$scope.rceAdocs[id].key = id;
 		$scope.rceAdocs[id].status = 'CONNECTED';
-		$scope.rceAdocs[id].state = "CONGRATS ! You joined the Team ("+id+")";
+		if (isPartOfATeam === true){
+			$scope.mode = 'online';
+			$scope.rceAdocs[id].state = "CONGRATS ! You joined the Team ("+id+")";
+		}
+		else {
+			$scope.rceAdocs[id].state = "CONGRATS ! You create a space for your AsciiDoc project ("+id+")";
+		}
 		$scope.rceAdocs[id].author = writer;
 		$scope.addAlert("success", $scope.rceAdocs[id].state);
 	};
