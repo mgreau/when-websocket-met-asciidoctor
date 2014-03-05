@@ -122,6 +122,15 @@
 							<Dependencies>org.asciidoctor</Dependencies>
 						</manifestEntries>
 					</archive>
+					<!-- With bower, there are a lot of files unused -->
+					<packagingExcludes>libs/**/*.html, libs/**/*.png,libs/**/*.json,libs/**/*.md,
+					libs/**/*.less,
+					libs/ace-builds/demo/**,libs/ace-builds/kitchen-sink/**,libs/ace-builds/src/**,
+					libs/ace-builds/src-min-noconflict/**,libs/ace-builds/src-noconflict/**,libs/ace-builds/textarea/**,
+					libs/angular-dropfile-directive/src/**,libs/angular-dropfile-directive/examples/**,
+					libs/angular-fullscreen/demo/**,
+					libs/boostrap/fonts/**,libs/boostrap/js/**,libs/boostrap/less/**,libs/boostrap/test-infra/**
+					</packagingExcludes>
 				</configuration>
 			</plugin>
 			<!-- To deploy on Wildfly -->
