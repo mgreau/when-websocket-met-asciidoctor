@@ -1,7 +1,7 @@
 = Real-time collaborative editor for Asciidoc files
 Maxime Greau <https://github.com/mgreau[@mgreau]>
 :awestruct-layout: base 
-:imagesdir: ./doc/img
+:imagesdir: https://raw.github.com/mgreau/when-websocket-met-asciidoctor/master/doc/img/
 :idprefix:
 :idseparator: -
 :online-demo: http://wildfly-mgreau.rhcloud.com/ad-editor
@@ -9,15 +9,34 @@ Maxime Greau <https://github.com/mgreau[@mgreau]>
 :issues: https://github.com/mgreau/when-websocket-met-asciidoctor/issues
 :asciidoctor-url: http://asciidoctor.org
 :asciidoctorj-url: https://github.com/asciidoctor/asciidoctorj
+:asciidoctorjs-url: https://github.com/asciidoctor/asciidoctor.js
 :wildfly-url: http://download.jboss.org/wildfly/8.0.0.CR1/wildfly-8.0.0.CR1.zip
 
-You can try the editor online at {online-demo} (running on OpenShift).
+Try the editor online at {online-demo} (running on OpenShift).
 
-This project gives you the possibility to *work on the same AsciiDoc file with a team*.
+This project gives you the possibility to *work on the same AsciiDoc file with a team and see the rendering in realtime*.
 
-It's based on the {asciidoctor-url}[Asciidoctor project] thanks to the Java API provided by {asciidoctor-url}[AsciidoctorJ].
+It's based on the {asciidoctor-url}[Asciidoctor project] thanks to : 
 
-image::ad-editor-0.1.0-alpha2.png[Patch feature example]
+* the Java API provided by {asciidoctorj-url}[AsciidoctorJ]
+* the Javascript libraries provided by {asciidoctorjs-url}[Asciidoctor.js]
+
+
+[[drag-drop]]
+.Drag and drop feature
+image::ad-editor-dragdrop.png[Drag and drop feature]
+
+[[offline]]
+.Offline mode feature
+image::ad-editor-offline.png[Offline mode feature]
+
+
+== 0.1.0-alpha3
+
+* +*Full offline mode*+ : if you are not connected to the server by WebScoket protocol, then the
+rendering view is still working in real-time with the Javascript project asciidoctor.js
+* +*Drag and Drop*+ : you can *drag a AsciiDoc file* from your laptop and *drop it into the editor* and the content of the file
+will be loaded into the editor
 
 == 0.1.0-Alpha2 features
 
@@ -32,6 +51,14 @@ image::ad-editor-0.1.0-alpha2.png[Patch feature example]
 ** if an other author send a version, you can click on +Compute Diff+ button to see differences between your adoc file and the last adoc file
 ** if the patch seems ok, click on +Apply Patch+ and you adoc source will be up to date
 * *Load the last AsciiDoc source* send by an other author
+
+[diff feature]
+.Compute diff feature
+image::ad-editor-diff.png[Diff feature example]
+
+[patch feature]
+.patch feature
+image::ad-editor-patch.png[Patch feature example]
 
 == Changelog
 
@@ -95,6 +122,7 @@ A lot of cool features are planned :) You can read all {issues}[open and closed 
 
 * Asciidoctor project
 ** AsciidoctorJ 0.1.4
+** asciidocor.js
 * Java EE 7 
 ** CDI 1.1
 ** WebSocket 1.0
