@@ -1,5 +1,9 @@
 package com.mgreau.wwsmad.websocket;
 
+import static com.jayway.awaitility.Awaitility.await;
+import static com.jayway.awaitility.Awaitility.to;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -88,16 +92,13 @@ public class WWSMADEndpointTest {
 				+ writer + "\":\"" + writer + "\"}}}";
 
 		// notifOnOpen - notifWhenSend Adoc - output
-		MyBasicEndpointClient.latch = new CountDownLatch(5);
-
+		MyBasicEndpointClient endpoint = new MyBasicEndpointClient();
 		Session session = connectToServer(MyBasicEndpointClient.class, ADOC_URL
 				+ ADOC_ID);
 		assertNotNull(session);
 
 		session.getBasicRemote().sendText(data);
-		assertTrue("error on waiting...", MyBasicEndpointClient.latch.await(5, TimeUnit.SECONDS));
-		assertEquals("JSON not equals", JSONNotificationWhenBecameAWriter,
-				MyBasicEndpointClient.notificationMessage);
+		await().untilCall(to(endpoint).getNotificationMessage(), is(equalTo(JSONNotificationWhenBecameAWriter)));
 	}
 
 	/**
@@ -123,7 +124,7 @@ public class WWSMADEndpointTest {
 		return container.connectToServer(endpoint, uri);
 	}
 
-	private String data = "{\"type\":\"adoc-for-html5\",\"source\":\"= Hello Test\\nDoc Writer <doc@example.com>\\nv1.0, 2013-11-11\\n:toc:\\n:numbered:\\n:source-highlighter: coderay\\n\\nAn introduction to http://asciidoc.orgdf[AsciiDoc].\\n\\n\\n\",\"writer\":\"@mgreau\"}";
+	private String data = "{\"type\":\"adoc-for-html5\",\"source\":\"Hello Test\",\"writer\":\"@mgreau\"}";
 
 	private String getNotificationOnOpenConnection(String nb){
 		return "{\"type\":\"notification\",\"adocId\":\""
