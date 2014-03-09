@@ -33,12 +33,16 @@ public class MyBasicEndpointClient {
     	latch.countDown();
     	if (message.contains("type\":\"output"))
     		outputMessage = message;
-    	else if (message.contains("type\":\"adoc"))
+    	else if (message.contains("type\":\"adoc-for-html5"))
     		adocMessage = message;
     	else
     		notificationMessage = message;
     	System.out.println("Message received: " + message.toString());
         
+    }
+    
+    public String getNotificationMessage(){
+    	return notificationMessage;
     }
     
     @OnError
