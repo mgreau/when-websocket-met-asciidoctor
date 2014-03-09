@@ -31,14 +31,14 @@ image::ad-editor-dragdrop.png[Drag and drop feature]
 image::ad-editor-offline.png[Offline mode feature]
 
 
-== 0.1.0-alpha3
+== 0.1.0-alpha3 new features
 
 * +*Full offline mode*+ : if you are not connected to the server by WebScoket protocol, then the
 rendering view is still working in real-time with the Javascript project asciidoctor.js
 * +*Drag and Drop*+ : you can *drag a AsciiDoc file* from your laptop and *drop it into the editor* and the content of the file
 will be loaded into the editor
 
-== 0.1.0-Alpha2 features
+== 0.1.0-alpha2 new features
 
 * Create a *new space* OR *join others author* with a spaceID
 * *Browser storage* with HTML5 IndexedDB for backup (save and load AsciiDoc source)
