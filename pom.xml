@@ -129,7 +129,8 @@
 					libs/ace-builds/src-min-noconflict/**,libs/ace-builds/src-noconflict/**,libs/ace-builds/textarea/**,
 					libs/angular-dropfile-directive/src/**,libs/angular-dropfile-directive/examples/**,
 					libs/angular-fullscreen/demo/**,
-					libs/boostrap/fonts/**,libs/boostrap/js/**,libs/boostrap/less/**,libs/boostrap/test-infra/**
+					libs/bootstrap/fonts/**,libs/bootstrap/js/**,libs/bootstrap/less/**,libs/bootstrap/test-infra/**,
+					libs/jquery/src/**
 					</packagingExcludes>
 				</configuration>
 			</plugin>
