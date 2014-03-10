@@ -1,18 +1,13 @@
 package com.mgreau.wwsmad.cdi;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.ManagedBean;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
-import javax.inject.Named;
 
-import org.asciidoctor.Author;
 import org.asciidoctor.DocumentHeader;
 
 import com.mgreau.wwsmad.asciidoctor.AsciidoctorProcessor;
@@ -117,7 +112,9 @@ public class AsciidocMessageConsumer {
 	}
 	
 	public void dzslidesRenderedEvent(@Observes @Backend("dzslides") AsciidocMessageEvent event){
-		//NOT YET IMPLEMENTED
+		logger.info("DZSlides rendered start");
+		
+		 
 	}
 	
 	public void pdfRenderedEvent(@Observes @Backend("pdf") AsciidocMessageEvent event){

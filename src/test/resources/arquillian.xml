@@ -8,6 +8,7 @@
         <configuration>
             <property name="jbossHome">${serverRoot}</property>
             <property name="serverConfig">${serverProfile:standalone-full.xml}</property>
+            <property name="allowConnectingToRunningServer">true</property>
         </configuration>
     </container>
 

@@ -16,7 +16,7 @@
 		<javaee.api.version>7.0</javaee.api.version>
 		<asciidoctor.version>0.1.4</asciidoctor.version>
 		<!-- Target JavaEE 7 app server -->
-		<org.wildfly.version>8.0.0.Beta1</org.wildfly.version>
+		<org.wildfly.version>8.0.0.Final</org.wildfly.version>
 		<org.wildfly.plugins.version>1.0.1.Final</org.wildfly.plugins.version>
 
 		<!-- Tests -->
@@ -221,7 +221,8 @@
 			<id>wildfly-managed-arquillian</id>
 			<properties>
 				<serverProfile>standalone-full.xml</serverProfile>
-				<serverRoot>${env.JBOSS_HOME}</serverRoot>
+				<!-- <serverRoot>${env.JBOSS_HOME}</serverRoot> -->
+				<serverRoot>/Users/mgreau/JavaEE/JavaEE7/Wildfly/wildfly-8.0.0.Final</serverRoot>
 				<undertow.version>1.0.0.Beta27</undertow.version>
 				<resteasy.version>3.0.5.Final</resteasy.version>
 			</properties>

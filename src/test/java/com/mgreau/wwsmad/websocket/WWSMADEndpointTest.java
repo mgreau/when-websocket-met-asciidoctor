@@ -25,6 +25,7 @@ import org.jboss.arquillian.junit.InSequence;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -45,6 +46,7 @@ public class WWSMADEndpointTest {
 		return ShrinkWrap.create(WebArchive.class)
 				.addPackages(true, StarterService.class.getPackage())
 				.addAsManifestResource("MANIFEST.MF")
+				.addAsLibraries(Maven.resolver().loadPomFromFile("pom.xml").resolve("org.jsoup:jsoup").withTransitivity().asFile())
 				.addAsWebInfResource("beans.xml");
 	}
 
@@ -124,8 +126,8 @@ public class WWSMADEndpointTest {
 		return container.connectToServer(endpoint, uri);
 	}
 
-	private String data = "{\"type\":\"adoc-for-html5\",\"source\":\"Hello Test\",\"writer\":\"@mgreau\"}";
-
+	private String data = "{\"type\":\"adoc-for-html5\",\"source\":\"= Real-time collaborative editor for AsciiDoc\\nMaxime GREAU <greaumaxime@gmail.com>\\nv0.1.0, March 28, 2014\\n:backend: html5\\n:toc:\\n:toclevels: 3\\n:imagesdir: ../images\\n\\n== Introduction\\n\\nThis project gives you the possibility to *work on the same AsciiDoc file with a team and see the rendering in realtime*.\",\"writer\":\"@mgreau\"}";
+	
 	private String getNotificationOnOpenConnection(String nb){
 		return "{\"type\":\"notification\",\"adocId\":\""
 				+ ADOC_ID

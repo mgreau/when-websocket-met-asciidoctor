@@ -25,12 +25,14 @@ public class MyBasicEndpointClient {
     @OnOpen
     public void onOpen(Session session) {
     	System.out.println("Session open from: " + session.getRequestURI());
-    	latch.countDown();
+    	if (latch != null)
+    		latch.countDown();
     }
     
     @OnMessage
     public void processMessage(String message) {
-    	latch.countDown();
+    	if (latch != null)
+    		latch.countDown();
     	if (message.contains("type\":\"output"))
     		outputMessage = message;
     	else if (message.contains("type\":\"adoc-for-html5"))

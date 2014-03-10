@@ -68,6 +68,7 @@ public class MessageDecoder implements Decoder.Text<AsciidocMessage> {
         boolean decodes = false;
         /* Convert the message into a map */
         messageMap = new HashMap<>();
+        logger.fine("String to decode : " + string);
         JsonParser parser = Json.createParser(new StringReader(string));
         while (parser.hasNext()) {
             if (parser.next() == JsonParser.Event.KEY_NAME) {
