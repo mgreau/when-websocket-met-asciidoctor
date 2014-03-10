@@ -221,8 +221,7 @@
 			<id>wildfly-managed-arquillian</id>
 			<properties>
 				<serverProfile>standalone-full.xml</serverProfile>
-				<!-- <serverRoot>${env.JBOSS_HOME}</serverRoot> -->
-				<serverRoot>/Users/mgreau/JavaEE/JavaEE7/Wildfly/wildfly-8.0.0.Final</serverRoot>
+				<serverRoot>${env.JBOSS_HOME}</serverRoot>
 				<undertow.version>1.0.0.Beta27</undertow.version>
 				<resteasy.version>3.0.5.Final</resteasy.version>
 			</properties>
