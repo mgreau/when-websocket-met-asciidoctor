@@ -7,10 +7,10 @@ This is the module you have to deploy on your WildFly server in order to make as
 . Stop your server instance
 . Copy the +org+ directory to *$JBOSS_HOME/modules*
 . You should have the file below :
-.. +$JBOSS_HOME/modules/org/asciidoctor/main/module.xml+
+.. +$JBOSS_HOME/modules/system/layers/base/org/asciidoctor/main/module.xml+
 . Then copy *asciidoctor-java-integration-0.1.4.jar* and *jruby-complete-1.7.4.jar* files from your .m2 repository to the main module directory in order to have :
-.. +$JBOSS_HOME/modules/org/asciidoctor/main/asciidoctor-java-integration-0.1.4.jar+
-.. +$JBOSS_HOME/modules/org/asciidoctor/main/jruby-complete-1.7.4.jar+
+.. +$JBOSS_HOME/modules/system/layers/base/org/asciidoctor/main/asciidoctor-java-integration-0.1.4.jar+
+.. +$JBOSS_HOME/modules/system/layers/base/org/asciidoctor/main/jruby-complete-1.7.4.jar+
 . Start your server
 
 Then the wWSmAD project configure the +maven-war-plugin+ in order to generate a *MANIFEST.MF* file with this line :
