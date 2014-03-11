@@ -9,6 +9,10 @@
 
 APP_SERVER_HOME=""
 
+server="wildfly"
+version="0.1.0-alpha3"
+debug=false
+
 function usage {
   echo "usage : install.sh -s {serverName} -v {appVersion}"
   echo "OPTIONS :"
@@ -46,7 +50,8 @@ function log {
 function checkParams {
 
   if [ -z "$serverName" ]; then
-     echo "No serverName specifiec (-s), Wildfly used by default"
+     echo "No serverName specified (-s), Wildfly used by default"
+     appServer="wildfly-8.0.0.Final"
   fi
 
   log "Paramètres de la commande => serverName : $serverName "
@@ -55,39 +60,49 @@ function checkParams {
 #
 # Download the target Java EE 7 app server
 function downloadAppServer {
-    curl -O http://download.jboss.org/wildfly/8.0.0.Final/wildfly-8.0.0.Final.tar.gz
-    tar xzf wildfly-8.0.0.Final.tar.gz
-    APP_SERVER_HOME=$( echo pwd )
+    curl -O http://download.jboss.org/wildfly/8.0.0.Final/$appServer.tar.gz
+    tar xzf $appServer.tar.gz
+    APP_SERVER_HOME=$(pwd)"/$appServer"
+
+    log "server home :  $APP_SERVER_HOME"
 }
 
 #
 # AsciidoctorJ + JRuby + asciidoctor-backends
 function downloadAsciidoctorDeps {
-
+  log "Download AsciidoctorJ..."
 }
 
 #
 #
 function downloadApp {
-
+  log "Downloading app..."
+  
+  log "App downloaded"
 }
 
 #
 #
 function deployToTarget {
-
+   log "Deploy deps + app to the server"
 }
+
+
 
 #
 #
 function cleanAndStatus {
-
+  log "cleaning..."
 }
 
+function launchApp {
+  $APP_SERVER_HOME/bin/standalone.sh
+  open http://localhost:8080/ad-editor
+}
 
 echo "--------- START AD-EDITOR INSTALL -------"
 checkParams
-defineTargetDirectory
+#defineTargetDirectory
 downloadAppServer
 downloadAsciidoctorDeps
 downloadApp
