@@ -13,7 +13,7 @@ function usage {
   echo "usage : install.sh -s {serverName} -v {appVersion}"
   echo "OPTIONS :"
   echo "  -X : debug mode to shwo process steps"
-  echo "  -s {serverName}  : Java EE 7 server name (default: wildfly)
+  echo "  -s {serverName}  : Java EE 7 server name (default: wildfly)"
   echo "  -v {appVersion}  : ad-editor version (default: last release)"
   echo "ex : install.sh -s wildfly -v 0.1.0-alpha3"
 }
