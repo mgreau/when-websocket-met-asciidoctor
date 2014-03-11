@@ -9,7 +9,7 @@
 debug=true
 
 APP_SERVER_HOME=""
-serverApplication="wildfly-8.0.0.Final"
+applicationServer="wildfly-8.0.0.Final"
 
 appVersion="0.1.0-alpha3"
 appName="ad-editor"
@@ -67,12 +67,12 @@ function checkParams {
 #
 # Download the target Java EE 7 app server
 function downloadAppServer {
- # determine the default base dir, if not set
+ # determine if WildFly is installed, if not set
     if [ "x$JBOSS_HOME" = "x" ]; then
       log "No JBOSS_HOME define, download and install WildFly..."
-      curl -O http://download.jboss.org/wildfly/8.0.0.Final/$appServer.tar.gz
-      tar xzf $appServer.tar.gz
-      APP_SERVER_HOME=$(pwd)"/$appServer"
+      curl -O http://download.jboss.org/wildfly/8.0.0.Final/$applicationServer.tar.gz
+      tar xzf $applicationServer.tar.gz
+      APP_SERVER_HOME=$(pwd)"/$applicationServer"
    else
       APP_SERVER_HOME=$JBOSS_HOME
    fi
