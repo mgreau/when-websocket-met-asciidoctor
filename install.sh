@@ -6,23 +6,24 @@
 #  - the asciidoctor-backends data
 #  - the ad-editor app
 ###########
+debug=true
 
 APP_SERVER_HOME=""
+serverApplication="wildfly-8.0.0.Final"
 
-server="wildfly"
-version="0.1.0-alpha3"
-debug=false
+appVersion="0.1.0-alpha3"
+appName="ad-editor"
+
 
 function usage {
-  echo "usage : install.sh -s {serverName} -v {appVersion}"
+  echo "usage : install.sh -s {server} -v {version}"
   echo "OPTIONS :"
   echo "  -X : debug mode to shwo process steps"
-  echo "  -s {serverName}  : Java EE 7 server name (default: wildfly)"
-  echo "  -v {appVersion}  : ad-editor version (default: last release)"
+  echo "  -s {server}  : Java EE 7 server name (default: wildfly)"
+  echo "  -v {version}  : ad-editor version (default: last release)"
   echo "ex : install.sh -s wildfly -v 0.1.0-alpha3"
 }
 
-#Récupère les options
 while getopts s:v:X opt; do
   case $opt in
     s) server="$OPTARG" ;;
@@ -31,11 +32,6 @@ while getopts s:v:X opt; do
   esac;
 done
 
-#Check no params
-if [ $# -eq 0 ]; then
-    usage;
-    exit;
-fi
 
 #
 #if mode debug is true
@@ -49,64 +45,87 @@ function log {
 #Check that all required params are present
 function checkParams {
 
-  if [ -z "$serverName" ]; then
-     echo "No serverName specified (-s), Wildfly used by default"
-     appServer="wildfly-8.0.0.Final"
+  if [ -z "$server" ]; then
+     echo "No server name specified (-s), Wildfly used by default"
+  else
+     serverApplication=$server
   fi
 
-  log "Paramètres de la commande => serverName : $serverName "
+  if [ -z "$version" ]; then
+     echo "No version specified (-v), $appVersion  used by default"
+  else
+     appVersion=$version
+  fi
+  app=$appName"-"$appVersion
+  appWAR=$app".war"
+  #github release
+  releaseVersion="v"$app
+
+  log "Paramètres de la commande => server : $server, version : $version "
 }
 
 #
 # Download the target Java EE 7 app server
 function downloadAppServer {
-    curl -O http://download.jboss.org/wildfly/8.0.0.Final/$appServer.tar.gz
-    tar xzf $appServer.tar.gz
-    APP_SERVER_HOME=$(pwd)"/$appServer"
+ # determine the default base dir, if not set
+    if [ "x$JBOSS_HOME" = "x" ]; then
+      log "No JBOSS_HOME define, download and install WildFly..."
+      curl -O http://download.jboss.org/wildfly/8.0.0.Final/$appServer.tar.gz
+      tar xzf $appServer.tar.gz
+      APP_SERVER_HOME=$(pwd)"/$appServer"
+   else
+      APP_SERVER_HOME=$JBOSS_HOME
+   fi
 
     log "server home :  $APP_SERVER_HOME"
 }
 
 #
 # AsciidoctorJ + JRuby + asciidoctor-backends
-function downloadAsciidoctorDeps {
+function createAsciidoctorModule {
+  mkdir "org" && cd "org" && mkdir "asciidoctor" && cd "asciidoctor" && mkdir "main" && cd "main" 
   log "Download AsciidoctorJ..."
+  curl -O http://search.maven.org/remotecontent?filepath=org/asciidoctor/asciidoctor-java-integration/0.1.4/asciidoctor-java-integration-0.1.4.jar
+  log "Download JRuby..."
+  curl -O http://search.maven.org/remotecontent?filepath=org/jruby/jruby-complete/1.7.4/jruby-complete-1.7.4.jar
+  log "Download module.xml"
+  curl -O https://raw.github.com/mgreau/when-websocket-met-asciidoctor/v0.1.0-alpha3.preview1/module/org/asciidoctor/main/module.xml
+  cd ../../..
+  log "Install asciidoctor module"
+  cp -r org $APP_SERVER_HOME/modules
+
 }
 
 #
 #
-function downloadApp {
-  log "Downloading app..."
-  
-  log "App downloaded"
+function installApp {
+  log "Downloading and install app..."
+  curl -OL https://github.com/mgreau/when-websocket-met-asciidoctor/releases/download/v0.1.0-alpha3.preview1/ad-editor-0.1.0-alpha3.war
+  mv $appWAR $APP_SERVER_HOME/standalone/deployments
+  log "App deployed"
 }
-
-#
-#
-function deployToTarget {
-   log "Deploy deps + app to the server"
-}
-
 
 
 #
 #
 function cleanAndStatus {
   log "cleaning..."
+  rm -rf "org"
 }
 
 function launchApp {
-  $APP_SERVER_HOME/bin/standalone.sh
-  open http://localhost:8080/ad-editor
+  log "Launch the app..."
+  $APP_SERVER_HOME/bin/standalone.sh &
+  { sleep 9; echo waking up after 9 seconds; }
+  url="http://localhost:8080/$app"
+  open $url
+  log "Have fun with $app!"
 }
 
-echo "--------- START AD-EDITOR INSTALL -------"
+echo "--------- INSTALLING Real-time Collaborative editor for AsciiDoc -------"
 checkParams
-#defineTargetDirectory
 downloadAppServer
-downloadAsciidoctorDeps
-downloadApp
-deployToTarget
+createAsciidoctorModule
+installApp
 cleanAndStatus
-
-
+launchApp
