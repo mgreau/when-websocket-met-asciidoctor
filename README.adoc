@@ -1,4 +1,4 @@
-= Real-time collaborative editor for AsciidDoc
+= Real-time collaborative editor for AsciiDoc
 Maxime Greau <https://github.com/mgreau[@mgreau]>
 :awestruct-layout: base 
 :imagesdir: https://raw.github.com/mgreau/when-websocket-met-asciidoctor/master/doc/img/
