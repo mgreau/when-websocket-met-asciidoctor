@@ -1,6 +1,5 @@
 = Real-time collaborative editor for AsciiDoc
 Maxime Greau <https://github.com/mgreau[@mgreau]>
-:awestruct-layout: base 
 :imagesdir: https://raw.github.com/mgreau/when-websocket-met-asciidoctor/master/doc/img/
 :idprefix:
 :idseparator: -
@@ -21,10 +20,17 @@ It's based on the {asciidoctor-url}[Asciidoctor project] thanks to :
 * the Java API provided by {asciidoctorj-url}[AsciidoctorJ]
 * the Javascript libraries provided by {asciidoctorjs-url}[Asciidoctor.js]
 
+[[collaborative-editor]]
+.Demo Collaborative Editor
+image::../demo/collaborative-editor.gif[Collaborative-editor]
+
+If you have an existing asciidoc file, you can drag and drop this file to the editor :
 
 [[drag-drop]]
 .Drag and drop feature
 image::ad-editor-dragdrop.png[Drag and drop feature]
+
+You can also work on an offline mode with just your browser :
 
 [[offline]]
 .Offline mode feature
