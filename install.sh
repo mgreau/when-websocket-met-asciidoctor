@@ -116,9 +116,21 @@ function cleanAndStatus {
 function launchApp {
   log "Launch the app..."
   $APP_SERVER_HOME/bin/standalone.sh &
-  { sleep 9; echo waking up after 9 seconds; }
-  url="http://localhost:8080/$app"
-  open $url
+
+  while true
+  do
+    if [ -f $APP_SERVER_HOME/standalone/log/server.log ]
+    then
+      cat $APP_SERVER_HOME/standalone/log/server.log | grep "started in" 2>/dev/null
+      if [ $? = 0 ]
+      then
+        url="http://localhost:8080/$app"
+        open $url
+      exit
+      fi
+    fi
+  done
+
   log "Have fun with $app!"
 }
 
