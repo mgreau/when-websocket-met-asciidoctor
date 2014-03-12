@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# 2014-03-06:v0.1.0-alpha3.b1
+# 2014-03-12:v0.1.0-alpha3.b2
 
 # Explicitly cached entries
 index.html
@@ -13,13 +13,17 @@ templates/auth.html
 templates/collaborative-msg.html
 templates/html5-render.html
 
+libs/bootstrap/dist/css/bootstrap.min.css
 libs/angular/angular.min.js
+libs/angular/angular.min.js.map
 libs/angular-resource/angular-resource.min.js
+libs/angular-resource/angular-resource.min.js.map
 libs/angular-bootstrap/ui-bootstrap-tpls.min.js
 libs/ace-builds/src-min/ace.js
 libs/angular-ui-ace/ui-ace.min.js
 libs/angular-indexeddb/IDB.js
 libs/angular-fullscreen/src/angular-fullscreen.js
+libs/angular-dropfile-directive/dist/dropfile.all.js
 	
 js/app.js
 js/services.js
