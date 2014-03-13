@@ -11,7 +11,14 @@ Maxime Greau <https://github.com/mgreau[@mgreau]>
 :asciidoctorjs-url: https://github.com/asciidoctor/asciidoctor.js
 :wildfly-url: http://download.jboss.org/wildfly/8.0.0.CR1/wildfly-8.0.0.CR1.zip
 
-Try the editor online at {online-demo} (running on OpenShift).
+How to test it ? 
+
+. *Install it* quickly
+   
+   curl https://raw.github.com/mgreau/when-websocket-met-asciidoctor/master/install.sh | bash
+   
+. or *try it online* at {online-demo} (running on OpenShift).
+. or clone the project and follow the instructions below
 
 This project gives you the possibility to *work on the same AsciiDoc file with a team and see the rendering in realtime*.
 
