@@ -170,7 +170,7 @@ function installApp {
 #
 function cleanAndStatus {
   log "cleaning..."
-  rm -rf "org/asciidoctor"
+  rm -rf "org"
 }
 
 function launchApp {
