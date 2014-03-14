@@ -1,0 +1,12 @@
+
+== v0.1.0-alpha3
+
+* #10 : Full offline mode (base on asciidoctor.js)
+* #22 #27 : Drag and drop to the editor
+* #12 : In IFrame, making linking between anchors work
+* #30 : all arquillian tests are OK
+* initiate a shell to install all quickly (App Server + module asciidoctor + application)
+
+== v0.1.0-alpha2
+
+* based on AsciidoctorJ 0.1.4
