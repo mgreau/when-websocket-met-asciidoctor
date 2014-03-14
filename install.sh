@@ -146,7 +146,7 @@ function createAsciidoctorModule {
         cp $asciidoctorJInRepoLocal .
       fi
       log "Download module.xml"
-      curl -O https://raw.github.com/mgreau/when-websocket-met-asciidoctor/v0.1.0-alpha3.preview1/module/org/asciidoctor/main/module.xml
+      curl -O https://raw.github.com/mgreau/when-websocket-met-asciidoctor/$appVersion/module/org/asciidoctor/main/module.xml
       cd ../../..
     else
       log "Asciidoctor module is ready to install"
@@ -160,7 +160,7 @@ function createAsciidoctorModule {
 #
 function installApp {
   log "Downloading and install app..."
-  curl -OL https://github.com/mgreau/when-websocket-met-asciidoctor/releases/download/v0.1.0-alpha3.preview1/ad-editor-0.1.0-alpha3.war
+  curl -OL https://github.com/mgreau/when-websocket-met-asciidoctor/releases/download/$appVersion/$appWAR
   mv $appWAR $APP_SERVER_HOME/standalone/deployments
   log "App deployed"
 }
