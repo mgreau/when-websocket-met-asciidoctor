@@ -62,7 +62,7 @@ function checkParams {
   app=$appName"-"$appVersion
   appWAR=$app".war"
   #github release
-  releaseVersion="v"$app
+  releaseVersion="v"$appVersion
 
   log "Installation for ... App Server : $applicationServer, Application : $app "
 }
@@ -159,7 +159,7 @@ function createAsciidoctorModule {
 #
 #
 function installApp {
-  log "Downloading and install app..."
+  log "Downloading and install app...$releaseVersion $appWAR"
   curl -OL https://github.com/mgreau/when-websocket-met-asciidoctor/releases/download/$releaseVersion/$appWAR
   mv $appWAR $APP_SERVER_HOME/standalone/deployments
   log "App deployed"
