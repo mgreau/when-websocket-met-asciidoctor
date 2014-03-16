@@ -141,8 +141,6 @@ public class AsciidocMessageConsumer {
 				headers.put("author", "the Author");
 				headers.put("email", "test@test.fr");
 			}
-			//headers.put("revdate", "2014-02-26");
-			//headers.put("revnumber", "1234");
 			docHeader = DocumentHeader.createDocumentHeader("Doc title", "page title", headers);
 			
 		} catch (RuntimeException rEx) {

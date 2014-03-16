@@ -30,28 +30,31 @@ public class OutputMessageEncoder implements Encoder.Text<OutputMessage> {
 		try {
 			try (JsonWriter jsonWrite = Json.createWriter(swriter)) {
 				JsonObjectBuilder builder = Json.createObjectBuilder();
+				
+				JsonObjectBuilder dataBuilder = Json.createObjectBuilder();
+				dataBuilder.add("format", m.getFormat().toString()).add("currentWriter",
+						m.getCurrentWriter()).add("source", m.getAdocSource()).add("timeToRender",
+						m.getTimeToRender()).add("output", m.getContent());
+				//addHeader
+				if (m.getDocHeader() != null && m.getDocHeader()
+						.getDocumentTitle() != null && m.getDocHeader().getAuthor() != null
+						&& m.getDocHeader().getRevisionInfo().getNumber() != null){
+					dataBuilder.add("docHeader",
+							Json.createObjectBuilder()
+									.add("title",
+											m.getDocHeader()
+													.getDocumentTitle())
+									.add("author", m.getDocHeader().getAuthor().getFullName())
+									.add("revisioninfo",
+											m.getDocHeader()
+													.getRevisionInfo()
+													.getNumber()));
+				}
+				
 				builder.add("type", m.getType().toString())
 						.add("adocId", m.getAdocId())
-						.add("data",
-								Json.createObjectBuilder()
-										.add("format", m.getFormat().toString())
-										.add("currentWriter",
-												m.getCurrentWriter())
-										.add("docHeader",
-												Json.createObjectBuilder()
-														.add("title",
-																m.getDocHeader()
-																		.getDocumentTitle())
-														.add("author", m.getDocHeader().getAuthor().getFullName())
-														.add("revisioninfo",
-																m.getDocHeader()
-																		.getRevisionInfo()
-																		.getNumber()))
-										.add("source", m.getAdocSource())
-										.add("timeToRender",
-												m.getTimeToRender())
-										.add("output", m.getContent()));
-
+						.add("data", dataBuilder.build());
+				
 				jsonWrite.writeObject(builder.build());
 			}
 		} catch (Exception e) {
@@ -67,12 +70,15 @@ public class OutputMessageEncoder implements Encoder.Text<OutputMessage> {
 		builder.add("type", m.getType().toString())
 				.add("adocId", m.getAdocId())
 				.add("data",
-						Json.createObjectBuilder().add("format", "")
+						Json.createObjectBuilder()
+								.add("format", "")
 								.add("currentWriter", "")
 								.add("docHeader", Json.createObjectBuilder())
-								.add("source", m.getAdocSource()).add("timeToRender", "-1")
-								.add("output", "<b>Error in Asciidoc source !</b> <br/>Check the following and re-try : "
-										+ "<ul><li>Headers informations are mandatory (title, author name, revision, date)</li></lu>"));
+								.add("source", m.getAdocSource())
+								.add("timeToRender", "-1")
+								.add("output",
+										"<b>Error in Asciidoc source !</b> <br/>Check the following and re-try : "
+												+ "<ul><li>Headers informations are mandatory (title, author name, revision, date)</li></lu>"));
 		return builder;
 
 	}
