@@ -13,7 +13,7 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 	});
 	
 	$scope.user; //User connected
-	$scope.mode; //Writing mode (offline, online)
+	$scope.mode = "offline"; //Writing mode (offline, online)
 	$scope.adSpaceID; //ID for the AsciiDoctor Space
     $scope.isRenderFullscreen = false; // Initially, do not go into full screen
     
@@ -25,16 +25,14 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
     $scope.backend = "adoc-for-html5";
     
     $scope.selectAction = function() {
-        console.log($scope.backend);
-        console.log(this.backend);
         $scope.backend = this.backend;
     };
     
 
 	//RCEAdoc : Realtime Collaborative Editor for Asciidoctor
 	$scope.rceAdocs = new Object();
-	$scope.isEditorActivate = false;
-	$scope.isEvtOnChangeActivate = false;
+	$scope.isEditorActivate = true;
+	$scope.isEvtOnChangeActivate = true;
 	$scope.isDiffOnEditor = false;
 	
 	//Editor buttons
