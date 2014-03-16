@@ -4,11 +4,11 @@
 
 	<groupId>com.mgreau.wwsmad</groupId>
 	<artifactId>when-websocket-met-asciidoctor</artifactId>
-	<version>0.1.0-alpha3</version>
+	<version>0.1.0-alpha4-SNAPSHOT</version>
 	<packaging>war</packaging>
 
 	<name>wWSmAD : When Websocket met Asciidoctor : </name>
-	<description>Real-time collaborative editor for Asciidoc file</description>
+	<description>Real-time collaborative editor for AsciiDoc</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

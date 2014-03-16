@@ -64,19 +64,73 @@ public class AsciidocMessageConsumer {
 	
 	public void html5RenderedEvent(@Observes @Backend("html5") AsciidocMessageEvent event){
 		logger.info("::event:: received html5 event message");
+		OutputMessage html = buildOutputMessage(TypeFormat.html5, event);
 		
-		OutputMessage html = new OutputMessage(TypeFormat.html5);
+		long start = System.currentTimeMillis();
+		try {
+			html.setContent(processor.renderAsDocument(event.msg.getAdocSource()));
+			html.setTimeToRender(System.currentTimeMillis() - start);
+		} catch (RuntimeException rEx) {
+			logger.severe("processing error." + rEx.getCause().toString());
+		}
+
+		// send the new HTML version to all connected peers
+		WWSMADEndpoint.sendMessage(html, event.id);
+	}
+	
+	/**
+	 * 
+	 * @param event
+	 */
+	public void dzslidesRenderedEvent(@Observes @Backend("dzslides") AsciidocMessageEvent event){
+		logger.info("::event:: received dzslides event message");
+		OutputMessage html = buildOutputMessage(TypeFormat.html5, event);
+		
+		final String templateDir = System.getProperty("jboss.server.data.dir")+"/asciidoctor-backends/slim/dzslides";
+		
+		long start = System.currentTimeMillis();
+		try {
+			html.setContent(processor.renderAsDocument(event.msg.getAdocSource(), "dzslides", 
+					new java.io.File(templateDir)));
+			html.setTimeToRender(System.currentTimeMillis() - start);
+		} catch (RuntimeException rEx) {
+			logger.severe("processing error." + rEx.getCause().toString());
+		}
+		
+		// send the new HTML version to all connected peers
+		WWSMADEndpoint.sendMessage(html, event.id);
+	}
+	
+	public void pdfRenderedEvent(@Observes @Backend("pdf") AsciidocMessageEvent event){
+		//NOT YET IMPLEMENTED
+	}
+	
+	private OutputMessage buildOutputMessage(TypeFormat type, AsciidocMessageEvent event){
+		final OutputMessage html = new OutputMessage(type);
 		html.setAdocId(event.id);
 		html.setType(TypeMessage.output);
 		html.setCurrentWriter(event.msg.getCurrentWriter());
+		html.setAdocSource(event.msg.getAdocSource());
+		html.setTimeToRender(-1);
+		html.setDocHeader(checkHeader(event.msg
+				.getAdocSource()));
 		
+		return html;
+	}
+	
+	/**
+	 * Check if all required headers are present.
+	 * 
+	 * @param source the AsciiDoc source sent by the client
+	 * @return the DocumentHeader 
+	 */
+	private DocumentHeader checkHeader (String source){
 		//Check if document header is present
 		DocumentHeader docHeader = null;
 		try {
-			logger.info("DocHeader add custom header");
+			logger.info("[RENDER] processing DocumentHeader");
 
-			docHeader = processor.renderDocumentHeader(event.msg
-					.getAdocSource());
+			docHeader = processor.renderDocumentHeader(source);
 			for (Map.Entry<String, Object> h : docHeader.getAttributes().entrySet()){
 				logger.log(Level.FINER, h.getKey() + " : " + h.getValue());
 			}
@@ -87,38 +141,16 @@ public class AsciidocMessageConsumer {
 				headers.put("author", "the Author");
 				headers.put("email", "test@test.fr");
 			}
-			headers.put("revdate", "2014-02-26");
-			headers.put("revnumber", "1234");
+			//headers.put("revdate", "2014-02-26");
+			//headers.put("revnumber", "1234");
 			docHeader = DocumentHeader.createDocumentHeader("Doc title", "page title", headers);
 			
 		} catch (RuntimeException rEx) {
 			logger.severe("DocHeader processing error, add custom header" + rEx.getCause().toString());
 		}
 		
-		long start = System.currentTimeMillis();
-		try {
-			html.setContent(processor.renderAsDocument(event.msg.getAdocSource(),
-					""));
-			html.setDocHeader(docHeader);
-			html.setTimeToRender(System.currentTimeMillis() - start);
-		} catch (RuntimeException rEx) {
-			html.setTimeToRender(-1);
-			logger.severe("processing error." + rEx.getCause().toString());
-		}
-		html.setAdocSource(event.msg.getAdocSource());
-
-		// send the new HTML version to all connected peers
-		WWSMADEndpoint.sendMessage(html, event.id);
-	}
-	
-	public void dzslidesRenderedEvent(@Observes @Backend("dzslides") AsciidocMessageEvent event){
-		logger.info("DZSlides rendered start");
-		
-		 
-	}
-	
-	public void pdfRenderedEvent(@Observes @Backend("pdf") AsciidocMessageEvent event){
-		//NOT YET IMPLEMENTED
+		return docHeader;
+				
 	}
 
 

@@ -209,15 +209,15 @@ public class WWSMADEndpoint {
 				patchEvent.fire(event);
 				break;
 	
-			case "renderHtml5":
+			case "backendHtml5":
 				html5Event.fire(event);
 				break;
 				
-			case "renderDz":
+			case "backendDzSlides":
 				dzEvent.fire(event);
 				break;
 				
-			case "renderPdf":
+			case "backendPdf":
 				pdfEvent.fire(event);
 				break;
 	

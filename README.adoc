@@ -1,7 +1,9 @@
 = Real-time collaborative editor for AsciiDoc
 Maxime Greau <https://github.com/mgreau[@mgreau]>
+v2.0, Jan 28, 2014
 :imagesdir: https://raw.github.com/mgreau/when-websocket-met-asciidoctor/master/doc/img/
-:idprefix:
+:toc:
+:toclevels: 3
 :idseparator: -
 :online-demo: http://wildfly-mgreau.rhcloud.com/ad-editor
 :milestones: https://github.com/mgreau/when-websocket-met-asciidoctor/issues/milestones
@@ -9,16 +11,9 @@ Maxime Greau <https://github.com/mgreau[@mgreau]>
 :asciidoctor-url: http://asciidoctor.org
 :asciidoctorj-url: https://github.com/asciidoctor/asciidoctorj
 :asciidoctorjs-url: https://github.com/asciidoctor/asciidoctor.js
-:wildfly-url: http://download.jboss.org/wildfly/8.0.0.CR1/wildfly-8.0.0.CR1.zip
-
-How to test it ? 
-
-. *Install it* quickly
-   
-   curl https://raw.github.com/mgreau/when-websocket-met-asciidoctor/master/install.sh | bash
-   
-. or *try it online* at {online-demo} (running on OpenShift).
-. or clone the project and follow the instructions below
+:asciidoctor-backends-url: https://github.com/asciidoctor/asciidoctor-backends
+:wildfly-url: http://download.jboss.org/wildfly/8.0.0.Final/wildfly-8.0.0.Final.zip
+:demo-url: https://raw.github.com/mgreau/when-websocket-met-asciidoctor/master/doc/demo/
 
 This project gives you the possibility to *work on the same AsciiDoc file with a team and see the rendering in realtime*.
 
@@ -27,26 +22,40 @@ It's based on the {asciidoctor-url}[Asciidoctor project] thanks to :
 * the Java API provided by {asciidoctorj-url}[AsciidoctorJ]
 * the Javascript libraries provided by {asciidoctorjs-url}[Asciidoctor.js]
 
+== How to test it ?
+
+. *Install it* quickly (0.1.0-alpha3)
+   
+   curl https://raw.github.com/mgreau/when-websocket-met-asciidoctor/master/install.sh | bash
+   
+. or *try it online* at {online-demo} (running on OpenShift).
+. or clone the project and follow the instructions below
+
+
 [[collaborative-editor]]
 .Demo Collaborative Editor
-image::../demo/collaborative-editor.gif[Collaborative-editor]
+image::../demo/collaborative-editor.gif[Collaborative-editor, 600, link="{demo-url}collaborative-editor.gif"]
 
 If you have an existing asciidoc file, you can drag and drop this file to the editor :
 
 [[drag-drop]]
 .Drag and drop feature
-image::ad-editor-dragdrop.png[Drag and drop feature]
+image::ad-editor-dragdrop.png[Drag and drop feature, 600, link="{demo-url}ad-editor-dragdrop.png"]
 
 You can also work on an offline mode with just your browser :
 
 [[offline]]
 .Offline mode feature
-image::ad-editor-offline.png[Offline mode feature]
+image::ad-editor-offline.png[Offline mode feature, 600, link="{imagesdir}ad-editor-offline.png"]
+
+== 0.1.0-alpha4-SNAPSHOT (dev in progress)
+
+* *+dzSlides backend+* : you can work on your slides for a presentation !
 
 
-== 0.1.0-alpha3 new features
+== 0.1.0-alpha3 - new features
 
-* +*Full offline mode*+ : if you are not connected to the server by WebScoket protocol, then the
+* +*Full offline mode+* : if you are not connected to the server by WebScoket protocol, then the
 rendering view is still working in real-time with the Javascript project asciidoctor.js
 * +*Drag and Drop*+ : you can *drag a AsciiDoc file* from your laptop and *drop it into the editor* and the content of the file
 will be loaded into the editor
@@ -67,11 +76,11 @@ will be loaded into the editor
 
 [diff feature]
 .Compute diff feature
-image::ad-editor-diff.png[Diff feature example]
+image::ad-editor-diff.png[Diff feature example, 600]
 
 [patch feature]
 .patch feature
-image::ad-editor-patch.png[Patch feature example]
+image::ad-editor-patch.png[Patch feature example, 600]
 
 == Changelog
 
@@ -81,7 +90,7 @@ You can read all changes between each release in the link:CHANGELOG.adoc[changel
 
 A lot of cool features are planned :) You can read all {issues}[open and closed issues] and {milestones}[milestones]
 
-== Install on your laptop
+== [DEV MODE] Install on your laptop
 
 [IMPORTANT]
 .Prerequisites
@@ -93,8 +102,9 @@ A lot of cool features are planned :) You can read all {issues}[open and closed 
 . Clone or download this github project (*+$APP_HOME+*)
 
 . Installing the Java EE 7 Compliance App server  
-.. Download {wildfly-url}[WildFly 8.0.0-CR1] (*+$JBOSS_HOME+*)
+.. Download {wildfly-url}[WildFly 8.0.0-Final] (*+$JBOSS_HOME+*)
 .. Then you need to deploy the link:module/README.adoc[Asciidoctor module] into your WildFly app server
+.. For the slides features, you have to install {asciidoctor-backends-url}[asciidoctor-backends] into +$JBOSS_HOME/standalone/datas+
 
 . Installing Bower
 .. Bower depends on Node and npm. It's installed globally using npm:

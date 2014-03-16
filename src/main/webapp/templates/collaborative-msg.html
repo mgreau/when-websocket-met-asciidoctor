@@ -13,15 +13,15 @@
 				<strong>OFFLINE.</strong></span> <a href="#" ng-show="theDoc.status == 'DISCONNECTED'" ng-click="showAuth()">- Connect -</a> <span class="label label-success"
 				ng-show="theDoc.status == 'CONNECTED'"><strong>ONLINE.</strong>
 			</span>  | 
-		Realtime Collaborative Editor for Asciidoctor | v0.1-alpha3 | <a href="https://github.com/mgreau/when-websocket-met-asciidoctor" target="_blank">View Project on GitHub</a> |
+		Realtime Collaborative Editor for AsciiDoc | v0.1-alpha4-SNAPSHOT | <a href="https://github.com/mgreau/when-websocket-met-asciidoctor" target="_blank">View Project on GitHub</a> |
 			 <span ng-show="theDoc.status == 'CONNECTED'">
 				<span title="Number of writer" class="glyphicon glyphicon-user"></span>
-					<em>Online writers :</em> <span title="Number of writers"
+					<span title="Online writers"
 						class="badge badge">{{theDoc.notification.nbWriters}}</span>
 						 | 
 				 <span
 						title="Number of readers" class="glyphicon glyphicon-eye-open"></span>
-					<em>Online readers :</em> <span title="Number of viewer"
+					 <span title="Online readers"
 						class="badge">{{theDoc.notification.nbConnected}}</span>
 			</span>
 			<span ng-show="theDoc.status == 'CONNECTED'"> | <em>Signed as {{user}}</em></span>

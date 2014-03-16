@@ -37,13 +37,13 @@ public class MessageDecoder implements Decoder.Text<AsciidocMessage> {
         	 msg = new AsciidocMessage(messageMap.get("writer"), messageMap.get("source"));
             switch (messageMap.get("type")) {
                 case "adoc-for-html5":
-                    msg.setAction("renderHtml5");
+                    msg.setAction("backendHtml5");
                 break;
                 case "adoc-for-pdf":
-                    msg.setAction("renderPdf");
+                    msg.setAction("backendPDF");
                 break;
                 case "adoc-for-dzslides":
-                    msg.setAction("renderDz");
+                    msg.setAction("backendDzSlides");
                 break;
                 case "adoc-for-diff":
                     msg.setAdocSourceToMerge(messageMap.get("sourceToMerge"));

@@ -16,6 +16,20 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 	$scope.mode; //Writing mode (offline, online)
 	$scope.adSpaceID; //ID for the AsciiDoctor Space
     $scope.isRenderFullscreen = false; // Initially, do not go into full screen
+    
+    //backend 
+    $scope.backends = [//"html5", "slides"
+	    {"id": "adoc-for-html5", "label":"html5", "backend": "html5"},
+	    {"id": "adoc-for-dzslides", "label":"slides", "backend": "html5"}
+	   ];
+    $scope.backend = "adoc-for-html5";
+    
+    $scope.selectAction = function() {
+        console.log($scope.backend);
+        console.log(this.backend);
+        $scope.backend = this.backend;
+    };
+    
 
 	//RCEAdoc : Realtime Collaborative Editor for Asciidoctor
 	$scope.rceAdocs = new Object();
@@ -158,12 +172,10 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 			}
 			//progress bar to 0
 			$scope.dynamic = 0;
-			//TODO handle adoc for PDF and adoc for dzSlides
-			backend = "adoc-for-html5";
-			WebSocketService.sendAdocSource(idAdoc, $scope.rceAdocs[idAdoc].adocSrc, $scope.rceAdocs[idAdoc].author, backend);
+			WebSocketService.sendAdocSource(idAdoc, $scope.rceAdocs[idAdoc].adocSrc, $scope.rceAdocs[idAdoc].author, $scope.backend);
 		}
 		else {
-			$scope.rceAdocs[idAdoc].state = "You work on OFFLINE MODE !";
+			$scope.rceAdocs[idAdoc].state = "You work on OFFLINE MODE (No slides rendered) !";
 			$scope.addAlert("warning", $scope.rceAdocs[idAdoc].state);
 			if (angular.isUndefined($scope.rceAdocs[idAdoc].html5)){
 				$scope.rceAdocs[idAdoc].html5 = new Object();
@@ -270,6 +282,8 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 			$scope.initSpace($scope.adSpaceID, $scope.user, false);
 			if (angular.equals(mode, 'online')){
 				WebSocketService.connect($scope.initID);
+				if (angular.equals(WebSocketService.status($scope.initID), WebSocket.OPEN))
+					$scope.rceAdocs[$scope.initID].status = 'CONNECTED';
 			}
 			
 			//To show the preview in the iframe
@@ -295,6 +309,8 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 			spaceID = $scope.adSpaceID;
 			WebSocketService.connect($scope.adSpaceID);
 			$scope.initSpace($scope.adSpaceID, $scope.user, true);
+			if (angular.equals(WebSocketService.status(idAdoc), WebSocket.OPEN))
+				$scope.rceAdocs[$scope.adSpaceID].status = 'CONNECTED';
 		}
 	};
 	
@@ -303,7 +319,7 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 		$scope.rceAdocs = new Object();
 		$scope.rceAdocs[id] = new Object();
 		$scope.rceAdocs[id].key = id;
-		$scope.rceAdocs[id].status = 'CONNECTED';
+		$scope.rceAdocs[id].status = 'DISCONNECTED';
 		if (isPartOfATeam === true){
 			$scope.mode = 'online';
 			$scope.rceAdocs[id].state = "CONGRATS ! You joined the Team ("+id+")";
@@ -317,12 +333,13 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 	
 	//Disconnect from the server, work offline ?
 	$scope.disconnect = function(adSpaceID) {
-		$scope.rceAdocs[adSpaceID].notification.writers = {};
 		WebSocketService.disconnect(adSpaceID);
+		$scope.rceAdocs[adSpaceID].status = 'DISCONNECTED';
 		//Activate the offline mode with storage
 		$scope.mode = 'offline';
 		$scope.rceAdocs[adSpaceID].state = "You are currently working on Offline mode.";
 		$scope.addAlert("warning", "");
+		$scope.rceAdocs[adSpaceID].notification.writers = {};
 	};
 	
 	//Alert messages

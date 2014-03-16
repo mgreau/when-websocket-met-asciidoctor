@@ -1,5 +1,6 @@
 package com.mgreau.wwsmad.asciidoctor;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -21,22 +22,37 @@ import org.asciidoctor.extension.ExtensionRegistry;
 public class AsciidoctorProcessor {
 	
 	private static final Logger logger = Logger.getLogger("AsciidoctorProcessor");
+	
 	private Asciidoctor delegate;
 	
+	public String renderAsDocument(final String source){
+		return renderAsDocument(source, "html5", null);
+	}
+	
     // tag::render[]
-	public String renderAsDocument(String source, String baseDir) {
-		logger.info("[RENDER]::START rendering adoc");
+	public String renderAsDocument(final String source, String backend, final File templateDir) {
+		String output = "";
 		
-		ExtensionRegistry extensionRegistry = this.delegate.extensionRegistry(); 
-		extensionRegistry.postprocessor(IFrameAnchorPostProcessor.class);
+		if (backend == null || "".equals(backend))
+			backend = "html5";
 		
-		String output = "There is a problem";
+		if (backend.equals("html5")){
+			ExtensionRegistry extensionRegistry = this.delegate.extensionRegistry(); 
+			extensionRegistry.postprocessor(IFrameAnchorPostProcessor.class);
+		}
 		
-		try{
+		OptionsBuilder optsBuilder = OptionsBuilder
+				.options();
+		if (templateDir != null && templateDir.exists()){
+			optsBuilder = optsBuilder.templateDir(templateDir);
+		}
+		
+		try {
+			logger.info("[RENDER]::START rendering adoc");
 			output = delegate.render(
 					source,
-					OptionsBuilder
-							.options()
+					optsBuilder
+							.backend(backend)
 							.safe(SafeMode.UNSAFE).headerFooter(true)
 							.eruby("erubis")
 							.attributes(
@@ -49,8 +65,8 @@ public class AsciidoctorProcessor {
 
 		} catch(RuntimeException rex){
 			logger.severe("[RENDER]::ERROR rendering adoc");
+			output = "Error during render process";
 		}
-		
 		return output;
 	}
     // end::render[]
@@ -60,8 +76,8 @@ public class AsciidoctorProcessor {
 		return delegate.readDocumentHeader(source);
 	}
 	
-	public String renderAsDocument(InputStream source, String baseDir) {
-		return renderAsDocument(readFromStream(source), baseDir);
+	public String renderAsDocument(InputStream source) {
+		return renderAsDocument(readFromStream(source));
 	}
 	
 	public Asciidoctor getDelegate() {
