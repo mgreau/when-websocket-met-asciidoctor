@@ -42,7 +42,7 @@ html, .view body {
 }
 
 body, .view section {
-  background: #ffffff;
+  background: #fff;
   font-size: 17px;
   line-height: 1;
   -webkit-box-shadow: 8px 0 6px -3px #8c8c8c;
@@ -106,7 +106,16 @@ section[class=topic] h2 {
   margin-top: -.5em;
 }
 
-section.intro, section.terminal {
+section.topic {
+	background: url('../../images/devnation2014_speakerdeck_16by9_base.jpg');
+	background-size: 100%;
+}
+section.intro {
+	background: url('../../images/devnation2014_speakerdeck_16by9_maintitle.jpg');
+	background-size: 100%;
+}
+
+section.terminal {
   background-color: #1D2326;
 }
 
