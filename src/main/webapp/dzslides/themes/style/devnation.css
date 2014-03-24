@@ -43,7 +43,7 @@ html, .view body {
 
 body, .view section {
   background: #fff;
-  font-size: 17px;
+  font-size: 15px;
   line-height: 1;
   -webkit-box-shadow: 8px 0 6px -3px #8c8c8c;
      -moz-box-shadow: 8px 0 6px -3px #8c8c8c;
@@ -81,7 +81,7 @@ section:not(.title) {
 
 section.title h1 {
   font-size: 6em;
-  color: #1D2326;
+  color: #fff;
   position: relative;
   top: 40%;
   -webkit-transform: translate(0, -50%);
@@ -92,24 +92,65 @@ section.title h1 {
   padding: 0 50px; /* quick hack to fix overruns */
 }
 
+section.title h1 em {
+  color: #fff;
+}
+
 section.title footer {
-  font-weight: 200;
+  color: rgb(109,188,219);
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* padding: 40px; */
+  background-color: #fff;
+  /* font-weight: 200; */
   text-align: center;
-  font-size: 2.5em;
-  padding: 30px 50px;
+  font-size: 2em;
+  padding: 20px 20px;
+  background-color: #fff;
+  border-top: 2px solid rgb(109,188,219);
+}
+
+.email {
+color: rgb(252, 92, 71);
+position: absolute;
+right: .5em;
+bottom: .5em;
+font-size: .5em;
+font-weight: bold;
+}
+
+.hashtag {
+color: rgb(252, 92, 71);
+position: absolute;
+left: .5em;
+bottom: .5em;
+font-size: .5em;
+font-weight: bold;
+}
+
+.ruby {
+color: #A30C00;
 }
 
 section[class=topic] h2 {
-  color:  #4d4d4c;
+   color: rgb(109,188,219);
   font-size: 2.5em;
   margin-bottom: .5em;
   margin-top: -.5em;
+  text-align: right;
+}
+
+section.title {
+  background: url('../../images/devnation2014_speakerdeck_16by9_speakertitle.jpg');
+  background-size: 100%;
 }
 
 section.topic {
 	background: url('../../images/devnation2014_speakerdeck_16by9_base.jpg');
 	background-size: 100%;
 }
+
 section.intro {
 	background: url('../../images/devnation2014_speakerdeck_16by9_maintitle.jpg');
 	background-size: 100%;
@@ -122,10 +163,12 @@ section.terminal {
 section.intro h1,
 section.intro h2 {
   color: #DDDCC5;
-  text-transform: lowercase;
+  /**text-transform: lowercase;*/
   line-height: .7em;
   text-align: left;
   font-size: 4.4em;
+  background: url('../../images/devnation2014_speakerdeck_16by9_base.jpg');
+  background-size: 100%;
 }
 
 section.intro.alt h1,
@@ -486,14 +529,6 @@ figcaption.invert {
   text-shadow: 2px 2px #000000;
 }
 
-section.title footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  padding: 40px;
-  background-color: #F3F4F8;
-  border-top: 1px solid #CCC;
-}
 
 section.source {
   /*background-color: #272822;*/
@@ -548,7 +583,7 @@ section > p {
 }
 
 section p.statement strong {
-  font-size: 3em;
+  font-size: 2.5em;
   line-height: .75em;
 }
 
@@ -655,7 +690,11 @@ section p {
 
 section p.middle,
 section p.statement {
-  font-size: 3em;
+  font-size: 2em;
+}
+
+.push2 {
+  padding-left: 1em;
 }
 
 section p.follow-up {
