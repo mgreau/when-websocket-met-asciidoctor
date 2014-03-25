@@ -93,11 +93,21 @@ section.title h1 {
 }
 
 section.title h1 em {
+color: #fff;
+font-size: 0.5em;
+
+}
+
+section.title h1 strong {
+  font-size: 1em;
+  font-style: italic;
   color: #fff;
+  background: rgb(252, 92, 71);
+
 }
 
 section.title footer {
-  color: rgb(109,188,219);
+  color: #000;
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -108,7 +118,7 @@ section.title footer {
   font-size: 2em;
   padding: 20px 20px;
   background-color: #fff;
-  border-top: 2px solid rgb(109,188,219);
+  border-top: 2px solid rgb(252, 92, 71);
 }
 
 .email {
@@ -152,7 +162,7 @@ section.topic {
 }
 
 section.intro {
-	background: url('../../images/devnation2014_speakerdeck_16by9_maintitle.jpg');
+	background: url('../../images/devnation2014_speakerdeck_16by9_base.jpg');
 	background-size: 100%;
 }
 
@@ -166,9 +176,7 @@ section.intro h2 {
   /**text-transform: lowercase;*/
   line-height: .7em;
   text-align: left;
-  font-size: 4.4em;
-  background: url('../../images/devnation2014_speakerdeck_16by9_base.jpg');
-  background-size: 100%;
+  font-size: 4em;
 }
 
 section.intro.alt h1,
@@ -208,9 +216,9 @@ section.recap > h1,
 section.recap > h2 {
   margin: 0;
   text-transform: uppercase;
-  color: #718c00;
+  color: #000;
   font-size: 2em;
-  border: 15px solid #718c00;
+  border: 15px solid rgb(252, 92, 71);
   border-radius: 20px;
   position: absolute;
   right: -25px;
@@ -316,7 +324,7 @@ section ul {
   font-size: 3em;
   text-transform: uppercase;
   font-weight: 700;
-  color: #4271ae;
+  color: #OOO;
   text-align: right;
   margin-bottom: 1em;
 }
@@ -555,7 +563,7 @@ section.source div.title {
   padding-left: 1px;
 }
 
-section pre code {
+section.source pre code {
   font-family: "DejaVu Sans Mono", "Droid Sans Mono", Menlo, Monaco, "Courier New", monospace;
   font-size: 1em;
   line-height: 1.2;
@@ -665,7 +673,7 @@ span.detail {
    progress of the presentation. */
 #progress-bar {
   height: 2px;
-  background: #AAA;
+  background: rgb(252, 92, 71);
 }
 
 /* TODO: merge the overrides below into the sheet */
@@ -673,15 +681,9 @@ section.title h1 {
   font-size: 4em;
 }
 
-section.title h1 strong {
-  font-size: 3em;
-  font-style: italic;
-}
 
-section.intro h1 strong,
-section.intro h2 strong {
-  font-size: 3.5em;
-}
+
+
 
 section p {
   font-size: 2em;
