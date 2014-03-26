@@ -162,7 +162,7 @@ section.topic {
 }
 
 section.intro {
-	background: url('../../images/devnation2014_speakerdeck_16by9_base.jpg');
+	background: url('../../images/devnation2014_speakerdeck_16by9_base_blue.jpg');
 	background-size: 100%;
 }
 
@@ -172,7 +172,7 @@ section.terminal {
 
 section.intro h1,
 section.intro h2 {
-  color: #DDDCC5;
+  color: #fff;
   /**text-transform: lowercase;*/
   line-height: .7em;
   text-align: left;
@@ -186,7 +186,7 @@ section.intro.alt h2 {
 
 section.intro h1 strong,
 section.intro h2 strong {
-  color: #D5EE5E;
+  color: #2b2b4b;
   font-size: 1.51em;
   line-height: .8em;
 }
@@ -268,7 +268,9 @@ section.question p strong {
 }
 
 section.ending {
-  background-color: #4271ae;
+  background: url('../../images/devnation2014_speakerdeck_16by9_base_dark_blue.jpg');
+  background-size: 100%;
+  color: #fff;
 }
 
 section.ending > h2 {
@@ -292,7 +294,7 @@ section.ending p.footer {
   padding: 40px 0;
   font-size: 3em;
   text-align: center;
-  color: #4271ae;
+  color: #2b2b4b;
   font-weight: bold;
   top: 55%;
   margin: 0;
@@ -546,13 +548,18 @@ section.source {
 
 section.source h2 {
   margin: 0 .5em .5em 0;
-  color: #DDDCC5;
-  text-transform: uppercase;
+  color: #4d4d4c;
+  /*text-transform: uppercase;*/
   text-align: right;
 }
 
 section.source.lhs h2 {
   text-align: left;
+}
+
+section.source div {
+  background-color: rgb(219, 219, 219);
+  border: 1px 0 0 1px solid #000;
 }
 
 section.source div.title {
