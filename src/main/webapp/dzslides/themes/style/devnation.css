@@ -161,6 +161,11 @@ section.topic {
 	background-size: 100%;
 }
 
+section.logos {
+  background: url('../../images/devnation2014_adeditor_technologies.png');
+  background-size: 100%;
+}
+
 section.intro {
 	background: url('../../images/devnation2014_speakerdeck_16by9_base_blue.jpg');
 	background-size: 100%;
