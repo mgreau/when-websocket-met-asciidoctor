@@ -50,8 +50,8 @@ app.factory('WebSocketService', function($window) {
 	};
 
 	// Send an adoc source to see the generated output back
-	service.sendAdocSource = function(idAdoc, source, writer, backend) {
-		var jsonObj = {"type" : backend, "source" : source, "writer": writer};
+	service.sendAdocSource = function(idAdoc, source, writer, backend, part) {
+		var jsonObj = {"type" : backend, "source" : source, "writer": writer, "part": part};
 		service.ws[idAdoc].send(JSON.stringify(jsonObj));
 	};
 	
