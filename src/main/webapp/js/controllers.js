@@ -30,6 +30,7 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
     
     //part 
     $scope.parts = [
+        {"id": "all", "label":"all"},
 	    {"id": "slide2", "label":"slide2"},
 	    {"id": "slide3", "label":"slide3"},
 	    {"id": "slide4", "label":"slide4"},

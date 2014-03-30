@@ -73,12 +73,14 @@ public class AsciidoctorProcessor {
 									.attribute("copycss!", "").asMap())
 					.asMap();
 			
-			StructuredDocument document = asciidoctor.readDocumentStructure(
-					source, parameters);
-			if (backend.equals("dzslides") && document != null && part != null  && document.getPartById(part) != null) {
-				parameters.put(Asciidoctor.STRUCTURE_MAX_LEVEL, 2);
-				ContentPart p = document.getPartById(part);
-				output = getHeaderForSlides() + "<body><"+ p.getContext() +" class=\""+ p.getRole() + "\">"+ "<h2>" + p.getTitle() + "</h2>" + p.getContent() + "</"+ p.getContext() +">" + getBodyFooterForSlides() +"</body>";
+			if (part != null && !"all".equals(part)){
+				StructuredDocument document = asciidoctor.readDocumentStructure(
+						source, parameters);
+				if (backend.equals("dzslides") && document != null  && document.getPartById(part) != null) {
+					parameters.put(Asciidoctor.STRUCTURE_MAX_LEVEL, 2);
+					ContentPart p = document.getPartById(part);
+					output = getHeaderForSlides() + "<body><"+ p.getContext() +" class=\""+ p.getRole() + "\">"+ "<h2>" + p.getTitle() + "</h2>" + p.getContent() + "</"+ p.getContext() +">" + getBodyFooterForSlides() +"</body>";
+				}
 			}
 			
 			if (output == null)
