@@ -34,7 +34,7 @@ public class AsciidocMessageConsumer {
 	private Logger logger;
 	
 	@Inject
-	AsciidoctorProcessor processor; //= new AsciidoctorProcessor();
+	AsciidoctorProcessor processor; 
 	
 	@Inject @DiffProvider("Google")
 	DiffAdoc diffGoogle;

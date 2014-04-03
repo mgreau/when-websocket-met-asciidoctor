@@ -185,7 +185,6 @@ public class WWSMADEndpoint {
 	@OnMessage
 	public void message(final Session session, AsciidocMessage msg,
 			@PathParam("adoc-id") String adocId) {
-		Asciidoctor asciidoctor =  Asciidoctor.Factory.create();
 		logger.log(Level.INFO, "Received: Asciidoc source from - {0}", msg);
 
 		// check if the user had already send a version for this doc

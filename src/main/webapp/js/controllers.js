@@ -29,25 +29,15 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
     };
     
     //part 
-    $scope.parts = [
-        {"id": "all", "label":"all"},
-	    {"id": "slide2", "label":"slide2"},
-	    {"id": "slide3", "label":"slide3"},
-	    {"id": "slide4", "label":"slide4"},
-	    {"id": "slide5", "label":"slide5"},
-	    {"id": "slide6", "label":"slide6"},
-	    {"id": "slide7", "label":"slide7"},
-	    {"id": "slide8", "label":"slide8"},
-	    {"id": "slide9", "label":"slide9"}
-	   ];
-    $scope.part = "slide5";
-    
+    $scope.parts = [ {"id": "all", "label":"all"} ];
+    for (var i = 2; i <= 60; i++) {
+    	$scope.parts.push({"id": "slide"+i, "label":"slide"+i});
+    }
+    $scope.part = "slide2";
     $scope.selectPart = function() {
         $scope.part = this.part;
-        
 		$scope.sendAdoc(spaceID);
     };
-    
 
 	//RCEAdoc : Realtime Collaborative Editor for Asciidoctor
 	$scope.rceAdocs = new Object();
