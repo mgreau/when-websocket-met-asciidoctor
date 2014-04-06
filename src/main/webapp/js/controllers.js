@@ -317,7 +317,7 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 			spaceID = $scope.adSpaceID;
 			WebSocketService.connect($scope.adSpaceID);
 			$scope.initSpace($scope.adSpaceID, $scope.user, true);
-			if (angular.equals(WebSocketService.status(idAdoc), WebSocket.OPEN))
+			if (angular.equals(WebSocketService.status($scope.adSpaceID), WebSocket.OPEN))
 				$scope.rceAdocs[$scope.adSpaceID].status = 'CONNECTED';
 		}
 	};

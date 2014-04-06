@@ -23,18 +23,21 @@ public class IFrameAnchorPostProcessor extends Postprocessor {
 
     @Override
     public String process(Document document, String output) {
-    
-        final org.jsoup.nodes.Document doc = Jsoup.parse(output);
-        final String js = "js/iframe/iframe_anchors.js";
-        
-        if (doc.getElementsByAttributeValue("src", js).size() ==  0){
-        	 Element head = doc.getElementsByTag("head").first();
-
-        	 head.appendElement("script").attr("type", "text/javascript").attr("src", "http://code.jquery.com/jquery-1.7.2.min.js");
-             head.appendElement("script").attr("type", "text/javascript").attr("src", js);
-        }
-        
-        return doc.html();
+    	
+    	if ("html5".equals(document.getAttributes().get("backend"))){
+    		
+	        final org.jsoup.nodes.Document doc = Jsoup.parse(output);
+	        final String js = "js/iframe/iframe_anchors.js";
+	        
+	        if (doc.getElementsByAttributeValue("src", js).size() ==  0){
+	        	 Element head = doc.getElementsByTag("head").first();
+	
+	        	 head.appendElement("script").attr("type", "text/javascript").attr("src", "http://code.jquery.com/jquery-1.7.2.min.js");
+	             head.appendElement("script").attr("type", "text/javascript").attr("src", js);
+	        }
+	        return doc.html();
+    	}
+    	return output;
     }
 
 	//@Override

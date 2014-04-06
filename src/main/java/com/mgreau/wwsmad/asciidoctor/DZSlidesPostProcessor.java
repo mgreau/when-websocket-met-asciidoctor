@@ -41,15 +41,19 @@ public class DZSlidesPostProcessor extends Postprocessor {
     @Override
     public String process(Document document, String output) {
     
-        final org.jsoup.nodes.Document doc = Jsoup.parse(output);
-        
-    	 Element head = doc.getElementsByTag("head").first();
-
-    	 head.appendElement("link").attr("rel", "stylesheet").attr("href", "./dzslides/themes/highlight/asciidoctor.css");
-    	 head.appendElement("link").attr("rel", "stylesheet").attr("href", "./dzslides/core/dzslides.css");
-    	 head.appendElement("link").attr("rel", "stylesheet").attr("href", "./dzslides/themes/style/devnation.css");
+    	if ("dzslides".equals(document.getAttributes().get("backend"))){
+	        final org.jsoup.nodes.Document doc = Jsoup.parse(output);
+	        
+	    	 Element head = doc.getElementsByTag("head").first();
+	
+	    	 head.appendElement("link").attr("rel", "stylesheet").attr("href", "./dzslides/themes/highlight/asciidoctor.css");
+	    	 head.appendElement("link").attr("rel", "stylesheet").attr("href", "./dzslides/core/dzslides.css");
+	    	 head.appendElement("link").attr("rel", "stylesheet").attr("href", "./dzslides/themes/style/devnation.css");
+	    	 
+	    	 return doc.html();
+    	}
          
-        return doc.html();
+       return output;
     }
 
 	//@Override
