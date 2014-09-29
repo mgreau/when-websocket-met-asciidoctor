@@ -1,6 +1,6 @@
 package com.mgreau.wwsmad.websocket.messages;
 
-import org.asciidoctor.DocumentHeader;
+import org.asciidoctor.ast.DocumentHeader;
 
 /**
  * This message can be send by both peers (client/server) :
@@ -39,6 +39,9 @@ public class AsciidocMessage extends Message {
 	
 	/** Action to do with this message : render, compute diff, patch **/
 	private String action;
+	
+	/** part of the message to render */
+	private String part;
 	
 	public AsciidocMessage(){
 	}
@@ -119,6 +122,14 @@ public class AsciidocMessage extends Message {
 
 	public void setPatchToApply(String patchToApply) {
 		this.patchToApply = patchToApply;
+	}
+
+	public String getPart() {
+		return part;
+	}
+
+	public void setPart(String part) {
+		this.part = part;
 	}
 
 	

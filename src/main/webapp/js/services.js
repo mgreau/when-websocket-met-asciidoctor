@@ -19,7 +19,7 @@ app.factory('WebSocketService', function($window) {
 		var host = $window.location.hostname;
 		var protocol = "ws";
 		var port = "8080";
-		if (angular.equals(host, 'wildfly-mgreau.rhcloud.com') ){
+		if (host.indexOf("rhcloud.com") != -1){
 			port = '8000';
 		}
 		if (angular.equals($window.location.protocol,'https:')){
@@ -50,8 +50,8 @@ app.factory('WebSocketService', function($window) {
 	};
 
 	// Send an adoc source to see the generated output back
-	service.sendAdocSource = function(idAdoc, source, writer, backend) {
-		var jsonObj = {"type" : backend, "source" : source, "writer": writer};
+	service.sendAdocSource = function(idAdoc, source, writer, backend, part) {
+		var jsonObj = {"type" : backend, "source" : source, "writer": writer, "part": part};
 		service.ws[idAdoc].send(JSON.stringify(jsonObj));
 	};
 	

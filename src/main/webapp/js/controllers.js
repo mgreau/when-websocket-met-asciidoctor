@@ -28,6 +28,16 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
         $scope.backend = this.backend;
     };
     
+    //part 
+    $scope.parts = [ {"id": "all", "label":"all"} ];
+    for (var i = 2; i <= 60; i++) {
+    	$scope.parts.push({"id": "slide"+i, "label":"slide"+i});
+    }
+    $scope.part = "slide2";
+    $scope.selectPart = function() {
+        $scope.part = this.part;
+		$scope.sendAdoc(spaceID);
+    };
 
 	//RCEAdoc : Realtime Collaborative Editor for Asciidoctor
 	$scope.rceAdocs = new Object();
@@ -170,7 +180,7 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 			}
 			//progress bar to 0
 			$scope.dynamic = 0;
-			WebSocketService.sendAdocSource(idAdoc, $scope.rceAdocs[idAdoc].adocSrc, $scope.rceAdocs[idAdoc].author, $scope.backend);
+			WebSocketService.sendAdocSource(idAdoc, $scope.rceAdocs[idAdoc].adocSrc, $scope.rceAdocs[idAdoc].author, $scope.backend, $scope.part);
 		}
 		else {
 			$scope.rceAdocs[idAdoc].state = "You work on OFFLINE MODE (No slides rendered) !";
@@ -212,7 +222,7 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 			$scope.isDiffOnEditor = false;
 			$scope.rceAdocs[idAdoc].state = "Patch Apply !";
 			WebSocketService.sendAdocSourceToApplyPatch(idAdoc, $scope.rceAdocs[idAdoc].adocSrc, 
-					$scope.rceAdocs[idAdoc].author, $scope.rceAdocs[idAdoc].adoc.sourceToMerge);
+					$scope.rceAdocs[idAdoc].author, $scope.rceAdocs[idAdoc].adoc.sourceToMerge, $scope.part);
 		}
 		else {
 			$scope.rceAdocs[idAdoc].state = "You work on OFFLINE MODE !!. You need to be ONLINE to do this action.";
@@ -243,7 +253,7 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 				return;
 			}
 			$scope.rceAdocs[idAdoc].adocSrc = $scope.editor.getValue();
-			WebSocketService.sendAdocSourceForDiff(idAdoc, $scope.rceAdocs[idAdoc].adocSrc, $scope.rceAdocs[idAdoc].author, $scope.rceAdocs[idAdoc].html5.source);
+			WebSocketService.sendAdocSourceForDiff(idAdoc, $scope.rceAdocs[idAdoc].adocSrc, $scope.rceAdocs[idAdoc].author, $scope.rceAdocs[idAdoc].html5.source, $scope.part);
 		}
 		else {
 			$scope.rceAdocs[idAdoc].state = "You work on OFFLINE MODE !!. You need to be ONLINE to do this action.";
@@ -307,7 +317,7 @@ app.controller("RCEAdocCtrl", function($scope, $rootScope, JsonService, DocRESTS
 			spaceID = $scope.adSpaceID;
 			WebSocketService.connect($scope.adSpaceID);
 			$scope.initSpace($scope.adSpaceID, $scope.user, true);
-			if (angular.equals(WebSocketService.status(idAdoc), WebSocket.OPEN))
+			if (angular.equals(WebSocketService.status($scope.adSpaceID), WebSocket.OPEN))
 				$scope.rceAdocs[$scope.adSpaceID].status = 'CONNECTED';
 		}
 	};

@@ -35,6 +35,8 @@ public class MessageDecoder implements Decoder.Text<AsciidocMessage> {
         AsciidocMessage msg = null;
         if (willDecode(string)) {
         	 msg = new AsciidocMessage(messageMap.get("writer"), messageMap.get("source"));
+        	 if (messageMap.get("part") != null)
+        		 msg.setPart(messageMap.get("part"));
             switch (messageMap.get("type")) {
                 case "adoc-for-html5":
                     msg.setAction("backendHtml5");

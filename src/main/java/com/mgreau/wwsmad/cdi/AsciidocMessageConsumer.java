@@ -8,7 +8,7 @@ import javax.annotation.ManagedBean;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
-import org.asciidoctor.DocumentHeader;
+import org.asciidoctor.ast.DocumentHeader;
 
 import com.mgreau.wwsmad.asciidoctor.AsciidoctorProcessor;
 import com.mgreau.wwsmad.cdi.qualifier.Backend;
@@ -34,7 +34,7 @@ public class AsciidocMessageConsumer {
 	private Logger logger;
 	
 	@Inject
-	AsciidoctorProcessor processor;
+	AsciidoctorProcessor processor; 
 	
 	@Inject @DiffProvider("Google")
 	DiffAdoc diffGoogle;
@@ -91,10 +91,10 @@ public class AsciidocMessageConsumer {
 		long start = System.currentTimeMillis();
 		try {
 			html.setContent(processor.renderAsDocument(event.msg.getAdocSource(), "dzslides", 
-					new java.io.File(templateDir)));
+					new java.io.File(templateDir), event.msg.getPart()));
 			html.setTimeToRender(System.currentTimeMillis() - start);
 		} catch (RuntimeException rEx) {
-			logger.severe("processing error." + rEx.getCause().toString());
+			logger.severe("processing error." + rEx.toString());
 		}
 		
 		// send the new HTML version to all connected peers

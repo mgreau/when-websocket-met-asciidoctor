@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="urn:jboss:module:1.0" name="org.asciidoctor">
   <resources>
-	<resource-root path="asciidoctor-java-integration-0.1.4.jar"/>
 	<resource-root path="jruby-complete-1.7.4.jar"/>
+	<resource-root path="asciidoctorj-1.5.0.preview2.jar"/>
+	<resource-root path="slf4j-api-1.7.5.jar"/>
+	<resource-root path="log4j-1.2.17.jar"/>
+	<resource-root path="slf4j-log4j12-1.7.5.jar"/>
   </resources>
   
   <dependencies>

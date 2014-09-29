@@ -21,6 +21,8 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
+import org.asciidoctor.Asciidoctor;
+
 import com.mgreau.wwsmad.cdi.AsciidocMessageEvent;
 import com.mgreau.wwsmad.cdi.qualifier.Backend;
 import com.mgreau.wwsmad.cdi.qualifier.ComputeDiff;
@@ -88,21 +90,21 @@ public class WWSMADEndpoint {
 		nfMsg.setAdocId(adocId);
 		nfMsg.setType(TypeMessage.notification);
 
-		try {
+		//try {
 			for (Session session : peers) {
 				if (Boolean.TRUE
 						.equals(session.getUserProperties().get(adocId))) {
 					if (session.isOpen()) {
-						session.getBasicRemote().sendObject(msg);
+						session.getAsyncRemote().sendObject(msg);
 						logger.log(Level.INFO, " Outpout Sent : ",
 								msg.toString());
 						sendNotificationMessage(session, nfMsg, adocId);
 					}
 				}
 			}
-		} catch (IOException | EncodeException e) {
-			logger.log(Level.SEVERE, e.getCause().toString());
-		}
+		//} catch (IOException | EncodeException e) {
+			//logger.log(Level.SEVERE, e.getCause().toString());
+		//}
 	}
 	
 	/**
@@ -119,19 +121,19 @@ public class WWSMADEndpoint {
 		nfMsg.setAdocId(adocId);
 		nfMsg.setType(TypeMessage.notification);
 
-		try {
+		//try {
 			if (Boolean.TRUE
 					.equals(session.getUserProperties().get(adocId))) {
 				if (session.isOpen()) {
-					session.getBasicRemote().sendObject(msg);
+					session.getAsyncRemote().sendObject(msg);
 					logger.log(Level.INFO, " Outpout Sent : ",
 							msg.toString());
 					sendNotificationMessage(session, nfMsg, adocId);
 				}
 			}
-		} catch (IOException | EncodeException e) {
-			logger.log(Level.SEVERE, e.getCause().toString());
-		}
+		//} catch (IOException | EncodeException e) {
+			//logger.log(Level.SEVERE, e.getCause().toString());
+		//}
 	}
 
 	/**
@@ -145,9 +147,9 @@ public class WWSMADEndpoint {
 			NotificationMessage msg, String adocId) {
 		try {
 			msg.getWriters().addAll(writersByAdoc.get(adocId));
-			session.getBasicRemote().sendObject(msg);
+			session.getAsyncRemote().sendObject(msg);
 			logger.log(Level.INFO, "Notification Sent: {0}", msg.toString());
-		} catch (IOException | EncodeException e) {
+		} catch (Exception e) {
 			logger.log(Level.SEVERE, e.toString());
 		}
 	}

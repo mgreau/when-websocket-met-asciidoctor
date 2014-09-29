@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<!-- <html manifest="adeditor.appcache"> -->
+<html>
+<head>
+<title>Realtime Collaborative Editor for Asciidoctor</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description"
+	content="Realtime Collaborative Editor for Asciidoctor" />
+<link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body ng-app="adeditorApp" ng-controller="RCEAdocCtrl" style="padding-top:55px;">
+	<div class="container-fluid" ng-repeat="theDoc in rceAdocs">
+		<nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="height: 40px;">
+			<div class="panel panel-default recipients">
+				<div class="panel-heading">
+				<button ng-show="theDoc.status == 'CONNECTED'"
+						class="navbar-btn btn-danger btn-xs"
+						ng-click="disconnect(theDoc.key)" title="Exit from this space (ID:{{adSpaceID}})">
+						<span class="glyphicon glyphicon-off"></span>
+					</button> 
+					<span ng-show="theDoc.status == 'CONNECTED'"> | </span>
+					<span class="label label-danger"
+						ng-show="theDoc.status == 'DISCONNECTED'"> <span
+						title="Offline" class="glyphicon glyphicon-exclamation-sign"></span>
+						<strong>OFFLINE.</strong></span> <a href="#" ng-show="theDoc.status == 'DISCONNECTED'" ng-click="showAuth()">- Connect -</a> <span class="label label-success"
+						ng-show="theDoc.status == 'CONNECTED'"><strong>ONLINE.</strong>
+					</span>  | Webinar | <a href="https://github.com/mgreau/when-websocket-met-asciidoctor" target="_blank">Project on GitHub</a> |
+					 <span ng-show="theDoc.status == 'CONNECTED'">
+						<span title="Number of speakers" class="glyphicon glyphicon-user"></span>
+							<span title="Online speakers"
+								class="badge badge">{{theDoc.notification.nbWriters}}</span>
+								 | 
+						 <span
+								title="Number of attendees" class="glyphicon glyphicon-eye-open"></span>
+							 <span title="Online attendees"
+								class="badge">{{theDoc.notification.nbConnected}}</span>
+					</span>
+					<span ng-show="theDoc.status == 'CONNECTED'"> | <em>You : {{user}}</em></span>
+					<span ng-show="theDoc.status == 'CONNECTED'">  |  <em>ID : {{adSpaceID}}</em></span>
+					 | 
+					<button type="button" ng-click="toggleRenderFullscreen()" title="FullScreen mode for HTML5 preview"
+								class="btn btn-xs btn-default"><span class="glyphicon glyphicon-fullscreen"></span> FullScreen mode</button>
+					 | 
+					<span class="label label-primary">
+						<em> {{theDoc.html5.currentWriter}} </em>
+					</span>
+								
+				</div>
+			</div>
+		</nav>
+		
+		<div class="row" >
+			<div  ng-show="!mode  || mode == 'offline'"  class="panel panel-default col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<form class="form form-signup" id="joinATeam" role="form" ng-submit="enableEditor(adSpaceID)">
+					<div class="panel-body">
+						<h5 class="text-center">SESSION</h5>
+						<div class="form-group">
+							<div class="input-group">
+								<span class="input-group-addon"><span
+									class="glyphicon glyphicon-user"></span></span> <input type="text" ng-required="true"
+									class="form-control" placeholder="Writer name" ng-model="user"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="input-group">
+								<span class="input-group-addon"><span
+									class="glyphicon glyphicon-barcode"></span> </span> <input ng-model="adSpaceID"
+									type="text" class="form-control" placeholder="Space ID" ng-required="true" />
+							</div>
+						</div>
+					</div>
+				<button ng-click="joinATeam(user, adSpaceID)" class="btn btn-sm btn-primary btn-block" type="submit"> JOIN A WEBINAR</button>
+				</form>
+			</div>
+			
+			<!-- SLIDES -->
+			<div ng-show="mode == 'online' " class="panel panel-default col-xs-12 col-sm-12 col-md-12 col-lg-12" style="background-color:#fff;padding:3px 10px;;border:0px;">
+			<div class="panel-body" style="padding:0px;">
+				<p ng-show="!theDoc.html5.output">Hi, thanks for coming, the speaker will send you the first slide...</p>
+				<iframe ng-show="theDoc.html5.output" fullscreen="isRenderFullscreen" id="html5-rendered" srcdoc="{{theDoc.html5.output}}" width="100%"
+					height="1000px"> </iframe>
+			</div>
+		</div>
+	</div>
+	</div>
+	
+<script>
+	//var console = {};
+	//console.log = function(){};
+</script>
+
+	<script src="libs/angular/angular.min.js"></script>
+	<script src="libs/angular-dropfile-directive/dist/dropfile.all.js"></script>
+	<script src="libs/angular-resource/angular-resource.min.js"></script>
+	<script src="libs/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+	<script src="libs/ace-builds/src-min/ace.js"></script>
+	<script src="libs/angular-ui-ace/ui-ace.min.js"></script>
+	<script src="libs/angular-indexeddb/IDB.js"></script>
+	<script src="libs/angular-fullscreen/src/angular-fullscreen.js"></script>
+	
+	<script src="js/app.js"></script>
+	<script src="js/services.js"></script>
+	<script src="js/offlineService.js"></script>
+	<script src="js/controllers.js"></script>
+	<script src="js/directives.js"></script>
+	<script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	
+	  ga('create', 'UA-43902707-1', 'wildfly-mgreau.rhcloud.com');
+	  ga('send', 'pageview');
+	</script>
+</body>
+</html>
